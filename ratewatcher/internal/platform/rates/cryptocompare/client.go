@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log/slog"
 	"net/http"
 	"net/url"
 	"strings"
@@ -62,9 +63,9 @@ func (c Client) getRate(
 	}
 
 	q := url.Query()
-	q.Set(apiKeyQueryParam, c.token)
 	q.Set(fromQueryParam, from)
 	q.Set(toQueryParam, strings.Join(to, ","))
+	q.Set(apiKeyQueryParam, c.token)
 	url.RawQuery = q.Encode()
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url.String(), nil)
@@ -72,6 +73,7 @@ func (c Client) getRate(
 		return fmt.Errorf("failed to construct request: %w", err)
 	}
 
+	slog.Info("Constructed the URL", "url", url.String())
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return fmt.Errorf("failed to send request: %w", err)
