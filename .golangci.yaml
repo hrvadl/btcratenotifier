@@ -1,0 +1,37 @@
+run:
+  skip-files:
+    - curl.go
+
+linters:
+  enable:
+    # FAST
+    - nestif
+    - funlen
+    - lll
+    - forcetypeassert
+    - gofumpt
+    # MANDATORY HEAVY
+    - govet
+    - staticcheck
+    # OPTIONAL HEAVY
+    - revive
+    - errorlint
+    - exportloopref
+    - cyclop
+    - unparam
+    - unused
+    - errcheck
+
+linters-settings:
+  funlen:
+    ignore-comments: true
+    lines: 100
+
+issues:
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - errcheck
+        - funlen
+        - cyclop
+        - lll
