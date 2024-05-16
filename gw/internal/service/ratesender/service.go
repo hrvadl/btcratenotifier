@@ -56,7 +56,7 @@ func (s *Service) Subscribe(ctx context.Context, mail string) error {
 func (s *Service) SendToAll(ctx context.Context) error {
 	mails, err := s.repo.FindAll(ctx)
 	if err != nil {
-		fmt.Errorf("%s: failed to get mails: %w", operation, err)
+		return fmt.Errorf("%s: failed to get mails: %w", operation, err)
 	}
 
 	r, err := s.rateGetter.GetRate(ctx)

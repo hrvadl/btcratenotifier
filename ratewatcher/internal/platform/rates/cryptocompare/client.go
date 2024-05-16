@@ -41,7 +41,7 @@ func NewClient(token, url string) Client {
 	}
 }
 
-func (c Client) BTCToUAH(ctx context.Context) (float32, error) {
+func (c Client) Convert(ctx context.Context) (float32, error) {
 	res := new(btcUahResponse)
 	if err := c.getRate(ctx, res, btc, uah); err != nil {
 		return 0, fmt.Errorf("%s: %w", operation, err)
