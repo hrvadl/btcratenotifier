@@ -8,7 +8,6 @@ package mailer
 
 import (
 	context "context"
-
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -24,7 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type MailerServiceClient interface {
-	Send(ctx context.Context, opts ...grpc.CallOption) (MailerService_SendClient, error)
+	Send(ctx context.Context, in *Mail, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type mailerServiceClient struct {
@@ -35,53 +34,29 @@ func NewMailerServiceClient(cc grpc.ClientConnInterface) MailerServiceClient {
 	return &mailerServiceClient{cc}
 }
 
-func (c *mailerServiceClient) Send(ctx context.Context, opts ...grpc.CallOption) (MailerService_SendClient, error) {
-	stream, err := c.cc.NewStream(ctx, &MailerService_ServiceDesc.Streams[0], "/mailer.v1.MailerService/Send", opts...)
+func (c *mailerServiceClient) Send(ctx context.Context, in *Mail, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/mailer.v1.MailerService/Send", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &mailerServiceSendClient{stream}
-	return x, nil
-}
-
-type MailerService_SendClient interface {
-	Send(*Mail) error
-	CloseAndRecv() (*emptypb.Empty, error)
-	grpc.ClientStream
-}
-
-type mailerServiceSendClient struct {
-	grpc.ClientStream
-}
-
-func (x *mailerServiceSendClient) Send(m *Mail) error {
-	return x.ClientStream.SendMsg(m)
-}
-
-func (x *mailerServiceSendClient) CloseAndRecv() (*emptypb.Empty, error) {
-	if err := x.ClientStream.CloseSend(); err != nil {
-		return nil, err
-	}
-	m := new(emptypb.Empty)
-	if err := x.ClientStream.RecvMsg(m); err != nil {
-		return nil, err
-	}
-	return m, nil
+	return out, nil
 }
 
 // MailerServiceServer is the server API for MailerService service.
 // All implementations must embed UnimplementedMailerServiceServer
 // for forward compatibility
 type MailerServiceServer interface {
-	Send(MailerService_SendServer) error
+	Send(context.Context, *Mail) (*emptypb.Empty, error)
 	mustEmbedUnimplementedMailerServiceServer()
 }
 
 // UnimplementedMailerServiceServer must be embedded to have forward compatible implementations.
-type UnimplementedMailerServiceServer struct{}
+type UnimplementedMailerServiceServer struct {
+}
 
-func (UnimplementedMailerServiceServer) Send(MailerService_SendServer) error {
-	return status.Errorf(codes.Unimplemented, "method Send not implemented")
+func (UnimplementedMailerServiceServer) Send(context.Context, *Mail) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Send not implemented")
 }
 func (UnimplementedMailerServiceServer) mustEmbedUnimplementedMailerServiceServer() {}
 
@@ -96,30 +71,22 @@ func RegisterMailerServiceServer(s grpc.ServiceRegistrar, srv MailerServiceServe
 	s.RegisterService(&MailerService_ServiceDesc, srv)
 }
 
-func _MailerService_Send_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(MailerServiceServer).Send(&mailerServiceSendServer{stream})
-}
-
-type MailerService_SendServer interface {
-	SendAndClose(*emptypb.Empty) error
-	Recv() (*Mail, error)
-	grpc.ServerStream
-}
-
-type mailerServiceSendServer struct {
-	grpc.ServerStream
-}
-
-func (x *mailerServiceSendServer) SendAndClose(m *emptypb.Empty) error {
-	return x.ServerStream.SendMsg(m)
-}
-
-func (x *mailerServiceSendServer) Recv() (*Mail, error) {
-	m := new(Mail)
-	if err := x.ServerStream.RecvMsg(m); err != nil {
+func _MailerService_Send_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Mail)
+	if err := dec(in); err != nil {
 		return nil, err
 	}
-	return m, nil
+	if interceptor == nil {
+		return srv.(MailerServiceServer).Send(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/mailer.v1.MailerService/Send",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MailerServiceServer).Send(ctx, req.(*Mail))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 // MailerService_ServiceDesc is the grpc.ServiceDesc for MailerService service.
@@ -128,13 +95,12 @@ func (x *mailerServiceSendServer) Recv() (*Mail, error) {
 var MailerService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "mailer.v1.MailerService",
 	HandlerType: (*MailerServiceServer)(nil),
-	Methods:     []grpc.MethodDesc{},
-	Streams: []grpc.StreamDesc{
+	Methods: []grpc.MethodDesc{
 		{
-			StreamName:    "Send",
-			Handler:       _MailerService_Send_Handler,
-			ClientStreams: true,
+			MethodName: "Send",
+			Handler:    _MailerService_Send_Handler,
 		},
 	},
+	Streams:  []grpc.StreamDesc{},
 	Metadata: "v1/mailer/mailer.proto",
 }
