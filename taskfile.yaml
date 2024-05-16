@@ -1,6 +1,12 @@
 version: "3"
 
 includes:
+  gw:
+    taskfile: ./gw/taskfile.yaml
+    dir: ./gw
+  mailer:
+    taskfile: ./mailer/taskfile.yaml
+    dir: ./mailer
   rw:
     taskfile: ./ratewatcher/taskfile.yaml
     dir: ./ratewatcher

@@ -3,12 +3,11 @@ package ratesender
 import (
 	"context"
 	"fmt"
-
-	"github.com/hrvadl/btcratenotifier/gw/internal/transport/grpc/clients/mailer"
 )
 
 const operation = "ratesender service"
 
+// TODO: DB
 func NewService() *Service {
 	return &Service{}
 }
@@ -28,7 +27,7 @@ type RecipientRepo interface {
 }
 
 type Sender interface {
-	Send(ctx context.Context, emails ...mailer.SendOptions) error
+	Send(ctx context.Context, html string, emails ...string) error
 }
 
 type RateGetter interface {
@@ -64,16 +63,5 @@ func (s *Service) SendToAll(ctx context.Context) error {
 		return fmt.Errorf("%s: failed to get rate: %w", operation, err)
 	}
 
-	return s.sender.Send(ctx, mailsToMailerOptions(r, mails)...)
-}
-
-func mailsToMailerOptions(rate float32, mails []string) []mailer.SendOptions {
-	opt := make([]mailer.SendOptions, 0, len(mails))
-	for _, m := range mails {
-		opt = append(opt, mailer.SendOptions{
-			To:      m,
-			Payload: fmt.Sprint(rate),
-		})
-	}
-	return opt
+	return s.sender.Send(ctx, fmt.Sprint(r), mails...)
 }

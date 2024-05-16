@@ -1,0 +1,12 @@
+version: "3"
+
+tasks:
+  run:
+    required:
+      vars:
+        - MAILER_ADDR
+        - RATE_WATCHER_ADDR
+        - EXCHANGE_LOG_LEVEL
+        - EXCHANGE_PORT
+    cmds:
+      - go run ./cmd/server

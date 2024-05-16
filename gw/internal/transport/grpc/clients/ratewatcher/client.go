@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log/slog"
 
+	"github.com/hrvadl/btcratenotifier/pkg/logger"
 	pb "github.com/hrvadl/btcratenotifier/protos/gen/go/v1/ratewatcher"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -12,7 +13,13 @@ import (
 )
 
 func NewClient(addr string, log *slog.Logger) (*Client, error) {
-	cc, err := grpc.NewClient(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	cc, err := grpc.NewClient(
+		addr,
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithChainUnaryInterceptor(
+			logger.NewClientGRPCMiddleware(log),
+		),
+	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect to sender service: %w", err)
 	}
