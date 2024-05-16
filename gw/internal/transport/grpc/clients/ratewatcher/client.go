@@ -5,13 +5,14 @@ import (
 	"fmt"
 	"log/slog"
 
-	"github.com/golang/protobuf/protoc-gen-go/grpc"
-	pb "github.com/hrvadl/protos/gen/go/v1/ratewatcher"
+	pb "github.com/hrvadl/btcratenotifier/protos/gen/go/v1/ratewatcher"
+	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
-func NewClient(ctx context.Context, addr string, log *slog.Logger) (*Client, error) {
-	cc, err := grpc.DialContext(ctx, addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+func NewClient(addr string, log *slog.Logger) (*Client, error) {
+	cc, err := grpc.NewClient(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect to sender service: %w", err)
 	}
@@ -28,7 +29,7 @@ type Client struct {
 }
 
 func (c *Client) GetRate(ctx context.Context) (float32, error) {
-	resp, err := c.api.GetRate(ctx)
+	resp, err := c.api.GetRate(ctx, &emptypb.Empty{})
 	if err != nil {
 		return 0, err
 	}

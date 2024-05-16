@@ -8,8 +8,8 @@ import (
 
 	"github.com/hrvadl/btcratenotifier/pkg/logger"
 
-	"github.com/hrvadl/ratewatcher/internal/cfg"
-	"github.com/hrvadl/ratewatcher/internal/platform/rates/cryptocompare"
+	"github.com/hrvadl/btcratenotifier/ratewatcher/internal/cfg"
+	"github.com/hrvadl/btcratenotifier/ratewatcher/internal/platform/rates/cryptocompare"
 )
 
 const source = "rateWatcher"

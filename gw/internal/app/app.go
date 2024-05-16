@@ -1,6 +1,6 @@
 package app
 
-import "github.com/hrvadl/gw/internal/cfg"
+import "github.com/hrvadl/btcratenotifier/gw/internal/cfg"
 
 func New() *App {
 	return &App{}
