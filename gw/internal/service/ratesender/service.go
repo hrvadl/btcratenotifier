@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/hrvadl/gw/internal/transport/grpc/clients/mailer"
+	"github.com/hrvadl/btcratenotifier/gw/internal/transport/grpc/clients/mailer"
 )
 
 const operation = "ratesender service"

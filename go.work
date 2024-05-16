@@ -6,4 +6,5 @@ use (
 	./protos
 	./ratewatcher
 	./gw
+	./pkg
 )
