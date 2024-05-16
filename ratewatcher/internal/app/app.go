@@ -5,12 +5,15 @@ import (
 	"log/slog"
 	"net"
 
+	"github.com/hrvadl/btcratenotifier/pkg/logger"
 	"google.golang.org/grpc"
 
 	"github.com/hrvadl/btcratenotifier/ratewatcher/internal/cfg"
 	"github.com/hrvadl/btcratenotifier/ratewatcher/internal/platform/rates/cryptocompare"
 	"github.com/hrvadl/btcratenotifier/ratewatcher/internal/transport/grpc/server/ratewatcher"
 )
+
+const operation = "app init"
 
 func New(cfg cfg.Config, log *slog.Logger) *App {
 	return &App{
@@ -31,7 +34,9 @@ func (a *App) MustRun() {
 }
 
 func (a *App) Run() error {
-	srv := grpc.NewServer()
+	srv := grpc.NewServer(grpc.ChainUnaryInterceptor(
+		logger.NewServerGRPCMiddleware(a.log),
+	))
 
 	ratewatcher.Register(
 		srv,
@@ -42,7 +47,7 @@ func (a *App) Run() error {
 
 	listener, err := net.Listen("tcp", net.JoinHostPort("", a.cfg.Port))
 	if err != nil {
-		return fmt.Errorf("failed to listen on tcp port %s: %w", a.cfg.Port, err)
+		return fmt.Errorf("%s: failed to listen on tcp port %s: %w", operation, a.cfg.Port, err)
 	}
 
 	return srv.Serve(listener)
