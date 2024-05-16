@@ -1,0 +1,15 @@
+syntax = "proto3";
+package mailer.v1;
+
+import "google/protobuf/empty.proto";
+
+option go_package = "github.com/hrvadl/protos/v1/mailer";
+
+service MailerService {
+  rpc Send(stream Mail) returns (google.protobuf.Empty);
+}
+
+message Mail {
+  string recipient = 1;
+  string payload = 2;
+}
