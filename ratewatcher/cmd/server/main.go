@@ -1,15 +1,12 @@
 package main
 
 import (
-	"context"
-	"fmt"
 	"os"
-	"time"
 
 	"github.com/hrvadl/btcratenotifier/pkg/logger"
 
+	"github.com/hrvadl/btcratenotifier/ratewatcher/internal/app"
 	"github.com/hrvadl/btcratenotifier/ratewatcher/internal/cfg"
-	"github.com/hrvadl/btcratenotifier/ratewatcher/internal/platform/rates/cryptocompare"
 )
 
 const source = "rateWatcher"
@@ -21,15 +18,7 @@ func main() {
 		"pid", os.Getpid(),
 	)
 
-	l.Info("Successfuly parsed config...")
-	rw := cryptocompare.NewClient(cfg.ExchangeServiceToken, cfg.ExchangeServiceBaseURL)
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
-	defer cancel()
-
-	rate, err := rw.BTCToUAH(ctx)
-	if err != nil {
-		panic(err)
-	}
-
-	l.Info("Got a fresh rate!", "rate", fmt.Sprintf("%.2f", rate))
+	l.Info("Successfuly parsed config and initialized logger")
+	app := app.New(*cfg, l)
+	app.MustRun()
 }

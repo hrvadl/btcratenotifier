@@ -11,12 +11,14 @@ const (
 	exchangeServiceBaseURLEnvKey = "EXCHANGE_API_BASE_URL"
 	exchangeServiceTokenEnvKey   = "EXCHANGE_API_KEY"
 	logLevelEnvKey               = "EXCHANGE_LOG_LEVEL"
+	portEnvKey                   = "EXCHANGE_PORT"
 )
 
 type Config struct {
 	ExchangeServiceBaseURL string
 	ExchangeServiceToken   string
 	LogLevel               string
+	Port                   string
 }
 
 func Must(cfg *Config, err error) *Config {
@@ -42,9 +44,15 @@ func NewFromEnv() (*Config, error) {
 		return nil, fmt.Errorf("%s: log level can't be empty", operation)
 	}
 
+	port := os.Getenv(portEnvKey)
+	if port == "" {
+		return nil, fmt.Errorf("%s: port can't be empty", operation)
+	}
+
 	return &Config{
 		ExchangeServiceBaseURL: apiURL,
 		ExchangeServiceToken:   apiKey,
 		LogLevel:               logLevel,
+		Port:                   port,
 	}, nil
 }
