@@ -1,4 +1,4 @@
-package recipient
+package sender
 
 import (
 	"context"
@@ -11,7 +11,7 @@ type Service interface {
 	SendToAll(ctx context.Context) error
 }
 
-func New(svc Service) *Handler {
+func NewHandler(svc Service) *Handler {
 	return &Handler{
 		svc: svc,
 	}
@@ -21,7 +21,7 @@ type Handler struct {
 	svc Service
 }
 
-func (h *Handler) AddRecipient(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) Subscribe(w http.ResponseWriter, r *http.Request) {
 	mail := r.FormValue("email")
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancel()
