@@ -6,6 +6,8 @@ github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.1.0 h1:pRhl55Yx1eC7BZ1N+BBWwn
 github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.1.0/go.mod h1:XKMd7iuf/RGPSMJ/U4HP0zS2Z9Fh8Ps9a+6X26m/tmI=
 github.com/hrvadl/btcratenotifier/protos v0.0.0-20240517114158-1dbdd8a70100 h1:911CBRC1gc3lfm9F7mSl2aZ/CrXf50f6mSga+Hl/uj4=
 github.com/hrvadl/btcratenotifier/protos v0.0.0-20240517114158-1dbdd8a70100/go.mod h1:orfm+ZN07s0btfdf14G32VyjXgxS+x7vfG7Rl1hVPCo=
+github.com/hrvadl/btcratenotifier/protos v0.0.0-20240517134945-af8b74789c30 h1:Z0DvNLSF0Iu00Awm2zx/CYQDu05ds/9VsmhKOA1W7cw=
+github.com/hrvadl/btcratenotifier/protos v0.0.0-20240517134945-af8b74789c30/go.mod h1:orfm+ZN07s0btfdf14G32VyjXgxS+x7vfG7Rl1hVPCo=
 github.com/jmoiron/sqlx v1.4.0 h1:1PLqN7S1UYp5t4SrVVnt4nUVNemrDAtxlulVe+Qgm3o=
 github.com/jmoiron/sqlx v1.4.0/go.mod h1:ZrZ7UsYB/weZdl2Bxg6jCRO9c3YHl8r3ahlKmRT4JLY=
 github.com/lib/pq v1.10.9/go.mod h1:AlVN5x4E4T544tWzH6hKfbfQvm3HdbOxrmggDNAPY9o=

@@ -12,6 +12,8 @@ github.com/hrvadl/btcratenotifier/protos v0.0.0-20240516180247-78c86967da40 h1:s
 github.com/hrvadl/btcratenotifier/protos v0.0.0-20240516180247-78c86967da40/go.mod h1:orfm+ZN07s0btfdf14G32VyjXgxS+x7vfG7Rl1hVPCo=
 github.com/hrvadl/btcratenotifier/protos v0.0.0-20240517114158-1dbdd8a70100 h1:911CBRC1gc3lfm9F7mSl2aZ/CrXf50f6mSga+Hl/uj4=
 github.com/hrvadl/btcratenotifier/protos v0.0.0-20240517114158-1dbdd8a70100/go.mod h1:orfm+ZN07s0btfdf14G32VyjXgxS+x7vfG7Rl1hVPCo=
+github.com/hrvadl/btcratenotifier/protos v0.0.0-20240517134945-af8b74789c30 h1:Z0DvNLSF0Iu00Awm2zx/CYQDu05ds/9VsmhKOA1W7cw=
+github.com/hrvadl/btcratenotifier/protos v0.0.0-20240517134945-af8b74789c30/go.mod h1:orfm+ZN07s0btfdf14G32VyjXgxS+x7vfG7Rl1hVPCo=
 github.com/jmoiron/sqlx v1.4.0 h1:1PLqN7S1UYp5t4SrVVnt4nUVNemrDAtxlulVe+Qgm3o=
 github.com/jmoiron/sqlx v1.4.0/go.mod h1:ZrZ7UsYB/weZdl2Bxg6jCRO9c3YHl8r3ahlKmRT4JLY=
 github.com/lib/pq v1.10.9 h1:YXG7RB+JIjhP29X+OtkiDnYaXQwpS4JEWq7dtCCRUEw=

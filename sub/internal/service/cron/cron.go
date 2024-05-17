@@ -24,6 +24,7 @@ func (j *Job) Do(fn func() error) chan error {
 	errCh := make(chan error)
 	go func() {
 		for range j.ticker.C {
+			j.log.Info("Doing the job")
 			if err := fn(); err != nil {
 				j.log.Error("failed to do cron task", "err", err)
 				errCh <- fmt.Errorf("%s: run failed: %w", operation, err)
