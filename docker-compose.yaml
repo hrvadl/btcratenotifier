@@ -19,7 +19,7 @@ services:
     build:
       context: sub
       dockerfile: ./Dockerfile
-    image: gw
+    image: sub
     restart: on-failure
     depends_on:
       - db
@@ -69,8 +69,8 @@ services:
     networks:
       - btcratewatcher
     volumes:
-      - ./gw/migrations:/database
-    command: ["-path", "/database", "-database", "mysql://${GATEWAY_DSN}", "up"]
+      - ./sub/migrations:/database
+    command: ["-path", "/database", "-database", "mysql://${SUB_DSN}", "up"]
 
 networks:
   btcratewatcher:
