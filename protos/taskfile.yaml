@@ -5,6 +5,7 @@ tasks:
     cmds:
       - task: generate:rw
       - task: generate:mailer
+      - task: generate:sub
 
   generate:rw:
     cmds:
@@ -19,6 +20,15 @@ tasks:
     cmds:
       - |
         protoc -I proto proto/v1/mailer/mailer.proto \
+        --go_out=./gen/go \
+        --go-grpc_out=./gen/go \
+        --go_opt=paths=source_relative \
+        --go-grpc_opt=paths=source_relative
+
+  generate:sub:
+    cmds:
+      - |
+        protoc -I proto proto/v1/sub/sub.proto \
         --go_out=./gen/go \
         --go-grpc_out=./gen/go \
         --go_opt=paths=source_relative \
