@@ -14,7 +14,7 @@ import (
 	"github.com/hrvadl/btcratenotifier/sub/internal/service/cron"
 	"github.com/hrvadl/btcratenotifier/sub/internal/service/sender"
 	"github.com/hrvadl/btcratenotifier/sub/internal/service/sender/formatter"
-	ssvc "github.com/hrvadl/btcratenotifier/sub/internal/service/sub"
+	subs "github.com/hrvadl/btcratenotifier/sub/internal/service/sub"
 	"github.com/hrvadl/btcratenotifier/sub/internal/storage/platform/db"
 	"github.com/hrvadl/btcratenotifier/sub/internal/storage/subscriber"
 	"github.com/hrvadl/btcratenotifier/sub/internal/transport/grpc/clients/mailer"
@@ -54,7 +54,7 @@ func (a *App) Run() error {
 	}
 
 	sr := subscriber.NewRepo(db)
-	svc := ssvc.NewService(sr)
+	svc := subs.NewService(sr)
 	sub.Register(srv, svc, a.log.With("source", "sub"))
 
 	m, err := mailer.NewClient(a.cfg.MailerAddr, a.cfg.MailerFromAddr, a.log)
@@ -64,7 +64,7 @@ func (a *App) Run() error {
 
 	sg := subscriber.NewRepo(db)
 	fmter := formatter.NewWithDate()
-	rg, err := ratewatcher.NewClient(a.cfg.RateWatcherAddr, a.log.With("source", "rateWatcher"))
+	rw, err := ratewatcher.NewClient(a.cfg.RateWatcherAddr, a.log.With("source", "rateWatcher"))
 	if err != nil {
 		return fmt.Errorf("%s: failed to connect to rate watcher: %w", operation, err)
 	}
@@ -73,12 +73,13 @@ func (a *App) Run() error {
 		m,
 		sg,
 		fmter,
-		rg,
+		rw,
 		a.log.With("source", "cron sender"),
 	)
 
-	cron := cron.NewJob(time.Minute*3, a.log.With("source", "cron"))
-	errCh := cron.Do(func() error {
+	// TODO: add DB
+	job := cron.NewJob(time.Hour*24, a.log.With("source", "cron"))
+	errCh := job.Do(func() error {
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 		defer cancel()
 		return sender.Send(ctx)
