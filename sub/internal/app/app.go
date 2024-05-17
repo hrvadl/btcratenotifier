@@ -1,7 +1,6 @@
 package app
 
 import (
-	"context"
 	"fmt"
 	"log/slog"
 	"net"
@@ -11,10 +10,12 @@ import (
 	"google.golang.org/grpc"
 
 	"github.com/hrvadl/btcratenotifier/sub/internal/cfg"
+	"github.com/hrvadl/btcratenotifier/sub/internal/service/cooldown"
 	"github.com/hrvadl/btcratenotifier/sub/internal/service/cron"
 	"github.com/hrvadl/btcratenotifier/sub/internal/service/sender"
 	"github.com/hrvadl/btcratenotifier/sub/internal/service/sender/formatter"
 	subs "github.com/hrvadl/btcratenotifier/sub/internal/service/sub"
+	"github.com/hrvadl/btcratenotifier/sub/internal/storage/date"
 	"github.com/hrvadl/btcratenotifier/sub/internal/storage/platform/db"
 	"github.com/hrvadl/btcratenotifier/sub/internal/storage/subscriber"
 	"github.com/hrvadl/btcratenotifier/sub/internal/transport/grpc/clients/mailer"
@@ -69,7 +70,7 @@ func (a *App) Run() error {
 		return fmt.Errorf("%s: failed to connect to rate watcher: %w", operation, err)
 	}
 
-	sender := sender.New(
+	s := sender.New(
 		m,
 		sg,
 		fmter,
@@ -77,13 +78,16 @@ func (a *App) Run() error {
 		a.log.With("source", "cron sender"),
 	)
 
-	// TODO: add DB
-	job := cron.NewJob(time.Hour*24, a.log.With("source", "cron"))
-	errCh := job.Do(func() error {
-		ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
-		defer cancel()
-		return sender.Send(ctx)
-	})
+	lsr := date.NewLastSentRepo(db)
+	cooledSender := cooldown.NewSenderDecorator(
+		time.Minute*3,
+		lsr,
+		s,
+		a.log.With("source", "cooldownSender"),
+	)
+	adapted := sender.NewCronJobAdapter(cooledSender, a.log.With("source", "adapter"))
+	job := cron.NewJob(time.Minute*3, a.log.With("source", "cron"))
+	errCh := job.Do(adapted.Do)
 
 	l, err := net.Listen("tcp", net.JoinHostPort("", a.cfg.Port))
 	if err != nil {

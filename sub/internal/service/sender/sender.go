@@ -19,8 +19,8 @@ func New(
 	mf RateMessageFormatter,
 	rg RateGetter,
 	log *slog.Logger,
-) *WithInterval {
-	return &WithInterval{
+) *Service {
+	return &Service{
 		mailer:     m,
 		subGetter:  sg,
 		formatter:  mf,
@@ -45,7 +45,7 @@ type Mailer interface {
 	Send(ctx context.Context, msg, subject string, to ...string) error
 }
 
-type WithInterval struct {
+type Service struct {
 	mailer     Mailer
 	formatter  RateMessageFormatter
 	subGetter  SubscriberGetter
@@ -53,7 +53,7 @@ type WithInterval struct {
 	log        *slog.Logger
 }
 
-func (w *WithInterval) Send(ctx context.Context) error {
+func (w *Service) Send(ctx context.Context) error {
 	subs, err := w.subGetter.Get(ctx)
 	if err != nil {
 		return fmt.Errorf("%s: failed to get subscribers: %w", operation, err)
