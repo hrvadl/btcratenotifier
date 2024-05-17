@@ -13,6 +13,7 @@ const (
 	logLevelEnvKey          = "GATEWAY_LOG_LEVEL"
 	portEnvKey              = "GATEWAY_PORT"
 	dsnEnvKey               = "GATEWAY_DSN"
+	mailerFromAddrEnvKey    = "MAILER_FROM_ADDR"
 )
 
 type Config struct {
@@ -21,6 +22,7 @@ type Config struct {
 	RateWatcherAddr string
 	Port            string
 	LogLevel        string
+	MailerFromAddr  string
 }
 
 func Must(cfg *Config, err error) *Config {
@@ -56,11 +58,17 @@ func NewFromEnv() (*Config, error) {
 		return nil, fmt.Errorf("%s: dsn can't be empty", operation)
 	}
 
+	mailerFromAddr := os.Getenv(mailerFromAddrEnvKey)
+	if mailerFromAddr == "" {
+		return nil, fmt.Errorf("%s: mailer from addr can't be empty", mailerFromAddr)
+	}
+
 	return &Config{
 		LogLevel:        logLevel,
 		Port:            port,
 		RateWatcherAddr: rwAddr,
 		MailerAddr:      mAddr,
 		Dsn:             dsn,
+		MailerFromAddr:  mailerFromAddr,
 	}, nil
 }

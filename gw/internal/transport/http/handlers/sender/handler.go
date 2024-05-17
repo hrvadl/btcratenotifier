@@ -41,7 +41,7 @@ func (h *Handler) Subscribe(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) SendToAll(w http.ResponseWriter, r *http.Request) {
-	ctx, cancel := context.WithTimeout(r.Context(), time.Second*25)
+	ctx, cancel := context.WithTimeout(r.Context(), time.Second*5)
 	defer cancel()
 
 	if err := h.svc.SendToAll(ctx); err != nil {

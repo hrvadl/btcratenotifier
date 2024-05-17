@@ -45,7 +45,11 @@ func (a *App) Run() error {
 		return fmt.Errorf("%s: failed to initialize ratewatcher client: %w", operation, err)
 	}
 
-	mc, err := mailer.NewClient(a.cfg.MailerAddr, a.log.With("source", "mailerClient"))
+	mc, err := mailer.NewClient(
+		a.cfg.MailerAddr,
+		a.cfg.MailerFromAddr,
+		a.log.With("source", "mailerClient"),
+	)
 	if err != nil {
 		return fmt.Errorf("%s: failed to initialize mailer client: %w", operation, err)
 	}
