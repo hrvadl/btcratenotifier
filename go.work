@@ -4,6 +4,7 @@ use (
 	./mailer
 	./protos
 	./ratewatcher
+	./sub
 	./gw
 	.
 )
