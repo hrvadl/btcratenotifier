@@ -12,10 +12,12 @@ const (
 	rateWatchAddrEnvKey     = "RATE_WATCH_ADDR"
 	logLevelEnvKey          = "GATEWAY_LOG_LEVEL"
 	portEnvKey              = "GATEWAY_PORT"
+	dsnEnvKey               = "GATEWAY_DSN"
 )
 
 type Config struct {
 	MailerAddr      string
+	Dsn             string
 	RateWatcherAddr string
 	Port            string
 	LogLevel        string
@@ -49,10 +51,16 @@ func NewFromEnv() (*Config, error) {
 		return nil, fmt.Errorf("%s: port can't be empty", operation)
 	}
 
+	dsn := os.Getenv(dsnEnvKey)
+	if dsn == "" {
+		return nil, fmt.Errorf("%s: dsn can't be empty", operation)
+	}
+
 	return &Config{
 		LogLevel:        logLevel,
 		Port:            port,
 		RateWatcherAddr: rwAddr,
 		MailerAddr:      mAddr,
+		Dsn:             dsn,
 	}, nil
 }
