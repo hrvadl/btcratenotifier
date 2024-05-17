@@ -1,0 +1,51 @@
+services:
+  gw:
+    build:
+      context: gw
+      dockerfile: ./Dockerfile
+    image: gw
+    restart: on-failure
+    ports:
+      - "8080:${GATEWAY_PORT}"
+    depends_on:
+      - db
+    env_file:
+      - .env
+    networks:
+      - btcratewatcher
+
+  rw:
+    build:
+      context: ratewatcher
+      dockerfile: ./Dockerfile
+    image: rw
+    restart: on-failure
+    env_file:
+      - .env
+    networks:
+      - btcratewatcher
+
+  mailer:
+    build:
+      context: mailer
+      dockerfile: ./Dockerfile
+    image: rw
+    restart: on-failure
+    env_file:
+      - .env
+    networks:
+      - btcratewatcher
+
+  db:
+    image: mysql
+    env_file:
+      - .env
+    networks:
+      - btcratewatcher
+
+networks:
+  btcratewatcher:
+    driver: bridge
+
+volumes:
+  btcratewatcherdata:

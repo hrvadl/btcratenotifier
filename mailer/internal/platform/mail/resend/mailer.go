@@ -1,11 +1,11 @@
 package resend
 
 import (
+	"context"
 	"fmt"
 
 	pb "github.com/hrvadl/btcratenotifier/protos/gen/go/v1/mailer"
 	rs "github.com/resend/resend-go/v2"
-	"golang.org/x/net/context"
 )
 
 const operation = "resend mail client"
