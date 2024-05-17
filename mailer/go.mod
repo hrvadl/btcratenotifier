@@ -6,6 +6,7 @@ require (
 	github.com/aws/aws-sdk-go v1.53.4
 	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.1.0
 	github.com/hrvadl/btcratenotifier/protos v0.0.0-20240516180247-78c86967da40
+	github.com/resend/resend-go/v2 v2.6.0
 	google.golang.org/grpc v1.64.0
 	google.golang.org/protobuf v1.34.1
 )
