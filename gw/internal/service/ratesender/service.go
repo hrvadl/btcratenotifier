@@ -3,22 +3,26 @@ package ratesender
 import (
 	"context"
 	"fmt"
+
+	"github.com/hrvadl/btcratenotifier/gw/internal/storage/subscriber"
 )
 
 const operation = "ratesender service"
 
-// TODO: DB
-func NewService() *Service {
-	return &Service{}
+func NewService(rr RecipientRepo, rg RateGetter, s Sender) *Service {
+	return &Service{
+		repo:       rr,
+		rateGetter: rg,
+		sender:     s,
+	}
 }
 
 type RecipientFinder interface {
-	Find(ctx context.Context, mail string) (string, error)
-	FindAll(ctx context.Context) ([]string, error)
+	FindAll(ctx context.Context) ([]subscriber.Subscriber, error)
 }
 
 type RecipientSaver interface {
-	Save(ctx context.Context, mail string) error
+	Save(ctx context.Context, s subscriber.Subscriber) (int64, error)
 }
 
 type RecipientRepo interface {
@@ -41,11 +45,7 @@ type Service struct {
 }
 
 func (s *Service) Subscribe(ctx context.Context, mail string) error {
-	if find, _ := s.repo.Find(ctx, mail); find != "" {
-		return fmt.Errorf("%s: cannot add recipient when it already exists", operation)
-	}
-
-	if err := s.repo.Save(ctx, mail); err != nil {
+	if _, err := s.repo.Save(ctx, subscriber.Subscriber{Email: mail}); err != nil {
 		return fmt.Errorf("%s: failed to save recipient: %w", operation, err)
 	}
 
@@ -53,7 +53,7 @@ func (s *Service) Subscribe(ctx context.Context, mail string) error {
 }
 
 func (s *Service) SendToAll(ctx context.Context) error {
-	mails, err := s.repo.FindAll(ctx)
+	subscribers, err := s.repo.FindAll(ctx)
 	if err != nil {
 		return fmt.Errorf("%s: failed to get mails: %w", operation, err)
 	}
@@ -63,5 +63,13 @@ func (s *Service) SendToAll(ctx context.Context) error {
 		return fmt.Errorf("%s: failed to get rate: %w", operation, err)
 	}
 
-	return s.sender.Send(ctx, fmt.Sprint(r), mails...)
+	return s.sender.Send(ctx, fmt.Sprint(r), getMails(subscribers)...)
+}
+
+func getMails(s []subscriber.Subscriber) []string {
+	mails := make([]string, 0, len(s))
+	for _, ss := range s {
+		mails = append(mails, ss.Email)
+	}
+	return mails
 }

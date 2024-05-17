@@ -8,6 +8,9 @@ import (
 
 	"github.com/hrvadl/btcratenotifier/gw/internal/cfg"
 	"github.com/hrvadl/btcratenotifier/gw/internal/service/ratesender"
+	"github.com/hrvadl/btcratenotifier/gw/internal/storage/platform/db"
+	"github.com/hrvadl/btcratenotifier/gw/internal/storage/subscriber"
+	"github.com/hrvadl/btcratenotifier/gw/internal/transport/grpc/clients/mailer"
 	"github.com/hrvadl/btcratenotifier/gw/internal/transport/grpc/clients/ratewatcher"
 	"github.com/hrvadl/btcratenotifier/gw/internal/transport/http/handlers/rate"
 	"github.com/hrvadl/btcratenotifier/gw/internal/transport/http/handlers/sender"
@@ -34,9 +37,6 @@ func (a *App) MustRun() {
 }
 
 func (a *App) Run() error {
-	rss := ratesender.NewService()
-	sh := sender.NewHandler(rss)
-
 	rw, err := ratewatcher.NewClient(
 		a.cfg.RateWatcherAddr,
 		a.log.With("source", "rateWatcherClient"),
@@ -44,6 +44,18 @@ func (a *App) Run() error {
 	if err != nil {
 		return fmt.Errorf("%s: failed to initialize ratewatcher client: %w", operation, err)
 	}
+
+	mc, err := mailer.NewClient(a.cfg.MailerAddr, a.log.With("source", "mailerClient"))
+	if err != nil {
+		return fmt.Errorf("%s: failed to initialize mailer client: %w", operation, err)
+	}
+
+	db := db.Must(db.NewConn(a.cfg.Dsn))
+	sr := subscriber.NewRepo(db)
+
+	rss := ratesender.NewService(sr, rw, mc)
+	sh := sender.NewHandler(rss)
+
 	rh := rate.NewHandler(rw)
 
 	r := http.NewServeMux()
