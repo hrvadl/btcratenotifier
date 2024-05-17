@@ -3,10 +3,9 @@ package main
 import (
 	"os"
 
-	"github.com/hrvadl/btcratenotifier/pkg/logger"
-
 	"github.com/hrvadl/btcratenotifier/ratewatcher/internal/app"
 	"github.com/hrvadl/btcratenotifier/ratewatcher/internal/cfg"
+	"github.com/hrvadl/btcratenotifier/ratewatcher/pkg/logger"
 )
 
 const source = "rateWatcher"

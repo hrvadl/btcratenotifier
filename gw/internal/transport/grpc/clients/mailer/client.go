@@ -5,10 +5,11 @@ import (
 	"fmt"
 	"log/slog"
 
-	"github.com/hrvadl/btcratenotifier/pkg/logger"
 	pb "github.com/hrvadl/btcratenotifier/protos/gen/go/v1/mailer"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+
+	"github.com/hrvadl/btcratenotifier/gw/pkg/logger"
 )
 
 func NewClient(addr string, log *slog.Logger) (*Client, error) {
@@ -41,7 +42,7 @@ type SendOptions struct {
 
 func (c *Client) Send(ctx context.Context, html string, to ...string) error {
 	_, err := c.api.Send(ctx, &pb.Mail{
-		From:    "vadym@test.com",
+		From:    "v.l.grashchenko@student.khai.edu",
 		To:      to,
 		Subject: "BTC to UAH rate exchange",
 		Html:    html,

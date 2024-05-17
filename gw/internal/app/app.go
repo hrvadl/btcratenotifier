@@ -54,12 +54,12 @@ func (a *App) Run() error {
 	sr := subscriber.NewRepo(db)
 
 	rss := ratesender.NewService(sr, rw, mc)
-	sh := sender.NewHandler(rss)
+	sh := sender.NewHandler(rss, a.log)
 
-	rh := rate.NewHandler(rw)
+	rh := rate.NewHandler(rw, a.log)
 
 	r := http.NewServeMux()
-	r.HandleFunc("POST /subsribe", sh.Subscribe)
+	r.HandleFunc("POST /subscribe", sh.Subscribe)
 	r.HandleFunc("POST /sendEmail", sh.SendToAll)
 	r.HandleFunc("GET /rate", rh.GetRate)
 

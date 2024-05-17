@@ -5,12 +5,12 @@ import (
 	"log/slog"
 	"net"
 
-	"github.com/hrvadl/btcratenotifier/pkg/logger"
 	"google.golang.org/grpc"
 
 	"github.com/hrvadl/btcratenotifier/ratewatcher/internal/cfg"
 	"github.com/hrvadl/btcratenotifier/ratewatcher/internal/platform/rates/cryptocompare"
 	"github.com/hrvadl/btcratenotifier/ratewatcher/internal/transport/grpc/server/ratewatcher"
+	"github.com/hrvadl/btcratenotifier/ratewatcher/pkg/logger"
 )
 
 const operation = "app init"
