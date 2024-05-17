@@ -1,5 +1,5 @@
 syntax = "proto3";
-package proto.v1;
+package sub.v1;
 
 import "google/protobuf/empty.proto";
 
