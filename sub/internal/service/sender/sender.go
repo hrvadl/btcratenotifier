@@ -59,6 +59,10 @@ func (w *Service) Send(ctx context.Context) error {
 		return fmt.Errorf("%s: failed to get subscribers: %w", operation, err)
 	}
 
+	if len(subs) == 0 {
+		return fmt.Errorf("%s: can't send emails when subscribers are empty", operation)
+	}
+
 	r, err := w.rateGetter.GetRate(ctx)
 	if err != nil {
 		return fmt.Errorf("%s: failed to get rate: %w", operation, err)

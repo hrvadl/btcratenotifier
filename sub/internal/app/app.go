@@ -4,18 +4,14 @@ import (
 	"fmt"
 	"log/slog"
 	"net"
-	"time"
 
-	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
 
 	"github.com/hrvadl/btcratenotifier/sub/internal/cfg"
-	"github.com/hrvadl/btcratenotifier/sub/internal/service/cooldown"
 	"github.com/hrvadl/btcratenotifier/sub/internal/service/cron"
 	"github.com/hrvadl/btcratenotifier/sub/internal/service/sender"
 	"github.com/hrvadl/btcratenotifier/sub/internal/service/sender/formatter"
 	subs "github.com/hrvadl/btcratenotifier/sub/internal/service/sub"
-	"github.com/hrvadl/btcratenotifier/sub/internal/storage/date"
 	"github.com/hrvadl/btcratenotifier/sub/internal/storage/platform/db"
 	"github.com/hrvadl/btcratenotifier/sub/internal/storage/subscriber"
 	"github.com/hrvadl/btcratenotifier/sub/internal/transport/grpc/clients/mailer"
@@ -25,6 +21,11 @@ import (
 )
 
 const operation = "app init"
+
+const (
+	cronJobHour   = 12
+	cronJobMinute = 0
+)
 
 func New(cfg cfg.Config, log *slog.Logger) *App {
 	return &App{
@@ -70,7 +71,7 @@ func (a *App) Run() error {
 		return fmt.Errorf("%s: failed to connect to rate watcher: %w", operation, err)
 	}
 
-	s := sender.New(
+	mailSender := sender.New(
 		m,
 		sg,
 		fmter,
@@ -78,29 +79,14 @@ func (a *App) Run() error {
 		a.log.With("source", "cron sender"),
 	)
 
-	lsr := date.NewLastSentRepo(db)
-	cooledSender := cooldown.NewSenderDecorator(
-		time.Minute*3,
-		lsr,
-		s,
-		a.log.With("source", "cooldownSender"),
-	)
-	adapted := sender.NewCronJobAdapter(cooledSender, a.log.With("source", "adapter"))
-	job := cron.NewJob(time.Minute*3, a.log.With("source", "cron"))
-	errCh := job.Do(adapted.Do)
+	cronAdapter := sender.NewCronJobAdapter(mailSender, a.log.With("source", "adapter"))
+	job := cron.NewDailyJob(cronJobHour, cronJobMinute, a.log.With("source", "cron"))
+	job.Do(cronAdapter.Do)
 
 	l, err := net.Listen("tcp", net.JoinHostPort("", a.cfg.Port))
 	if err != nil {
 		return fmt.Errorf("%s: failed to start listener on port %s: %w", operation, a.cfg.Port, err)
 	}
 
-	g := new(errgroup.Group)
-	g.Go(func() error {
-		return srv.Serve(l)
-	})
-	g.Go(func() error {
-		return <-errCh
-	})
-
-	return g.Wait()
+	return srv.Serve(l)
 }
