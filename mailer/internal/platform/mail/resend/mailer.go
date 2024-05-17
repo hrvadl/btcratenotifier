@@ -21,6 +21,10 @@ type Client struct {
 }
 
 func (c *Client) Send(ctx context.Context, m *pb.Mail) error {
+	if len(m.To) == 0 {
+		return fmt.Errorf("%s: recipients cannot be empty", operation)
+	}
+
 	resCh := make(chan *rs.SendEmailResponse)
 	errCh := make(chan error)
 

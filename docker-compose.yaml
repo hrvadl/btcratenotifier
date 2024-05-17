@@ -22,9 +22,8 @@ services:
     image: sub
     restart: on-failure
     depends_on:
-      - db
-      - migrate
-      - rw
+      migrate:
+        condition: service_completed_successfully
     env_file:
       - .env
     networks:
