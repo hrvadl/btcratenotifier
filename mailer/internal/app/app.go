@@ -5,12 +5,12 @@ import (
 	"log/slog"
 	"net"
 
-	"github.com/hrvadl/btcratenotifier/pkg/logger"
 	"google.golang.org/grpc"
 
 	"github.com/hrvadl/btcratenotifier/mailer/internal/cfg"
 	"github.com/hrvadl/btcratenotifier/mailer/internal/platform/mail/resend"
 	"github.com/hrvadl/btcratenotifier/mailer/internal/transport/grpc/server/mailer"
+	"github.com/hrvadl/btcratenotifier/mailer/pkg/logger"
 )
 
 const operation = "app init"

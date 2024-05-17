@@ -9,6 +9,7 @@ services:
       - "8080:${GATEWAY_PORT}"
     depends_on:
       - db
+      - migrate
     env_file:
       - .env
     networks:
@@ -29,7 +30,7 @@ services:
     build:
       context: mailer
       dockerfile: ./Dockerfile
-    image: rw
+    image: mailer
     restart: on-failure
     env_file:
       - .env
@@ -42,6 +43,19 @@ services:
       - .env
     networks:
       - btcratewatcher
+
+  migrate:
+    image: migrate/migrate
+    restart: on-failure
+    depends_on:
+      - db
+    env_file:
+      - .env
+    networks:
+      - btcratewatcher
+    volumes:
+      - ./gw/migrations:/database
+    command: ["-path", "/database", "-database", "mysql://${GATEWAY_DSN}", "up"]
 
 networks:
   btcratewatcher:

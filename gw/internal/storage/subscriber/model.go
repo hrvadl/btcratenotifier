@@ -2,13 +2,15 @@ package subscriber
 
 import (
 	"context"
+	"time"
 
 	"github.com/jmoiron/sqlx"
 )
 
 type Subscriber struct {
-	ID    int64  `db:"id"`
-	Email string `db:"email"`
+	ID        int64     `db:"id"`
+	Email     string    `db:"email"`
+	CreatedAt time.Time `db:"created_at"`
 }
 
 type Repo struct {
@@ -22,7 +24,7 @@ func NewRepo(db *sqlx.DB) *Repo {
 }
 
 func (r *Repo) Save(ctx context.Context, s Subscriber) (int64, error) {
-	res, err := r.db.ExecContext(ctx, "INSERT INTO subscribers (email) VALUES ($1)", s.Email)
+	res, err := r.db.ExecContext(ctx, "INSERT INTO subscribers (email) VALUES (?)", s.Email)
 	if err != nil {
 		return 0, err
 	}

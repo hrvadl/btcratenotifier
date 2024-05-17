@@ -1,6 +1,10 @@
 package db
 
-import "github.com/jmoiron/sqlx"
+//nolint:revive
+import (
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/jmoiron/sqlx"
+)
 
 func Must(db *sqlx.DB, err error) *sqlx.DB {
 	if err != nil {

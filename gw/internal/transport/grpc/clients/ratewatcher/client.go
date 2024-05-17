@@ -5,11 +5,12 @@ import (
 	"fmt"
 	"log/slog"
 
-	"github.com/hrvadl/btcratenotifier/pkg/logger"
 	pb "github.com/hrvadl/btcratenotifier/protos/gen/go/v1/ratewatcher"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/protobuf/types/known/emptypb"
+
+	"github.com/hrvadl/btcratenotifier/gw/pkg/logger"
 )
 
 func NewClient(addr string, log *slog.Logger) (*Client, error) {

@@ -3,13 +3,15 @@ package rate
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"time"
 )
 
-func NewHandler(rg Getter) *Handler {
+func NewHandler(rg Getter, log *slog.Logger) *Handler {
 	return &Handler{
-		rg: rg,
+		rg:  rg,
+		log: log,
 	}
 }
 
@@ -18,7 +20,8 @@ type Getter interface {
 }
 
 type Handler struct {
-	rg Getter
+	log *slog.Logger
+	rg  Getter
 }
 
 func (h *Handler) GetRate(w http.ResponseWriter, r *http.Request) {
@@ -27,6 +30,7 @@ func (h *Handler) GetRate(w http.ResponseWriter, r *http.Request) {
 
 	rat, err := h.rg.GetRate(ctx)
 	if err != nil {
+		h.log.Error("Failed to get rate", "err", err)
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte("Invalid status value"))
 		return

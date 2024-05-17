@@ -2,6 +2,7 @@ package ratesender
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/hrvadl/btcratenotifier/gw/internal/storage/subscriber"
@@ -45,6 +46,10 @@ type Service struct {
 }
 
 func (s *Service) Subscribe(ctx context.Context, mail string) error {
+	if mail == "" {
+		return errors.New("mail can't be empty")
+	}
+
 	if _, err := s.repo.Save(ctx, subscriber.Subscriber{Email: mail}); err != nil {
 		return fmt.Errorf("%s: failed to save recipient: %w", operation, err)
 	}
