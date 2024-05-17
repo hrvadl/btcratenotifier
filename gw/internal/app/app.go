@@ -56,15 +56,12 @@ func (a *App) Run() error {
 
 	db := db.Must(db.NewConn(a.cfg.Dsn))
 	sr := subscriber.NewRepo(db)
-
 	rss := ratesender.NewService(sr, rw, mc)
 	sh := sender.NewHandler(rss, a.log)
-
 	rh := rate.NewHandler(rw, a.log)
 
 	r := http.NewServeMux()
 	r.HandleFunc("POST /subscribe", sh.Subscribe)
-	r.HandleFunc("POST /sendEmail", sh.SendToAll)
 	r.HandleFunc("GET /rate", rh.GetRate)
 
 	return http.ListenAndServe(net.JoinHostPort("", a.cfg.Port), r)

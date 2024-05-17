@@ -56,25 +56,3 @@ func (s *Service) Subscribe(ctx context.Context, mail string) error {
 
 	return nil
 }
-
-func (s *Service) SendToAll(ctx context.Context) error {
-	subscribers, err := s.repo.FindAll(ctx)
-	if err != nil {
-		return fmt.Errorf("%s: failed to get mails: %w", operation, err)
-	}
-
-	r, err := s.rateGetter.GetRate(ctx)
-	if err != nil {
-		return fmt.Errorf("%s: failed to get rate: %w", operation, err)
-	}
-
-	return s.sender.Send(ctx, fmt.Sprint(r), getMails(subscribers)...)
-}
-
-func getMails(s []subscriber.Subscriber) []string {
-	mails := make([]string, 0, len(s))
-	for _, ss := range s {
-		mails = append(mails, ss.Email)
-	}
-	return mails
-}
