@@ -36,7 +36,7 @@ func NewSubServiceClient(cc grpc.ClientConnInterface) SubServiceClient {
 
 func (c *subServiceClient) Subscribe(ctx context.Context, in *SubscribeRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/proto.v1.SubService/Subscribe", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/sub.v1.SubService/Subscribe", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -81,7 +81,7 @@ func _SubService_Subscribe_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto.v1.SubService/Subscribe",
+		FullMethod: "/sub.v1.SubService/Subscribe",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(SubServiceServer).Subscribe(ctx, req.(*SubscribeRequest))
@@ -93,7 +93,7 @@ func _SubService_Subscribe_Handler(srv interface{}, ctx context.Context, dec fun
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var SubService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "proto.v1.SubService",
+	ServiceName: "sub.v1.SubService",
 	HandlerType: (*SubServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

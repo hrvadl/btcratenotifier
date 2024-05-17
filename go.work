@@ -2,9 +2,9 @@ go 1.22.0
 
 use (
 	./mailer
-	./protos
 	./ratewatcher
 	./sub
 	./gw
+	./protos
 	.
 )
