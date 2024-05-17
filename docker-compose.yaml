@@ -8,8 +8,23 @@ services:
     ports:
       - "8080:${GATEWAY_PORT}"
     depends_on:
+      - sub
+      - rw
+    env_file:
+      - .env
+    networks:
+      - btcratewatcher
+
+  sub:
+    build:
+      context: sub
+      dockerfile: ./Dockerfile
+    image: gw
+    restart: on-failure
+    depends_on:
       - db
       - migrate
+      - rw
     env_file:
       - .env
     networks:

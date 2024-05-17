@@ -6,7 +6,7 @@ tasks:
       vars:
         - MAILER_ADDR
         - RATE_WATCHER_ADDR
-        - EXCHANGE_LOG_LEVEL
-        - EXCHANGE_PORT
+        - GATEWAY_LOG_LEVEL
+        - GATEWAY_PORT
     cmds:
       - go run ./cmd/server

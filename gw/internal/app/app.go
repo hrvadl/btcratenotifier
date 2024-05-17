@@ -7,13 +7,10 @@ import (
 	"net/http"
 
 	"github.com/hrvadl/btcratenotifier/gw/internal/cfg"
-	"github.com/hrvadl/btcratenotifier/gw/internal/service/ratesender"
-	"github.com/hrvadl/btcratenotifier/gw/internal/storage/platform/db"
-	"github.com/hrvadl/btcratenotifier/gw/internal/storage/subscriber"
-	"github.com/hrvadl/btcratenotifier/gw/internal/transport/grpc/clients/mailer"
 	"github.com/hrvadl/btcratenotifier/gw/internal/transport/grpc/clients/ratewatcher"
+	ssvc "github.com/hrvadl/btcratenotifier/gw/internal/transport/grpc/clients/sub"
 	"github.com/hrvadl/btcratenotifier/gw/internal/transport/http/handlers/rate"
-	"github.com/hrvadl/btcratenotifier/gw/internal/transport/http/handlers/sender"
+	"github.com/hrvadl/btcratenotifier/gw/internal/transport/http/handlers/sub"
 )
 
 const operation = "app init"
@@ -45,24 +42,17 @@ func (a *App) Run() error {
 		return fmt.Errorf("%s: failed to initialize ratewatcher client: %w", operation, err)
 	}
 
-	mc, err := mailer.NewClient(
-		a.cfg.MailerAddr,
-		a.cfg.MailerFromAddr,
-		a.log.With("source", "mailerClient"),
-	)
+	subsvc, err := ssvc.NewClient(a.cfg.SubAddr, a.log.With("source", "subClient"))
 	if err != nil {
-		return fmt.Errorf("%s: failed to initialize mailer client: %w", operation, err)
+		return fmt.Errorf("%s: failed to init sub service: %w", operation, err)
 	}
 
-	db := db.Must(db.NewConn(a.cfg.Dsn))
-	sr := subscriber.NewRepo(db)
-	rss := ratesender.NewService(sr, rw, mc)
-	sh := sender.NewHandler(rss, a.log)
-	rh := rate.NewHandler(rw, a.log)
+	sh := sub.NewHandler(subsvc, a.log.With("source", "subHandler"))
+	rh := rate.NewHandler(rw, a.log.With("source", "rateHandler"))
 
 	r := http.NewServeMux()
-	r.HandleFunc("POST /subscribe", sh.Subscribe)
 	r.HandleFunc("GET /rate", rh.GetRate)
+	r.HandleFunc("POST /subscribe", sh.Subscribe)
 
 	return http.ListenAndServe(net.JoinHostPort("", a.cfg.Port), r)
 }

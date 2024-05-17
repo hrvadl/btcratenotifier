@@ -10,7 +10,7 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/protobuf/types/known/emptypb"
 
-	"github.com/hrvadl/btcratenotifier/gw/pkg/logger"
+	"github.com/hrvadl/btcratenotifier/sub/pkg/logger"
 )
 
 func NewClient(addr string, log *slog.Logger) (*Client, error) {
@@ -27,10 +27,12 @@ func NewClient(addr string, log *slog.Logger) (*Client, error) {
 
 	return &Client{
 		api: pb.NewRateWatcherServiceClient(cc),
+		log: log,
 	}, nil
 }
 
 type Client struct {
+	log *slog.Logger
 	api pb.RateWatcherServiceClient
 }
 

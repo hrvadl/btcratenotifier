@@ -1,14 +1,13 @@
-package ratewatcher
+package sub
 
 import (
 	"context"
 	"fmt"
 	"log/slog"
 
-	pb "github.com/hrvadl/btcratenotifier/protos/gen/go/v1/ratewatcher"
+	pb "github.com/hrvadl/btcratenotifier/protos/gen/go/v1/sub"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-	"google.golang.org/protobuf/types/known/emptypb"
 
 	"github.com/hrvadl/btcratenotifier/gw/pkg/logger"
 )
@@ -26,19 +25,15 @@ func NewClient(addr string, log *slog.Logger) (*Client, error) {
 	}
 
 	return &Client{
-		api: pb.NewRateWatcherServiceClient(cc),
+		api: pb.NewSubServiceClient(cc),
 	}, nil
 }
 
 type Client struct {
-	api pb.RateWatcherServiceClient
+	api pb.SubServiceClient
 }
 
-func (c *Client) GetRate(ctx context.Context) (float32, error) {
-	resp, err := c.api.GetRate(ctx, &emptypb.Empty{})
-	if err != nil {
-		return 0, err
-	}
-
-	return resp.Rate, nil
+func (c *Client) Subscribe(ctx context.Context, req *pb.SubscribeRequest) error {
+	_, err := c.api.Subscribe(ctx, req)
+	return err
 }

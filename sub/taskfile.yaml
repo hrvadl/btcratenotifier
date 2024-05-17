@@ -1,0 +1,14 @@
+version: "3"
+
+tasks:
+  run:
+    required:
+      vars:
+        - SUB_PORT
+        - SUB_LOG_LEVEL
+        - MAILER_ADDR
+        - RATE_WATCH_ADDR
+        - SUB_DSN
+
+  cmds:
+    - go run ./cmd/server

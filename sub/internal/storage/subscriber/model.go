@@ -32,7 +32,7 @@ func (r *Repo) Save(ctx context.Context, s Subscriber) (int64, error) {
 	return res.LastInsertId()
 }
 
-func (r *Repo) FindAll(ctx context.Context) ([]Subscriber, error) {
+func (r *Repo) Get(ctx context.Context) ([]Subscriber, error) {
 	subscribers := []Subscriber{}
 	if err := r.db.SelectContext(ctx, &subscribers, "SELECT * FROM subscribers"); err != nil {
 		return nil, err
