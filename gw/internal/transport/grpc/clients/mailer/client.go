@@ -12,7 +12,7 @@ import (
 	"github.com/hrvadl/btcratenotifier/gw/pkg/logger"
 )
 
-func NewClient(addr string, log *slog.Logger) (*Client, error) {
+func NewClient(addr string, from string, log *slog.Logger) (*Client, error) {
 	cc, err := grpc.NewClient(
 		addr,
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
@@ -25,14 +25,16 @@ func NewClient(addr string, log *slog.Logger) (*Client, error) {
 	}
 
 	return &Client{
-		api: pb.NewMailerServiceClient(cc),
-		log: log,
+		api:  pb.NewMailerServiceClient(cc),
+		log:  log,
+		from: from,
 	}, nil
 }
 
 type Client struct {
-	log *slog.Logger
-	api pb.MailerServiceClient
+	log  *slog.Logger
+	api  pb.MailerServiceClient
+	from string
 }
 
 type SendOptions struct {
@@ -42,7 +44,7 @@ type SendOptions struct {
 
 func (c *Client) Send(ctx context.Context, html string, to ...string) error {
 	_, err := c.api.Send(ctx, &pb.Mail{
-		From:    "v.l.grashchenko@student.khai.edu",
+		From:    c.from,
 		To:      to,
 		Subject: "BTC to UAH rate exchange",
 		Html:    html,
