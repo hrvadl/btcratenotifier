@@ -12,6 +12,7 @@ import (
 	"github.com/hrvadl/converter/sub/internal/service/sender"
 	"github.com/hrvadl/converter/sub/internal/service/sender/formatter"
 	subs "github.com/hrvadl/converter/sub/internal/service/sub"
+	"github.com/hrvadl/converter/sub/internal/service/validator"
 	"github.com/hrvadl/converter/sub/internal/storage/platform/db"
 	"github.com/hrvadl/converter/sub/internal/storage/subscriber"
 	"github.com/hrvadl/converter/sub/internal/transport/grpc/clients/mailer"
@@ -56,7 +57,8 @@ func (a *App) Run() error {
 	}
 
 	sr := subscriber.NewRepo(db)
-	svc := subs.NewService(sr)
+	v := validator.NewStdlib()
+	svc := subs.NewService(sr, v)
 	sub.Register(srv, svc, a.log.With("source", "sub"))
 
 	m, err := mailer.NewClient(a.cfg.MailerAddr, a.cfg.MailerFromAddr, a.log)
