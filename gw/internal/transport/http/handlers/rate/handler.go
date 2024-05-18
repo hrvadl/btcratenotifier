@@ -15,6 +15,7 @@ func NewHandler(rg Getter, log *slog.Logger) *Handler {
 	}
 }
 
+//go:generate mockgen -destination=./mocks/mock_getter.go -package=mocks . Getter
 type Getter interface {
 	GetRate(ctx context.Context) (float32, error)
 }
