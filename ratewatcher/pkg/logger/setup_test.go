@@ -52,7 +52,7 @@ func TestMapLevels(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			if got := MapLevels(tt.args.lvl); !reflect.DeepEqual(got, tt.want) {
+			if got := mapLevels(tt.args.lvl); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("MapLevels() = %v, want %v", got, tt.want)
 			}
 		})
