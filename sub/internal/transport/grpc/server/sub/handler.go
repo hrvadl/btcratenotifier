@@ -19,6 +19,7 @@ func Register(srv *grpc.Server, svc Service, log *slog.Logger) {
 	})
 }
 
+//go:generate mockgen -destination=./mocks/mock_svcr.go -package=mocks . Service
 type Service interface {
 	Subscribe(ctx context.Context, mail string) (int64, error)
 }
