@@ -10,9 +10,10 @@ import (
 
 const operation = "ratesender service"
 
-func NewService(rr RecipientSaver) *Service {
+func NewService(rr RecipientSaver, vv Validator) *Service {
 	return &Service{
-		repo: rr,
+		repo:      rr,
+		validator: vv,
 	}
 }
 
@@ -21,13 +22,19 @@ type RecipientSaver interface {
 	Save(ctx context.Context, s subscriber.Subscriber) (int64, error)
 }
 
+//go:generate mockgen -destination=./mocks/mock_validator.go -package=mocks . Validator
+type Validator interface {
+	Validate(mail string) bool
+}
+
 type Service struct {
-	repo RecipientSaver
+	repo      RecipientSaver
+	validator Validator
 }
 
 func (s *Service) Subscribe(ctx context.Context, mail string) (int64, error) {
-	if mail == "" {
-		return 0, errors.New("mail can't be empty")
+	if !s.validator.Validate(mail) {
+		return 0, errors.New("invalid email")
 	}
 
 	resp, err := s.repo.Save(ctx, subscriber.Subscriber{Email: mail})
