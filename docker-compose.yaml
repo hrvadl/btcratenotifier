@@ -13,7 +13,7 @@ services:
     env_file:
       - .env
     networks:
-      - btcratewatcher
+      - converter
 
   sub:
     build:
@@ -29,18 +29,18 @@ services:
     env_file:
       - .env
     networks:
-      - btcratewatcher
+      - converter
 
   rw:
     build:
-      context: ratewatcher
+      context: rw
       dockerfile: ./Dockerfile
     image: rw
     restart: on-failure
     env_file:
       - .env
     networks:
-      - btcratewatcher
+      - converter
 
   mailer:
     build:
@@ -51,7 +51,7 @@ services:
     env_file:
       - .env
     networks:
-      - btcratewatcher
+      - converter
 
   db:
     image: mysql
@@ -63,8 +63,10 @@ services:
       retries: 30
     env_file:
       - .env
+    volumes:
+      - converterdata:/var/lib/mysql
     networks:
-      - btcratewatcher
+      - converter
 
   migrate:
     image: migrate/migrate
@@ -75,14 +77,14 @@ services:
     env_file:
       - .env
     networks:
-      - btcratewatcher
+      - converter
     volumes:
       - ./sub/migrations:/database
     command: ["-path", "/database", "-database", "mysql://${SUB_DSN}", "up"]
 
 networks:
-  btcratewatcher:
+  converter:
     driver: bridge
 
 volumes:
-  btcratewatcherdata:
+  converterdata:
