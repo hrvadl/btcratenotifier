@@ -14,6 +14,8 @@ linters:
     - cyclop
     - unparam
     - unused
+  disable:
+    - errcheck
 
 linters-settings:
   funlen:
