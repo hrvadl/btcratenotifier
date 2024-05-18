@@ -3,12 +3,13 @@ package app
 import (
 	"log"
 	"net/http"
+	"time"
 )
 
 const (
-	idleTimeout        = 240 // most optimal time in seconds
-	writeHeaderTimeout = 15  // recommended time in seconds for timeout
-	readHeaderTimeout  = 30  // sec. most optimal time in seconds for waiting for header
+	idleTimeout        = 240 * time.Second
+	writeHeaderTimeout = 15 * time.Second
+	readHeaderTimeout  = 30 * time.Second
 )
 
 func newServer(h http.Handler, addr string, log *log.Logger) *http.Server {

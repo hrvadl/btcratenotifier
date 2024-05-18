@@ -3,7 +3,6 @@ package app
 import (
 	"fmt"
 	"log/slog"
-	"net"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -61,14 +60,17 @@ func (a *App) Run() error {
 		middleware.CleanPath,
 	)
 
-	r.Get("/rate", rh.GetRate)
-	r.With(
-		middleware.AllowContentType("application/x-www-form-urlencoded"),
-	).Post("/subscribe", sh.Subscribe)
+	r.Route("/api", func(r chi.Router) {
+		r.Get("/rate", rh.GetRate)
+		r.With(
+			middleware.AllowContentType("application/x-www-form-urlencoded"),
+		).Post("/subscribe", sh.Subscribe)
+	})
 
+	a.log.Info("Starting web server", "addr", a.cfg.Addr)
 	srv := newServer(
 		r,
-		net.JoinHostPort("", a.cfg.Port),
+		a.cfg.Addr,
 		slog.NewLogLogger(a.log.Handler(), logger.MapLevels(a.cfg.LogLevel)),
 	)
 
