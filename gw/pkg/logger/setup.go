@@ -5,7 +5,7 @@ import (
 	"log/slog"
 )
 
-func mapLevels(lvl string) slog.Level {
+func MapLevels(lvl string) slog.Level {
 	switch lvl {
 	case "DEBUG":
 		return slog.LevelDebug
@@ -22,6 +22,6 @@ func mapLevels(lvl string) slog.Level {
 
 func New(w io.Writer, lvl string) *slog.Logger {
 	return slog.New(slog.NewTextHandler(w, &slog.HandlerOptions{
-		Level: mapLevels(lvl),
+		Level: MapLevels(lvl),
 	}))
 }

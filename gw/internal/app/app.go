@@ -4,13 +4,16 @@ import (
 	"fmt"
 	"log/slog"
 	"net"
-	"net/http"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 
 	"github.com/hrvadl/btcratenotifier/gw/internal/cfg"
 	"github.com/hrvadl/btcratenotifier/gw/internal/transport/grpc/clients/ratewatcher"
 	ssvc "github.com/hrvadl/btcratenotifier/gw/internal/transport/grpc/clients/sub"
 	"github.com/hrvadl/btcratenotifier/gw/internal/transport/http/handlers/rate"
 	"github.com/hrvadl/btcratenotifier/gw/internal/transport/http/handlers/sub"
+	"github.com/hrvadl/btcratenotifier/gw/pkg/logger"
 )
 
 const operation = "app init"
@@ -50,9 +53,24 @@ func (a *App) Run() error {
 	sh := sub.NewHandler(subsvc, a.log.With("source", "subHandler"))
 	rh := rate.NewHandler(rw, a.log.With("source", "rateHandler"))
 
-	r := http.NewServeMux()
-	r.HandleFunc("GET /rate", rh.GetRate)
-	r.HandleFunc("POST /subscribe", sh.Subscribe)
+	r := chi.NewRouter()
+	r.Use(
+		middleware.Heartbeat("/health"),
+		middleware.Recoverer,
+		middleware.Logger,
+		middleware.CleanPath,
+	)
 
-	return http.ListenAndServe(net.JoinHostPort("", a.cfg.Port), r)
+	r.Get("/rate", rh.GetRate)
+	r.With(
+		middleware.AllowContentType("application/x-www-form-urlencoded"),
+	).Post("/subscribe", sh.Subscribe)
+
+	srv := newServer(
+		r,
+		net.JoinHostPort("", a.cfg.Port),
+		slog.NewLogLogger(a.log.Handler(), logger.MapLevels(a.cfg.LogLevel)),
+	)
+
+	return srv.ListenAndServe()
 }
