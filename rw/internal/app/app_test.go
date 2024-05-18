@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/hrvadl/converter/ratewatcher/internal/cfg"
+	"github.com/hrvadl/converter/rw/internal/cfg"
 )
 
 func TestNew(t *testing.T) {

@@ -1,4 +1,4 @@
-module github.com/hrvadl/converter/ratewatcher
+module github.com/hrvadl/converter/rw
 
 go 1.22.0
 

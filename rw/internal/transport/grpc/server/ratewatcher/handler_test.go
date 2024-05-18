@@ -11,7 +11,7 @@ import (
 	"go.uber.org/mock/gomock"
 	"google.golang.org/protobuf/types/known/emptypb"
 
-	"github.com/hrvadl/converter/ratewatcher/internal/transport/grpc/server/ratewatcher/mocks"
+	"github.com/hrvadl/converter/rw/internal/transport/grpc/server/ratewatcher/mocks"
 )
 
 func TestServerGetRate(t *testing.T) {

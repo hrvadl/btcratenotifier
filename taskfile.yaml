@@ -8,8 +8,8 @@ includes:
     taskfile: ./mailer/taskfile.yaml
     dir: ./mailer
   rw:
-    taskfile: ./ratewatcher/taskfile.yaml
-    dir: ./ratewatcher
+    taskfile: ./rw/taskfile.yaml
+    dir: ./rw
   sub:
     taskfile: ./sub/taskfile.yaml
     dir: ./sub
