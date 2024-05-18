@@ -1,3 +1,3 @@
-module github.com/hrvadl/btcratenotifier
+module github.com/hrvadl/converter
 
 go 1.22.0

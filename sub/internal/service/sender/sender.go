@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log/slog"
 
-	"github.com/hrvadl/btcratenotifier/sub/internal/storage/subscriber"
+	"github.com/hrvadl/converter/sub/internal/storage/subscriber"
 )
 
 const (

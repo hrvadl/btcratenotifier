@@ -1,4 +1,4 @@
-module github.com/hrvadl/btcratenotifier/mailer
+module github.com/hrvadl/converter/mailer
 
 go 1.22.0
 

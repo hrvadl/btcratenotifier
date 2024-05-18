@@ -7,17 +7,17 @@ import (
 
 	"google.golang.org/grpc"
 
-	"github.com/hrvadl/btcratenotifier/sub/internal/cfg"
-	"github.com/hrvadl/btcratenotifier/sub/internal/service/cron"
-	"github.com/hrvadl/btcratenotifier/sub/internal/service/sender"
-	"github.com/hrvadl/btcratenotifier/sub/internal/service/sender/formatter"
-	subs "github.com/hrvadl/btcratenotifier/sub/internal/service/sub"
-	"github.com/hrvadl/btcratenotifier/sub/internal/storage/platform/db"
-	"github.com/hrvadl/btcratenotifier/sub/internal/storage/subscriber"
-	"github.com/hrvadl/btcratenotifier/sub/internal/transport/grpc/clients/mailer"
-	"github.com/hrvadl/btcratenotifier/sub/internal/transport/grpc/clients/ratewatcher"
-	"github.com/hrvadl/btcratenotifier/sub/internal/transport/grpc/server/sub"
-	"github.com/hrvadl/btcratenotifier/sub/pkg/logger"
+	"github.com/hrvadl/converter/sub/internal/cfg"
+	"github.com/hrvadl/converter/sub/internal/service/cron"
+	"github.com/hrvadl/converter/sub/internal/service/sender"
+	"github.com/hrvadl/converter/sub/internal/service/sender/formatter"
+	subs "github.com/hrvadl/converter/sub/internal/service/sub"
+	"github.com/hrvadl/converter/sub/internal/storage/platform/db"
+	"github.com/hrvadl/converter/sub/internal/storage/subscriber"
+	"github.com/hrvadl/converter/sub/internal/transport/grpc/clients/mailer"
+	"github.com/hrvadl/converter/sub/internal/transport/grpc/clients/ratewatcher"
+	"github.com/hrvadl/converter/sub/internal/transport/grpc/server/sub"
+	"github.com/hrvadl/converter/sub/pkg/logger"
 )
 
 const operation = "app init"

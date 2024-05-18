@@ -7,10 +7,10 @@ import (
 
 	"google.golang.org/grpc"
 
-	"github.com/hrvadl/btcratenotifier/mailer/internal/cfg"
-	"github.com/hrvadl/btcratenotifier/mailer/internal/platform/mail/resend"
-	"github.com/hrvadl/btcratenotifier/mailer/internal/transport/grpc/server/mailer"
-	"github.com/hrvadl/btcratenotifier/mailer/pkg/logger"
+	"github.com/hrvadl/converter/mailer/internal/cfg"
+	"github.com/hrvadl/converter/mailer/internal/platform/mail/resend"
+	"github.com/hrvadl/converter/mailer/internal/transport/grpc/server/mailer"
+	"github.com/hrvadl/converter/mailer/pkg/logger"
 )
 
 const operation = "app init"

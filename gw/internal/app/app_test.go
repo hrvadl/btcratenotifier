@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/hrvadl/btcratenotifier/gw/internal/cfg"
+	"github.com/hrvadl/converter/gw/internal/cfg"
 )
 
 func TestNew(t *testing.T) {

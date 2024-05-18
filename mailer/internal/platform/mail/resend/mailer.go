@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	pb "github.com/hrvadl/btcratenotifier/protos/gen/go/v1/mailer"
+	pb "github.com/hrvadl/converter/protos/gen/go/v1/mailer"
 	rs "github.com/resend/resend-go/v2"
 )
 

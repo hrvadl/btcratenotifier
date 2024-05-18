@@ -1,4 +1,4 @@
-module github.com/hrvadl/btcratenotifier/sub
+module github.com/hrvadl/converter/sub
 
 go 1.22.0
 

@@ -1,4 +1,4 @@
-module github.com/hrvadl/btcratenotifier/ratewatcher
+module github.com/hrvadl/converter/ratewatcher
 
 go 1.22.0
 

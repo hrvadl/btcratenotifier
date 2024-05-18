@@ -1,4 +1,4 @@
-module github.com/hrvadl/btcratenotifier/gw
+module github.com/hrvadl/converter/gw
 
 go 1.22.0
 

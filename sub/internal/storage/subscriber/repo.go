@@ -7,7 +7,7 @@ import (
 	"github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 
-	"github.com/hrvadl/btcratenotifier/sub/internal/storage/platform/db"
+	"github.com/hrvadl/converter/sub/internal/storage/platform/db"
 )
 
 type Repo struct {

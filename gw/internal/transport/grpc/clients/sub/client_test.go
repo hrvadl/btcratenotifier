@@ -1,4 +1,4 @@
-//go:generate mockgen -destination=./mocks/mock_sub.go -package=mocks github.com/hrvadl/btcratenotifier/protos/gen/go/v1/sub SubServiceClient
+//go:generate mockgen -destination=./mocks/mock_sub.go -package=mocks github.com/hrvadl/converter/protos/gen/go/v1/sub SubServiceClient
 package sub
 
 import (
@@ -6,10 +6,10 @@ import (
 	"errors"
 	"testing"
 
-	pb "github.com/hrvadl/btcratenotifier/protos/gen/go/v1/sub"
+	pb "github.com/hrvadl/converter/protos/gen/go/v1/sub"
 	"go.uber.org/mock/gomock"
 
-	"github.com/hrvadl/btcratenotifier/gw/internal/transport/grpc/clients/sub/mocks"
+	"github.com/hrvadl/converter/gw/internal/transport/grpc/clients/sub/mocks"
 )
 
 func TestClientSubscribe(t *testing.T) {

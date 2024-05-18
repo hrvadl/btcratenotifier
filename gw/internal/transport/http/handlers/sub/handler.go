@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
-	pb "github.com/hrvadl/btcratenotifier/protos/gen/go/v1/sub"
+	pb "github.com/hrvadl/converter/protos/gen/go/v1/sub"
 )
 
 func NewHandler(svc Service, log *slog.Logger) *Handler {

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log/slog"
 
-	pb "github.com/hrvadl/btcratenotifier/protos/gen/go/v1/mailer"
+	pb "github.com/hrvadl/converter/protos/gen/go/v1/mailer"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
 )

@@ -1,4 +1,4 @@
-module github.com/hrvadl/btcratenotifier/protos
+module github.com/hrvadl/converter/protos
 
 go 1.22.0
 

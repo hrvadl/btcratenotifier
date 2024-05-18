@@ -7,12 +7,12 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 
-	"github.com/hrvadl/btcratenotifier/gw/internal/cfg"
-	"github.com/hrvadl/btcratenotifier/gw/internal/transport/grpc/clients/ratewatcher"
-	ssvc "github.com/hrvadl/btcratenotifier/gw/internal/transport/grpc/clients/sub"
-	"github.com/hrvadl/btcratenotifier/gw/internal/transport/http/handlers/rate"
-	"github.com/hrvadl/btcratenotifier/gw/internal/transport/http/handlers/sub"
-	"github.com/hrvadl/btcratenotifier/gw/pkg/logger"
+	"github.com/hrvadl/converter/gw/internal/cfg"
+	"github.com/hrvadl/converter/gw/internal/transport/grpc/clients/ratewatcher"
+	ssvc "github.com/hrvadl/converter/gw/internal/transport/grpc/clients/sub"
+	"github.com/hrvadl/converter/gw/internal/transport/http/handlers/rate"
+	"github.com/hrvadl/converter/gw/internal/transport/http/handlers/sub"
+	"github.com/hrvadl/converter/gw/pkg/logger"
 )
 
 const operation = "app init"
