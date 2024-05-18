@@ -13,7 +13,7 @@ import (
 func NewDailyJob(hour, min int, log *slog.Logger) *Job {
 	return &Job{
 		interval: time.Hour * 24,
-		ticker:   time.NewTicker(calculateFirtTick(hour, min)),
+		ticker:   time.NewTicker(calculateFirstTick(hour, min)),
 		log:      log,
 	}
 }
@@ -51,7 +51,7 @@ func (j *Job) Do(fn Doer) {
 	}()
 }
 
-func calculateFirtTick(hour, min int) time.Duration {
+func calculateFirstTick(hour, min int) time.Duration {
 	now := time.Now()
 	tickAt := time.Date(now.Year(), now.Month(), now.Day(), hour, min, 0, 0, time.UTC)
 	if now.After(tickAt) {

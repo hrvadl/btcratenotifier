@@ -30,7 +30,8 @@ func TestNewService(t *testing.T) {
 				vv: mocks.NewMockValidator(gomock.NewController(t)),
 			},
 			want: &Service{
-				repo: mocks.NewMockRecipientSaver(gomock.NewController(t)),
+				repo:      mocks.NewMockRecipientSaver(gomock.NewController(t)),
+				validator: mocks.NewMockValidator(gomock.NewController(t)),
 			},
 		},
 		{
@@ -84,6 +85,7 @@ func TestServiceSubscribe(t *testing.T) {
 				mail: "mail@gmail.com",
 			},
 			setup: func(t *testing.T, saver RecipientSaver, validator Validator) {
+				t.Helper()
 				rs, ok := saver.(*mocks.MockRecipientSaver)
 				if !ok {
 					t.Fatalf("Failed to cast saver to mock saver")
@@ -114,6 +116,7 @@ func TestServiceSubscribe(t *testing.T) {
 				mail: "mail@gmail.com",
 			},
 			setup: func(t *testing.T, saver RecipientSaver, validator Validator) {
+				t.Helper()
 				rs, ok := saver.(*mocks.MockRecipientSaver)
 				if !ok {
 					t.Fatalf("Failed to cast saver to mock saver")
@@ -144,6 +147,7 @@ func TestServiceSubscribe(t *testing.T) {
 				mail: "",
 			},
 			setup: func(t *testing.T, saver RecipientSaver, validator Validator) {
+				t.Helper()
 				rs, ok := saver.(*mocks.MockRecipientSaver)
 				if !ok {
 					t.Fatalf("Failed to cast saver to mock saver")
