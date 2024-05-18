@@ -1,19 +1,13 @@
 run:
-  skip-files:
-    - curl.go
-
 linters:
   enable:
-    # FAST
     - nestif
     - funlen
     - lll
     - forcetypeassert
     - gofumpt
-    # MANDATORY HEAVY
     - govet
     - staticcheck
-    # OPTIONAL HEAVY
     - revive
     - errorlint
     - exportloopref
