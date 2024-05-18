@@ -19,6 +19,7 @@ func Register(srv *grpc.Server, client Client, log *slog.Logger) {
 	})
 }
 
+//go:generate mockgen -destination=./mocks/mock_client.go -package=mocks . Client
 type Client interface {
 	Send(ctx context.Context, m *pb.Mail) error
 }
