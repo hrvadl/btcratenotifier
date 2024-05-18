@@ -81,7 +81,7 @@ func (a *App) Run() error {
 
 	cronAdapter := sender.NewCronJobAdapter(mailSender, a.log.With("source", "adapter"))
 	job := cron.NewDailyJob(cronJobHour, cronJobMinute, a.log.With("source", "cron"))
-	job.Do(cronAdapter.Do)
+	job.Do(cronAdapter)
 
 	l, err := net.Listen("tcp", net.JoinHostPort("", a.cfg.Port))
 	if err != nil {
