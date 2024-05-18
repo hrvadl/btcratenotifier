@@ -10,6 +10,9 @@ includes:
   rw:
     taskfile: ./ratewatcher/taskfile.yaml
     dir: ./ratewatcher
+  sub:
+    taskfile: ./sub/taskfile.yaml
+    dir: ./sub
   protos:
     taskfile: ./protos/taskfile.yaml
     dir: ./protos
@@ -19,3 +22,15 @@ tasks:
     desc: "Show available tasks"
     cmds:
       - task --list-all
+  test:
+    cmds:
+      - task gw:test
+      - task mailer:test
+      - task rw:test
+      - task sub:test
+  test:race:
+    cmds:
+      - task gw:test:race
+      - task mailer:test:race
+      - task rw:test:race
+      - task sub:test:race
