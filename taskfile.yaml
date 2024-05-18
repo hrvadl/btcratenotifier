@@ -22,6 +22,12 @@ tasks:
     desc: "Show available tasks"
     cmds:
       - task --list-all
+  lint:
+    cmds:
+      - task gw:lint
+      - task mailer:lilnt
+      - task rw:lint
+      - task sub:lint
   test:
     cmds:
       - task gw:test

@@ -8,7 +8,9 @@ import (
 	"github.com/hrvadl/btcratenotifier/sub/pkg/logger"
 )
 
-const source = "sub"
+const (
+	source = "sub"
+)
 
 func main() {
 	cfg := cfg.Must(cfg.NewFromEnv())
