@@ -17,4 +17,7 @@ package main
 // 10. Add retries to GRPC (Done)
 // 11. Add retries to crypto API (Done)
 // 12. Add CI (GH Actions) (Done)
-// 13. Add mail validator!!!1
+// 13. Add mail validator !!!
+// 14. Rename repository !! (Done)
+// 15. Rename rw pkg (Done)
+// 16. Add healthcheck to other docker compose services !!
