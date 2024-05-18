@@ -23,11 +23,11 @@ tasks:
     cmds:
       - task --list-all
   lint:
-    deps:
-      - gw:lint
-      - mailer:lint
-      - rw:lint
-      - sub:lint
+    cmds:
+      - task gw:lint
+      - task mailer:lint
+      - task rw:lint
+      - task sub:lint
   test:
     deps:
       - gw:test
