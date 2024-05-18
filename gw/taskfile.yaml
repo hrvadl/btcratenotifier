@@ -10,6 +10,18 @@ tasks:
         - GATEWAY_PORT
     cmds:
       - go run ./cmd/server
+  lint:
+    desc: "Run golangci-lint"
+    deps: [install:lint]
+    cmds:
+      - echo "Running linters..."
+      - golangci-lint run
+    sources:
+      - .golangci.yaml
+      - ./**/*.go
+      - go.mod
+      - go.sum
+
   test:
     desc: "Run tests"
     cmds:

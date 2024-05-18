@@ -14,7 +14,6 @@ linters:
     - cyclop
     - unparam
     - unused
-    - errcheck
 
 linters-settings:
   funlen:
@@ -25,7 +24,6 @@ issues:
   exclude-rules:
     - path: _test\.go
       linters:
-        - errcheck
         - funlen
         - cyclop
         - lll

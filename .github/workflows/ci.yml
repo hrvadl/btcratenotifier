@@ -28,10 +28,13 @@ jobs:
           go-version-file: "go.mod"
           check-latest: true
 
-      - name: Golangci Lint
-        uses: golangci/golangci-lint-action@v4
+      - name: Install Task
+        uses: arduino/setup-task@v2
         with:
-          version: latest
+          version: 3.x
+
+      - name: Run linters
+        run: task lint
 
   test:
     name: Tests
