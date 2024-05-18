@@ -40,3 +40,9 @@ tasks:
       - mailer:test:race
       - rw:test:race
       - sub:test:race
+  install:lint:
+    desc: "Install golangci-lint"
+    cmds:
+      - go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+    status:
+      - command -v golangci-lint
