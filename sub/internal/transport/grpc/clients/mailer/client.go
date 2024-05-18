@@ -1,3 +1,4 @@
+//go:generate mockgen -destination=./mocks/mock_parser.go -package=mocks github.com/hrvadl/btcratenotifier/protos/gen/go/v1/mailer MailerServiceClient
 package mailer
 
 import (
