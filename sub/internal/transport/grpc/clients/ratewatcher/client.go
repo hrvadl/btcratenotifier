@@ -1,3 +1,4 @@
+//go:generate mockgen -destination=./mocks/mock_rw.go -package=mocks github.com/hrvadl/btcratenotifier/protos/gen/go/v1/ratewatcher RateWatcherServiceClient
 package ratewatcher
 
 import (
