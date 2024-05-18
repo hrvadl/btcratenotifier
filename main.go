@@ -5,7 +5,7 @@ package main
 
 // TODO:
 //
-// 1.  Add tests !!
+// 1.  Add tests !! (Done)
 // 2.  Add pre-commit (Done)
 // 3.  Add GoDoc comments
 // 4.  Add app schema
@@ -17,3 +17,4 @@ package main
 // 10. Add retries to GRPC (Done)
 // 11. Add retries to crypto API (Done)
 // 12. Add CI (GH Actions) (Done)
+// 13. Add mail validator!!!1
