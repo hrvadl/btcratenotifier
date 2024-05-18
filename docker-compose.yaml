@@ -24,6 +24,8 @@ services:
     depends_on:
       migrate:
         condition: service_completed_successfully
+      rw:
+        condition: service_started
     env_file:
       - .env
     networks:
@@ -53,6 +55,12 @@ services:
 
   db:
     image: mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      start_period: 5s
+      interval: 3s
+      timeout: 3s
+      retries: 30
     env_file:
       - .env
     networks:
@@ -62,7 +70,8 @@ services:
     image: migrate/migrate
     restart: on-failure
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     env_file:
       - .env
     networks:
