@@ -11,13 +11,13 @@ const (
 	subServiceAddrEnvKey = "SUB_ADDR"
 	rateWatchAddrEnvKey  = "RATE_WATCH_ADDR"
 	logLevelEnvKey       = "GATEWAY_LOG_LEVEL"
-	portEnvKey           = "GATEWAY_PORT"
+	addrEnvKey           = "GATEWAY_ADDR"
 )
 
 type Config struct {
 	SubAddr         string
 	RateWatcherAddr string
-	Port            string
+	Addr            string
 	LogLevel        string
 }
 
@@ -44,14 +44,14 @@ func NewFromEnv() (*Config, error) {
 		return nil, fmt.Errorf("%s: log level can't be empty", operation)
 	}
 
-	port := os.Getenv(portEnvKey)
+	port := os.Getenv(addrEnvKey)
 	if port == "" {
 		return nil, fmt.Errorf("%s: port can't be empty", operation)
 	}
 
 	return &Config{
 		LogLevel:        logLevel,
-		Port:            port,
+		Addr:            port,
 		RateWatcherAddr: rwAddr,
 		SubAddr:         subAddr,
 	}, nil
