@@ -8,7 +8,7 @@ import (
 	"google.golang.org/grpc"
 
 	"github.com/hrvadl/btcratenotifier/ratewatcher/internal/cfg"
-	"github.com/hrvadl/btcratenotifier/ratewatcher/internal/platform/rates/cryptocompare"
+	"github.com/hrvadl/btcratenotifier/ratewatcher/internal/platform/rates/exchangerate"
 	"github.com/hrvadl/btcratenotifier/ratewatcher/internal/transport/grpc/server/ratewatcher"
 	"github.com/hrvadl/btcratenotifier/ratewatcher/pkg/logger"
 )
@@ -40,7 +40,7 @@ func (a *App) Run() error {
 
 	ratewatcher.Register(
 		srv,
-		cryptocompare.NewClient(a.cfg.ExchangeServiceToken, a.cfg.ExchangeServiceBaseURL),
+		exchangerate.NewClient(a.cfg.ExchangeServiceToken, a.cfg.ExchangeServiceBaseURL),
 		a.log.With("source", "rateWatcherSrv"),
 	)
 	a.log.Info("Successfuly initialized all deps")
