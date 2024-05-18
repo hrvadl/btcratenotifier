@@ -33,9 +33,6 @@ jobs:
         with:
           version: 3.x
 
-      - name: Instal linter
-        run: task install:lint
-
       - name: Run linters
         run: task lint
 
