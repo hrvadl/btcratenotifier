@@ -2,16 +2,13 @@ package sub
 
 import (
 	"context"
+	"fmt"
 	"log/slog"
 	"net/http"
 	"time"
 
 	pb "github.com/hrvadl/btcratenotifier/protos/gen/go/v1/sub"
 )
-
-type Service interface {
-	Subscribe(ctx context.Context, s *pb.SubscribeRequest) error
-}
 
 func NewHandler(svc Service, log *slog.Logger) *Handler {
 	return &Handler{
@@ -20,12 +17,19 @@ func NewHandler(svc Service, log *slog.Logger) *Handler {
 	}
 }
 
+//go:generate mockgen -destination=./mocks/mock_svc.go -package=mocks . Service
+type Service interface {
+	Subscribe(ctx context.Context, s *pb.SubscribeRequest) error
+}
+
 type Handler struct {
 	svc Service
 	log *slog.Logger
 }
 
 func (h *Handler) Subscribe(w http.ResponseWriter, r *http.Request) {
+	f := r.Form
+	h.log.Info(fmt.Sprintf("%v", f))
 	mail := r.FormValue("email")
 	ctx, cancel := context.WithTimeout(r.Context(), time.Second*5)
 	defer cancel()
