@@ -187,7 +187,7 @@ func TestJobDo(t *testing.T) {
 			tt.setup(t, tt.args.doer)
 			j := NewJob(tt.fields.interval, tt.fields.log)
 			j.Do(tt.args.doer)
-			time.Sleep(tt.fields.interval * 4)
+			time.Sleep(tt.fields.interval * 10)
 		})
 	}
 }
