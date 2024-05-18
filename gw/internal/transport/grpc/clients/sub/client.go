@@ -1,3 +1,4 @@
+//go:generate mockgen -destination=./mocks/mock_sub.go -package=mocks github.com/hrvadl/btcratenotifier/protos/gen/go/v1/sub SubServiceClient
 package sub
 
 import (
