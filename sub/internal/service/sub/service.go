@@ -16,6 +16,7 @@ func NewService(rr RecipientSaver) *Service {
 	}
 }
 
+//go:generate mockgen -destination=./mocks/mock_saver.go -package=mocks . RecipientSaver
 type RecipientSaver interface {
 	Save(ctx context.Context, s subscriber.Subscriber) (int64, error)
 }
