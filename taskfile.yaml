@@ -23,20 +23,20 @@ tasks:
     cmds:
       - task --list-all
   lint:
-    cmds:
-      - task gw:lint
-      - task mailer:lilnt
-      - task rw:lint
-      - task sub:lint
+    deps:
+      - gw:lint
+      - mailer:lint
+      - rw:lint
+      - sub:lint
   test:
-    cmds:
-      - task gw:test
-      - task mailer:test
-      - task rw:test
-      - task sub:test
+    deps:
+      - gw:test
+      - mailer:test
+      - rw:test
+      - sub:test
   test:race:
-    cmds:
-      - task gw:test:race
-      - task mailer:test:race
-      - task rw:test:race
-      - task sub:test:race
+    deps:
+      - gw:test:race
+      - mailer:test:race
+      - rw:test:race
+      - sub:test:race
