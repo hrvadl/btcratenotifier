@@ -19,6 +19,7 @@ func Register(srv *grpc.Server, cnv Converter, log *slog.Logger) {
 	})
 }
 
+//go:generate mockgen -destination=./mocks/mock_converter.go -package=mocks . Converter
 type Converter interface {
 	Convert(ctx context.Context) (float32, error)
 }
