@@ -7,10 +7,10 @@ import (
 
 	"google.golang.org/grpc"
 
-	"github.com/hrvadl/btcratenotifier/ratewatcher/internal/cfg"
-	"github.com/hrvadl/btcratenotifier/ratewatcher/internal/platform/rates/exchangerate"
-	"github.com/hrvadl/btcratenotifier/ratewatcher/internal/transport/grpc/server/ratewatcher"
-	"github.com/hrvadl/btcratenotifier/ratewatcher/pkg/logger"
+	"github.com/hrvadl/converter/ratewatcher/internal/cfg"
+	"github.com/hrvadl/converter/ratewatcher/internal/platform/rates/exchangerate"
+	"github.com/hrvadl/converter/ratewatcher/internal/transport/grpc/server/ratewatcher"
+	"github.com/hrvadl/converter/ratewatcher/pkg/logger"
 )
 
 const operation = "app init"

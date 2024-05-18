@@ -1,4 +1,4 @@
-//go:generate mockgen -destination=./mocks/mock_sub.go -package=mocks github.com/hrvadl/btcratenotifier/protos/gen/go/v1/sub SubServiceClient
+//go:generate mockgen -destination=./mocks/mock_sub.go -package=mocks github.com/hrvadl/converter/protos/gen/go/v1/sub SubServiceClient
 package sub
 
 import (
@@ -8,12 +8,12 @@ import (
 	"time"
 
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/retry"
-	pb "github.com/hrvadl/btcratenotifier/protos/gen/go/v1/sub"
+	pb "github.com/hrvadl/converter/protos/gen/go/v1/sub"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials/insecure"
 
-	"github.com/hrvadl/btcratenotifier/gw/pkg/logger"
+	"github.com/hrvadl/converter/gw/pkg/logger"
 )
 
 const (

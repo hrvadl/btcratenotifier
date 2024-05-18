@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log/slog"
 
-	pb "github.com/hrvadl/btcratenotifier/protos/gen/go/v1/ratewatcher"
+	pb "github.com/hrvadl/converter/protos/gen/go/v1/ratewatcher"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
 )

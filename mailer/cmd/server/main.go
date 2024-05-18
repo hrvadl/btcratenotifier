@@ -3,9 +3,9 @@ package main
 import (
 	"os"
 
-	"github.com/hrvadl/btcratenotifier/mailer/internal/app"
-	"github.com/hrvadl/btcratenotifier/mailer/internal/cfg"
-	"github.com/hrvadl/btcratenotifier/mailer/pkg/logger"
+	"github.com/hrvadl/converter/mailer/internal/app"
+	"github.com/hrvadl/converter/mailer/internal/cfg"
+	"github.com/hrvadl/converter/mailer/pkg/logger"
 )
 
 const source = "mailer"

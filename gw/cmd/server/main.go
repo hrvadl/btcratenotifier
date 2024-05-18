@@ -3,9 +3,9 @@ package main
 import (
 	"os"
 
-	"github.com/hrvadl/btcratenotifier/gw/internal/app"
-	"github.com/hrvadl/btcratenotifier/gw/internal/cfg"
-	"github.com/hrvadl/btcratenotifier/gw/pkg/logger"
+	"github.com/hrvadl/converter/gw/internal/app"
+	"github.com/hrvadl/converter/gw/internal/cfg"
+	"github.com/hrvadl/converter/gw/pkg/logger"
 )
 
 const source = "gateway"

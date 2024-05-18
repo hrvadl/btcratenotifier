@@ -7,11 +7,11 @@ import (
 	"reflect"
 	"testing"
 
-	pb "github.com/hrvadl/btcratenotifier/protos/gen/go/v1/ratewatcher"
+	pb "github.com/hrvadl/converter/protos/gen/go/v1/ratewatcher"
 	"go.uber.org/mock/gomock"
 	"google.golang.org/protobuf/types/known/emptypb"
 
-	"github.com/hrvadl/btcratenotifier/ratewatcher/internal/transport/grpc/server/ratewatcher/mocks"
+	"github.com/hrvadl/converter/ratewatcher/internal/transport/grpc/server/ratewatcher/mocks"
 )
 
 func TestServerGetRate(t *testing.T) {

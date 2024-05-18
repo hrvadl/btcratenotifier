@@ -6,10 +6,10 @@ import (
 	"log/slog"
 	"testing"
 
-	pb "github.com/hrvadl/btcratenotifier/protos/gen/go/v1/mailer"
+	pb "github.com/hrvadl/converter/protos/gen/go/v1/mailer"
 	"go.uber.org/mock/gomock"
 
-	"github.com/hrvadl/btcratenotifier/sub/internal/transport/grpc/clients/mailer/mocks"
+	"github.com/hrvadl/converter/sub/internal/transport/grpc/clients/mailer/mocks"
 )
 
 func TestClientSend(t *testing.T) {

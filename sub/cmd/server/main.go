@@ -3,9 +3,9 @@ package main
 import (
 	"os"
 
-	"github.com/hrvadl/btcratenotifier/sub/internal/app"
-	"github.com/hrvadl/btcratenotifier/sub/internal/cfg"
-	"github.com/hrvadl/btcratenotifier/sub/pkg/logger"
+	"github.com/hrvadl/converter/sub/internal/app"
+	"github.com/hrvadl/converter/sub/internal/cfg"
+	"github.com/hrvadl/converter/sub/pkg/logger"
 )
 
 const (

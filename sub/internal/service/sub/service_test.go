@@ -8,8 +8,8 @@ import (
 
 	"go.uber.org/mock/gomock"
 
-	"github.com/hrvadl/btcratenotifier/sub/internal/service/sub/mocks"
-	"github.com/hrvadl/btcratenotifier/sub/internal/storage/subscriber"
+	"github.com/hrvadl/converter/sub/internal/service/sub/mocks"
+	"github.com/hrvadl/converter/sub/internal/storage/subscriber"
 )
 
 func TestNewService(t *testing.T) {

@@ -10,7 +10,7 @@ import (
 
 	"go.uber.org/mock/gomock"
 
-	"github.com/hrvadl/btcratenotifier/gw/internal/transport/http/handlers/rate/mocks"
+	"github.com/hrvadl/converter/gw/internal/transport/http/handlers/rate/mocks"
 )
 
 func TestNewHandler(t *testing.T) {
