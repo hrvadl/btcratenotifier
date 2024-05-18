@@ -33,10 +33,10 @@ func (h *Handler) Subscribe(w http.ResponseWriter, r *http.Request) {
 	if err := h.svc.Subscribe(ctx, &pb.SubscribeRequest{Email: mail}); err != nil {
 		h.log.Error("Failed to subscribe user", "err", err)
 		w.WriteHeader(http.StatusConflict)
-		w.Write([]byte("Email is already subscribed!"))
+		_, _ = w.Write([]byte("Email is already subscribed!"))
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Added email."))
+	_, _ = w.Write([]byte("Added email."))
 }
