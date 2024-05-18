@@ -1,8 +1,11 @@
 package validator
 
-import "testing"
+import (
+	"reflect"
+	"testing"
+)
 
-func TestStdlib_Validate(t *testing.T) {
+func TestStdlibValidate(t *testing.T) {
 	t.Parallel()
 	type args struct {
 		email string
@@ -62,6 +65,28 @@ func TestStdlib_Validate(t *testing.T) {
 			r := Stdlib{}
 			if got := r.Validate(tt.args.email); got != tt.want {
 				t.Errorf("Stdlib.Validate() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestNewStdlib(t *testing.T) {
+	t.Parallel()
+	tests := []struct {
+		name string
+		want *Stdlib
+	}{
+		{
+			name: "Should initialize validator correctly",
+			want: &Stdlib{},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			if got := NewStdlib(); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("NewStdlib() = %v, want %v", got, tt.want)
 			}
 		})
 	}
