@@ -9,4 +9,3 @@ FROM alpine:latest AS final
 WORKDIR /app
 COPY --from=builder /app/cmd/server/server .
 CMD [ "./server" ]
-
