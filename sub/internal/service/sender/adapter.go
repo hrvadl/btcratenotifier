@@ -13,6 +13,7 @@ func NewCronJobAdapter(s Sender, log *slog.Logger) *CronJobAdapter {
 	}
 }
 
+//go:generate mockgen -destination=./mocks/mock_sender.go -package=mocks . Sender
 type Sender interface {
 	Send(ctx context.Context) error
 }
@@ -23,7 +24,7 @@ type CronJobAdapter struct {
 }
 
 func (c *CronJobAdapter) Do() error {
-	c.log.Info("Doing cron job")
+	c.log.Info("Sending mails in cron job")
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 	return c.sender.Send(ctx)

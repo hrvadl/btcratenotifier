@@ -46,7 +46,6 @@ func (j *Job) Do(fn func() error) {
 			once.Do(func() {
 				j.ticker.Reset(j.interval)
 			})
-			j.log.Info("Doing the job")
 			if err := fn(); err != nil {
 				j.log.Error("Failed to do cron task", "err", err)
 			}
