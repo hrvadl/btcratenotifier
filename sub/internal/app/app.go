@@ -23,8 +23,8 @@ import (
 const operation = "app init"
 
 const (
-	cronJobHour   = 20
-	cronJobMinute = 8
+	cronJobHour   = 12
+	cronJobMinute = 0
 )
 
 func New(cfg cfg.Config, log *slog.Logger) *App {
