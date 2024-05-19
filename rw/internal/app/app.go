@@ -15,6 +15,8 @@ import (
 
 const operation = "app init"
 
+// New constructs new App with provided arguments.
+// NOTE: than neither cfg or log can't be nil or App will panic.
 func New(cfg cfg.Config, log *slog.Logger) *App {
 	return &App{
 		cfg: cfg,
@@ -22,17 +24,27 @@ func New(cfg cfg.Config, log *slog.Logger) *App {
 	}
 }
 
+// App is a thin abstraction used to initialize all the dependencies,
+// db connections, and GRPC server/clients. Could return an error if any
+// of described above steps failed.
 type App struct {
 	cfg cfg.Config
 	log *slog.Logger
 }
 
+// MustRun is a wrapper around App.Run() function which could be handly
+// when it's called from the main goroutine and we don't need to handler
+// an error.
 func (a *App) MustRun() {
 	if err := a.Run(); err != nil {
 		panic(err)
 	}
 }
 
+// Run method creates new GRPC server then initializes MySQL DB connection,
+// after that initializes all neccessary domain related services and finally
+// starts listening on the provided ports. Could return an error if any of
+// described above steps failed
 func (a *App) Run() error {
 	srv := grpc.NewServer(grpc.ChainUnaryInterceptor(
 		logger.NewServerGRPCMiddleware(a.log),
