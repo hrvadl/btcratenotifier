@@ -2,6 +2,9 @@ package handlers
 
 import "encoding/json"
 
+// NewErrResponse constructs the JSON encoded response,
+// which represents request failure from API.
+// NOTE: it expects error to be not nil value.
 func NewErrResponse(err error) []byte {
 	bytes, _ := json.Marshal(ErrorResponse{
 		Err:     err.Error(),
@@ -10,6 +13,9 @@ func NewErrResponse(err error) []byte {
 	return bytes
 }
 
+// NewEmptyResponse constructs the JSON encoded response,
+// which represents request success from API.
+// Omits data field in reponse.
 func NewEmptyResponse(msg string) []byte {
 	bytes, _ := json.Marshal(EmptyResponse{
 		Msg:     msg,
@@ -18,6 +24,9 @@ func NewEmptyResponse(msg string) []byte {
 	return bytes
 }
 
+// NewEmptyResponse constructs the JSON encoded response,
+// which represents request success from API.
+// NOTE: if data is nil then it will be omitter in the result.
 func NewSuccessResponse[T any](msg string, data T) []byte {
 	bytes, _ := json.Marshal(Response[T]{
 		EmptyResponse: EmptyResponse{

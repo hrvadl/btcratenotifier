@@ -12,6 +12,8 @@ const (
 	readHeaderTimeout  = 30 * time.Second
 )
 
+// newServer constructs built-in standard *http.Server with some values
+// set by default.
 func newServer(h http.Handler, addr string, log *log.Logger) *http.Server {
 	srv := &http.Server{
 		Handler:      h,
