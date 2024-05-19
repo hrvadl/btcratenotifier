@@ -6,7 +6,9 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	httpSwagger "github.com/swaggo/http-swagger"
 
+	_ "github.com/hrvadl/converter/gw/docs"
 	"github.com/hrvadl/converter/gw/internal/cfg"
 	"github.com/hrvadl/converter/gw/internal/transport/grpc/clients/ratewatcher"
 	ssvc "github.com/hrvadl/converter/gw/internal/transport/grpc/clients/sub"
@@ -35,6 +37,18 @@ func (a *App) MustRun() {
 	}
 }
 
+// @title Converter rate gateway
+// @version 1.0
+// @description This is a currency rate exchange gateway service
+
+// @contact.name API Support
+// @contact.url http://www.swagger.io/support
+// @contact.email support@swagger.io
+
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @BasePath /api
 func (a *App) Run() error {
 	rw, err := ratewatcher.NewClient(
 		a.cfg.RateWatcherAddr,
@@ -67,6 +81,10 @@ func (a *App) Run() error {
 			middleware.AllowContentType("application/x-www-form-urlencoded"),
 		).Post("/subscribe", sh.Subscribe)
 	})
+
+	if a.cfg.LogLevel == "DEBUG" {
+		r.Get("/docs/*", httpSwagger.WrapHandler)
+	}
 
 	a.log.Info("Starting web server", "addr", a.cfg.Addr)
 	srv := newServer(
