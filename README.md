@@ -93,7 +93,7 @@ The application uses GI actions (free tear) as a CI runner. It suits perfectly f
 
 ## Showcase 🎤
 
-TBD...
+https://drive.google.com/file/d/1jrEaqvzlhKB4HB98VEykbiR00G2OEwJS/view?usp=sharing
 
 ## App diagram 🏛️
 
