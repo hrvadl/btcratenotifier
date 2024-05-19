@@ -110,6 +110,14 @@ The application uses GI actions (free tear) as a CI runner. It suits perfectly f
 
 https://drive.google.com/file/d/1jrEaqvzlhKB4HB98VEykbiR00G2OEwJS/view?usp=sharing
 
+## Documentation
+Services are perfectly documented with Godoc comments. You can host godoc server running following command from the root of the repo:
+```sh
+task godoc
+```
+Then you can visit http://localhost:6060/pkg/github.com/hrvadl/converter/?m=all and see documentation for all my packages
+<img width="1704" alt="image" src="https://github.com/hrvadl/converter/assets/93580374/e026750c-b399-4801-acc2-76da4d316298">
+
 ## App diagram 🏛️
 
 <img width="1100" alt="image" src="https://github.com/hrvadl/converter/assets/93580374/1eeedb0a-7712-43dc-9395-4217d37ded15">
