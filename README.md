@@ -9,7 +9,7 @@ The app contains 4 microservices:
 - Mailer - dumb service for sending emails
 - RateWatcher (rw) - service for getting the latest currency exchange rates
 
-As per the task, I need to send a link to only one repository, it was decided to use go workspaces to fit all microservices to one repo. Typically, it should be the case and it's antipattern. Basically, you can treat each top-level directory as a separate and independent repository/package/module. The `protos` top-level directory is also a go module, containing grpc-generated code.
+As per the task, I need to send a link to only one repository, it was decided to use go workspaces to fit all microservices to one repo. Typically, it should not be the case and it's antipattern. Basically, you can treat each top-level directory as a separate and independent repository/package/module. The `protos` top-level directory is also a go module, containing grpc-generated code.
 
 ## How to run? 🏃
 
