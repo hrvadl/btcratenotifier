@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"log/slog"
 	"net"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"google.golang.org/grpc"
 
@@ -30,6 +33,7 @@ func New(cfg cfg.Config, log *slog.Logger) *App {
 type App struct {
 	cfg cfg.Config
 	log *slog.Logger
+	srv *grpc.Server
 }
 
 // MustRun is a wrapper around App.Run() function which could be handly
@@ -46,12 +50,12 @@ func (a *App) MustRun() {
 // starts listening on the provided ports. Could return an error if any of
 // described above steps failed
 func (a *App) Run() error {
-	srv := grpc.NewServer(grpc.ChainUnaryInterceptor(
+	a.srv = grpc.NewServer(grpc.ChainUnaryInterceptor(
 		logger.NewServerGRPCMiddleware(a.log),
 	))
 
 	ratewatcher.Register(
-		srv,
+		a.srv,
 		exchangerate.NewClient(a.cfg.ExchangeServiceToken, a.cfg.ExchangeServiceBaseURL),
 		a.log.With("source", "rateWatcherSrv"),
 	)
@@ -62,5 +66,17 @@ func (a *App) Run() error {
 		return fmt.Errorf("%s: failed to listen on tcp port %s: %w", operation, a.cfg.Port, err)
 	}
 
-	return srv.Serve(listener)
+	return a.srv.Serve(listener)
+}
+
+// GracefulStop method gracefully stop the server. It listens to the OS sigals.
+// After it recieves signal it terminates all currently active servers,
+// client, connections (if any) and gracefully exits.
+func (a *App) GracefulStop() {
+	ch := make(chan os.Signal, 1)
+	signal.Notify(ch, syscall.SIGTERM, syscall.SIGINT)
+	signal := <-ch
+	a.log.Info("Recieved stop signal. Terminating...", "signal", signal)
+	a.srv.Stop()
+	a.log.Info("Successfully terminated server. Bye!")
 }

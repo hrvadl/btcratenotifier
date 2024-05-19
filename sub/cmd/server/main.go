@@ -21,5 +21,6 @@ func main() {
 
 	l.Info("Successfuly parsed config and initialized logger")
 	app := app.New(*cfg, l)
-	app.MustRun()
+	go app.MustRun()
+	app.GracefulStop()
 }
