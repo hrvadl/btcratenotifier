@@ -124,3 +124,9 @@ Then you can visit http://localhost:6060/pkg/github.com/hrvadl/converter/?m=all 
 
 The application uses GI actions (free tear) as a CI runner. It suits perfectly for small non-commercial projects. CI heavily relies on the [taskfile](https://taskfile.dev/) to do its job. This means each CI step could easily be run locally. CI steps are run in parallel to reduce the time spent waiting for the results.
 <img width="1228" alt="image" src="https://github.com/hrvadl/converter/assets/93580374/77b9f5cf-1e9e-485f-a7f8-b29a092811f6">
+
+## Per service documentation
+- [Gateway](https://github.com/hrvadl/converter/blob/main/gw/README.md)
+- [Mailer](https://github.com/hrvadl/converter/blob/main/mailer/README.md)
+- [Ratewatcher](https://github.com/hrvadl/converter/blob/main/rw/README.md)
+- [Subscriber](https://github.com/hrvadl/converter/blob/main/sub/README.md)
