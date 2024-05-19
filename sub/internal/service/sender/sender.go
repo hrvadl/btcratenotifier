@@ -13,6 +13,10 @@ const (
 	subject   = "USD to UAH rate exchange"
 )
 
+// New will construct new sender responsible for sending
+// message to the provided recipients.
+// NOTE: neither of arguments cannot be empty, or service will
+// panic later.
 func New(
 	m Mailer,
 	sg SubscriberGetter,
@@ -49,6 +53,9 @@ type Mailer interface {
 	Send(ctx context.Context, msg, subject string, to ...string) error
 }
 
+// Service is main structure, responsible for sending
+// mails to the subscribers, getting exchange rate and
+// formatting email messages.
 type Service struct {
 	mailer     Mailer
 	formatter  RateMessageFormatter
@@ -57,6 +64,11 @@ type Service struct {
 	log        *slog.Logger
 }
 
+// Send methods tries to get all subscribers, then
+// gets all latest rate and format message. At the end
+// it delegetes sending to the underlying sender.
+// Could return an error if any of above steps has failed.
+// NOTE: don't call mailer send if there're zero subscribers.
 func (w *Service) Send(ctx context.Context) error {
 	subs, err := w.subGetter.Get(ctx)
 	if err != nil {
@@ -75,6 +87,9 @@ func (w *Service) Send(ctx context.Context) error {
 	return w.mailer.Send(ctx, w.formatter.Format(r), subject, mapSubsToMails(subs)...)
 }
 
+// mapSubsToMails takes slice of Subscriber as a argument
+// and then extracts mail from them, returning the slice
+// of subscribers's mails.
 func mapSubsToMails(s []subscriber.Subscriber) []string {
 	mails := make([]string, 0, len(s))
 	for i := range s {

@@ -22,6 +22,12 @@ const (
 	retryTimeout = time.Second * 2
 )
 
+// NewClient constructs a GRPC rate watcher client with provided arguments. Under the hood
+// it initializes a bunch of GRPC middleware for debugging and monitoring purposes. I.E:
+// - retry middleware
+// - request logger middleware
+// If initialization of connection has failed it will return an error.
+// NOTE: neither of parameters couldn't be nil or client will panic.
 func NewClient(addr string, log *slog.Logger) (*Client, error) {
 	retryOpt := []retry.CallOption{
 		retry.WithCodes(codes.Aborted, codes.NotFound, codes.DeadlineExceeded),
@@ -47,6 +53,8 @@ func NewClient(addr string, log *slog.Logger) (*Client, error) {
 	}, nil
 }
 
+// Client represents GRPC rate watcher client which
+// is responsible for retrivieng latest exchange rate.
 type Client struct {
 	log *slog.Logger
 	api pb.RateWatcherServiceClient
