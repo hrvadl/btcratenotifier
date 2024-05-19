@@ -10,16 +10,24 @@ import (
 
 const operation = "resend mail client"
 
+// NewClient constructs new Resend client
+// with provided token.
 func NewClient(token string) *Client {
 	return &Client{
 		c: rs.NewClient(token),
 	}
 }
 
+// Client is a thin wrapper around resend's SDK
+// which will add context support to the existing
+// signature call.
 type Client struct {
 	c *rs.Client
 }
 
+// Send method initiates a call to the resend API using
+// bult-in resend's SDK. Blocks untill call is finished, or
+// error is raised, or context is done.
 func (c *Client) Send(ctx context.Context, m *pb.Mail) error {
 	if len(m.To) == 0 {
 		return fmt.Errorf("%s: recipients cannot be empty", operation)
