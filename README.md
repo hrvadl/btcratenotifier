@@ -4,7 +4,7 @@
 
 The app contains 4 microservices:
 
-- Subscriber (sub) for subscribing users and executing cron job to trigger email once a day at 12:00 UTC
+- Subscriber (sub) for subscribing users and executing cron job to trigger email once a day at 12:00 UTC (15:00 by Kyiv time)
 - Gateway (gw) for mapping HTTP -> GRPC requests and entry point purposes
 - Mailer - dumb service for sending emails
 - RateWatcher (rw) - service for getting the latest currency exchange rates
@@ -105,7 +105,7 @@ Before committing anything, you need to also install [pre-commit](https://pre-co
 
 Compose file has definition of 4 microservices + 1 db service (MySQl) + migrator service (used for running DB migrations on startup). Typically, services won't start till DB is up and migrations has succeeded. So, keep in head, that startup could take some time (1-2 minutes). Data is saved in volume and pods communicate using shared private network. The only pod, which port is mapped to the host port is gateway service.
 
-## Documentation
+## Documentation 📄
 
 Services are perfectly documented with Godoc comments. You can host godoc server running following command from the root of the repo:
 
@@ -120,12 +120,12 @@ Then you can visit http://localhost:6060/pkg/github.com/hrvadl/converter/?m=all 
 
 <img width="1100" alt="image" src="https://github.com/hrvadl/converter/assets/93580374/1eeedb0a-7712-43dc-9395-4217d37ded15">
 
-## CI 🛞
+## CI ⚙️
 
 The application uses GI actions (free tear) as a CI runner. It suits perfectly for small non-commercial projects. CI heavily relies on the [taskfile](https://taskfile.dev/) to do its job. This means each CI step could easily be run locally. CI steps are run in parallel to reduce the time spent waiting for the results.
 <img width="1228" alt="image" src="https://github.com/hrvadl/converter/assets/93580374/77b9f5cf-1e9e-485f-a7f8-b29a092811f6">
 
-## Per service documentation
+## Per service documentation 📃
 - [Gateway](https://github.com/hrvadl/converter/blob/main/gw/README.md)
 - [Mailer](https://github.com/hrvadl/converter/blob/main/mailer/README.md)
 - [Ratewatcher](https://github.com/hrvadl/converter/blob/main/rw/README.md)
