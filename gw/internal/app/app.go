@@ -4,6 +4,9 @@ package app
 import (
 	"fmt"
 	"log/slog"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -95,4 +98,15 @@ func (a *App) Run() error {
 	)
 
 	return srv.ListenAndServe()
+}
+
+// GracefulStop method gracefully stop the server. It listens to the OS sigals.
+// After it recieves signal it terminates all currently active servers,
+// client, connections (if any) and gracefully exits.
+func (a *App) GracefulStop() {
+	ch := make(chan os.Signal, 1)
+	signal.Notify(ch, syscall.SIGTERM, syscall.SIGINT)
+	signal := <-ch
+	a.log.Info("Recieved stop signal. Terminating...", "signal", signal)
+	a.log.Info("Successfully terminated server. Bye!")
 }
