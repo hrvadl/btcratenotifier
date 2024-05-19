@@ -1,5 +1,6 @@
 package app
 
+//nolint:revive
 import (
 	"fmt"
 	"log/slog"
@@ -37,18 +38,6 @@ func (a *App) MustRun() {
 	}
 }
 
-// @title Converter rate gateway
-// @version 1.0
-// @description This is a currency rate exchange gateway service
-
-// @contact.name API Support
-// @contact.url http://www.swagger.io/support
-// @contact.email support@swagger.io
-
-// @license.name Apache 2.0
-// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
-
-// @BasePath /api
 func (a *App) Run() error {
 	rw, err := ratewatcher.NewClient(
 		a.cfg.RateWatcherAddr,

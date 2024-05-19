@@ -1,13 +1,24 @@
 version: "3"
 
 tasks:
+  default:
+    desc: "Show available tasks"
+    cmds:
+      - task --list-all
   run:
+    desc: "Populate env from .env file and run service"
+    deps: [install:godotenv]
+    cmds:
+      - godotenv -f ../.env task run-with-env
+  run-with-env:
+    desc: "run service"
     required:
       vars:
-        - MAILER_ADDR
-        - RATE_WATCHER_ADDR
-        - GATEWAY_LOG_LEVEL
         - GATEWAY_PORT
+        - GATEWAY_ADDR
+        - GATEWAY_LOG_LEVEL
+        - RATE_WATCH_ADDR
+        - SUB_ADDR
     cmds:
       - go run ./cmd/server
   lint:
@@ -85,6 +96,14 @@ tasks:
       - go install go.uber.org/mock/mockgen@latest
     status:
       - command -v mockgen
+
+  install:godotenv:
+    desc: "Install go dot env lib"
+    cmds:
+      - go install github.com/joho/godotenv/cmd/godotenv@latest
+    status:
+      - command godotenv
+
   gen:swagger:
     desc: "Generate swagger docs"
     cmds:
