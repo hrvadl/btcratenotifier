@@ -18,6 +18,8 @@ func NewDailyJob(hour, min int, log *slog.Logger) *Job {
 	}
 }
 
+// NewJob constructs job which will  be triggered after
+// provided interval.
 func NewJob(interval time.Duration, log *slog.Logger) *Job {
 	return &Job{
 		interval: interval,
@@ -26,6 +28,9 @@ func NewJob(interval time.Duration, log *slog.Logger) *Job {
 	}
 }
 
+// Job reporesents Cron Job which could be runned in some
+// interval or on daily basis. It's a thin wrapper around stdlib's
+// time.Ticker.
 type Job struct {
 	interval time.Duration
 	ticker   *time.Ticker
@@ -37,6 +42,10 @@ type Doer interface {
 	Do() error
 }
 
+// Do method calls provided fn with the given interval.
+// Does not stop on error, only logs it and then goes on.
+// Reset is needed for the daily job, to change it to 24 hours and it's done only once
+// after first run.
 func (j *Job) Do(fn Doer) {
 	var once sync.Once
 	go func() {

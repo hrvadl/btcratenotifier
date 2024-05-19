@@ -40,3 +40,15 @@ tasks:
       - mailer:test:race
       - rw:test:race
       - sub:test:race
+  godoc:
+    desc: "Host a Godoc web server on the http://localhost:6060/pkg/github.com/hrvadl/converter?m=all"
+    deps: [install:godoc]
+    cmds:
+      - echo "go to the http://localhost:6060/pkg/github.com/hrvadl/converter?m=all"
+      - godoc -http=:6060
+  install:godoc:
+    desc: "Installed godoc util"
+    cmds:
+      - go install -v golang.org/x/tools/cmd/godoc@latest
+    status:
+      - command godoc -h

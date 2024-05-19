@@ -21,6 +21,12 @@ const (
 	retryTimeout = time.Second * 2
 )
 
+// NewClient constructs a GRPC mailer client with provided arguments. Under the hood
+// it initializes a bunch of GRPC middleware for debugging and monitoring purposes. I.E:
+// - retry middleware
+// - request logger middleware
+// If initialization of connection has failed it will return an error.
+// NOTE: neither of parameters couldn't be nil or client will panic.
 func NewClient(addr string, from string, log *slog.Logger) (*Client, error) {
 	retryOpt := []retry.CallOption{
 		retry.WithCodes(codes.Aborted, codes.NotFound, codes.DeadlineExceeded),
@@ -47,15 +53,14 @@ func NewClient(addr string, from string, log *slog.Logger) (*Client, error) {
 	}, nil
 }
 
+// Client represents GRPC mailer client which
+// is responsible for sending messages to the provided
+// subscribers. from parameter is author of the message, which is hard-coded
+// on structure creation.
 type Client struct {
 	log  *slog.Logger
 	api  pb.MailerServiceClient
 	from string
-}
-
-type SendOptions struct {
-	To      string
-	Payload string
 }
 
 func (c *Client) Send(ctx context.Context, html, subject string, to ...string) error {
