@@ -2,12 +2,13 @@ package sub
 
 import (
 	"context"
-	"fmt"
 	"log/slog"
 	"net/http"
 	"time"
 
 	pb "github.com/hrvadl/converter/protos/gen/go/v1/sub"
+
+	"github.com/hrvadl/converter/gw/internal/transport/http/handlers"
 )
 
 func NewHandler(svc Service, log *slog.Logger) *Handler {
@@ -28,8 +29,6 @@ type Handler struct {
 }
 
 func (h *Handler) Subscribe(w http.ResponseWriter, r *http.Request) {
-	f := r.Form
-	h.log.Info(fmt.Sprintf("%v", f))
 	mail := r.FormValue("email")
 	ctx, cancel := context.WithTimeout(r.Context(), time.Second*5)
 	defer cancel()
@@ -37,10 +36,10 @@ func (h *Handler) Subscribe(w http.ResponseWriter, r *http.Request) {
 	if err := h.svc.Subscribe(ctx, &pb.SubscribeRequest{Email: mail}); err != nil {
 		h.log.Error("Failed to subscribe user", "err", err)
 		w.WriteHeader(http.StatusConflict)
-		_, _ = w.Write([]byte(err.Error()))
+		_, _ = w.Write(handlers.NewErrResponse(err))
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
-	_, _ = w.Write([]byte("Added email."))
+	_, _ = w.Write(handlers.NewSuccessResponse("added email", nil))
 }

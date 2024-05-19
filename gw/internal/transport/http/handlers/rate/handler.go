@@ -2,10 +2,11 @@ package rate
 
 import (
 	"context"
-	"fmt"
 	"log/slog"
 	"net/http"
 	"time"
+
+	"github.com/hrvadl/converter/gw/internal/transport/http/handlers"
 )
 
 func NewHandler(rg Getter, log *slog.Logger) *Handler {
@@ -33,10 +34,10 @@ func (h *Handler) GetRate(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		h.log.Error("Failed to get rate", "err", err)
 		w.WriteHeader(http.StatusBadRequest)
-		_, _ = w.Write([]byte(err.Error()))
+		_, _ = w.Write(handlers.NewErrResponse(err))
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
-	_, _ = w.Write([]byte(fmt.Sprint(rat)))
+	_, _ = w.Write(handlers.NewSuccessResponse("successfully got rate", rat))
 }

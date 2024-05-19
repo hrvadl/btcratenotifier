@@ -58,6 +58,7 @@ func (a *App) Run() error {
 		middleware.Recoverer,
 		middleware.Logger,
 		middleware.CleanPath,
+		middleware.SetHeader("Content-Type", "application/octet-stream"),
 	)
 
 	r.Route("/api", func(r chi.Router) {
