@@ -22,6 +22,17 @@ As per the task, I need to send a link to only one repository, it was decided to
 7. Populate the `MAILER_FROM_ADDR` variable with the email you've verified
 8. From the root of the repo run `docker compose up -d`
 
+## Tech stack ⚒️
+
+- [GO](https://go.dev/) as a main programming language
+- [`net/http`](https://pkg.go.dev/net/http) for HTTP server
+- [GRPC](https://grpc.io/) for inter-service communication
+- [`log/slog`](https://go.dev/blog/slog) as a structured logger
+- [swaggo](https://github.com/swaggo/swag) for generating swagger documentaion
+- [MySQL](https://www.mysql.com/) as a database
+- [Golang migrate](https://github.com/golang-migrate/migrate) for DB migrations
+- [Gomock](https://github.com/uber-go/mock) for mock generation
+
 ## Local development 🧑🏻‍💻
 
 The repository contains root [taskfile](https://taskfile.dev/) which imports other task files specific to each service. To see all available commands just type:

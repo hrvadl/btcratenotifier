@@ -1,6 +1,6 @@
 # Ratewatcher microservice (rw)
 
-This service is responsible for getting latest exchange rate for USD -> UAH.
+This service is responsible for getting latest exchange rate for USD -> UAH. Currently uses [exchange rate](https://app.exchangerate-api.com/) service.
 
 ## Available tasks
 
