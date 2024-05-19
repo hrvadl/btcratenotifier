@@ -57,6 +57,48 @@ func TestStdlibValidate(t *testing.T) {
 			},
 			want: false,
 		},
+		{
+			name: "Should not parse incorrect email",
+			args: args{
+				email: "",
+			},
+			want: false,
+		},
+		{
+			name: "Should not parse incorrect email",
+			args: args{
+				email: "youngwwad",
+			},
+			want: false,
+		},
+		{
+			name: "Should not parse incorrect email",
+			args: args{
+				email: "",
+			},
+			want: false,
+		},
+		{
+			name: "Should not parse incorrect email",
+			args: args{
+				email: "youngwwad@m",
+			},
+			want: false,
+		},
+		{
+			name: "Should parse correct email with subdomain",
+			args: args{
+				email: "youngwwad@m.c.c",
+			},
+			want: true,
+		},
+		{
+			name: "Should parse correct email",
+			args: args{
+				email: "youngwwad@m.c",
+			},
+			want: true,
+		},
 	}
 
 	for _, tt := range tests {
