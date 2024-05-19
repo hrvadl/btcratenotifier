@@ -3,7 +3,7 @@ package ratewatcher.v1;
 
 import "google/protobuf/empty.proto";
 
-option go_package = "github.com/hrvadl/btcratenotifier/protos/v1/ratewatcher";
+option go_package = "github.com/hrvadl/converter/protos/v1/ratewatcher";
 
 service RateWatcherService {
   rpc GetRate(google.protobuf.Empty) returns (RateResponse);

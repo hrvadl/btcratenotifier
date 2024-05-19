@@ -3,7 +3,7 @@ package sub.v1;
 
 import "google/protobuf/empty.proto";
 
-option go_package = "github.com/hrvadl/btcratenotifier/protos/v1/sub";
+option go_package = "github.com/hrvadl/converter/protos/v1/sub";
 
 service SubService {
   rpc Subscribe(SubscribeRequest) returns (google.protobuf.Empty);
