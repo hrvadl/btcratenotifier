@@ -10,7 +10,7 @@ import (
 
 const (
 	operation = "sender cron job"
-	subject   = "BTC to UAH rate exchange"
+	subject   = "USD to UAH rate exchange"
 )
 
 func New(

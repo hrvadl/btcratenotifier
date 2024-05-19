@@ -33,7 +33,7 @@ func (h *Handler) GetRate(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		h.log.Error("Failed to get rate", "err", err)
 		w.WriteHeader(http.StatusBadRequest)
-		_, _ = w.Write([]byte("Invalid status value"))
+		_, _ = w.Write([]byte(err.Error()))
 		return
 	}
 

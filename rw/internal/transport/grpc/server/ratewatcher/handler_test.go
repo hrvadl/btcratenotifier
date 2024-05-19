@@ -72,7 +72,7 @@ func TestServerGetRate(t *testing.T) {
 				c.EXPECT().
 					Convert(gomock.Any()).
 					Times(1).
-					Return(float32(0), errors.New("failed to convert BTC to UAH"))
+					Return(float32(0), errors.New("failed to convert USD to UAH"))
 			},
 			want:    nil,
 			wantErr: true,
