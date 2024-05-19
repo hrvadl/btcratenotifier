@@ -5,6 +5,5 @@ package main
 
 // TODO:
 //
-// 1.  Add GoDoc comments
-// 2.  Add README to each microservice
-// 3. Add mail validator (Need to test)
+// 1. Add GoDoc comments
+// 2. Add README to each microservice
