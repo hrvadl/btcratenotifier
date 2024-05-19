@@ -22,6 +22,10 @@ As per the task, I need to send a link to only one repository, it was decided to
 7. Populate the `MAILER_FROM_ADDR` variable with the email you've verified
 8. From the root of the repo run `docker compose up -d`
 
+## Compose file 🐋
+
+Compose file has definition of 4 microservices + 1 db service (MySQl) + migrator service (used for running DB migrations on startup). Typically, services won't start till DB is up and migrations has succeeded. So, keep in head, that startup could take some time (1-2 minutes). Data is saved in volume and pods communicate using shared private network. The only pod, which port is mapped to the host port is gateway service.
+
 ## Tech stack ⚒️
 
 - [GO](https://go.dev/) as a main programming language

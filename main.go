@@ -6,4 +6,3 @@ package main
 // TODO:
 //
 // 1. Add GoDoc comments
-// 2. Add README to each microservice
