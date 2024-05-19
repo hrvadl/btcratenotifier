@@ -1,11 +1,22 @@
 version: "3"
 
 tasks:
+  default:
+    desc: "Show available tasks"
+    cmds:
+      - task --list-all
   run:
+    desc: "Populate env from .env file and run service"
+    deps: [install:godotenv]
+    cmds:
+      - godotenv -f ../.env task run-with-env
+  run-with-env:
     required:
       vars:
         - EXCHANGE_API_KEY
         - EXCHANGE_API_BASE_URL
+        - EXCHANGE_LOG_LEVEL
+        - EXCHANGE_PORT
     cmds:
       - go run ./cmd/server
   lint:
@@ -82,3 +93,9 @@ tasks:
       - go install go.uber.org/mock/mockgen@latest
     status:
       - command -v mockgen
+  install:godotenv:
+    desc: "Install go dot env lib"
+    cmds:
+      - go install github.com/joho/godotenv/cmd/godotenv@latest
+    status:
+      - command godotenv
