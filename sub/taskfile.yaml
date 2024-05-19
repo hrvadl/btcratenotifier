@@ -1,7 +1,16 @@
 version: "3"
 
 tasks:
+  default:
+    desc: "Show available tasks"
+    cmds:
+      - task --list-all
   run:
+    desc: "Populate env from .env file and run service"
+    deps: [install:godotenv]
+    cmds:
+      - godotenv -f ../.env task run-with-env
+  run-with-env:
     required:
       vars:
         - SUB_PORT
@@ -85,3 +94,9 @@ tasks:
       - go install go.uber.org/mock/mockgen@latest
     status:
       - command -v mockgen
+  install:godotenv:
+    desc: "Install go dot env lib"
+    cmds:
+      - go install github.com/joho/godotenv/cmd/godotenv@latest
+    status:
+      - command godotenv
