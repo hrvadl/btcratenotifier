@@ -1,1 +1,100 @@
-# BTC -> UAH rate notifier microservice
+# USD -> UAH rate notifier microservice 💸
+
+## Description 💬
+
+The app contains 4 microservices:
+
+- Subscriber (sub) for subscribing users and executing cron job to trigger email once a day at 12:00 UTC
+- Gateway (gw) for mapping HTTP -> GRPC requests and entry point purposes
+- Mailer - dumb service for sending emails
+- RateWatcher (rw) - service for getting the latest currency exchange rates
+
+As per the task, I need to send a link to only one repository, it was decided to use go workspaces to fit all microservices to one repo. Typically, it should be the case and it's antipattern. Basically, you can treat each top-level directory as a separate and independent repository/package/module. The `protos` top-level directory is also a go module, containing grpc-generated code.
+
+## How to run? 🏃
+
+1. Copy .env.example contents to .env
+2. Get a token for exchange rate API (https://app.exchangerate-api.com/)
+3. Populate the `EXCHANGE_API_KEY` variable value with the token you've got
+4. Get a token for resend API (https://resend.com/)
+5. Verify your domain for sending
+6. Populate the `MAILER_API_KEY` variable value with the token you've got
+7. Populate the `MAILER_FROM_ADDR` variable with the email you've verified
+8. From the root of the repo run `docker compose up -d`
+
+## Local development 🧑🏻‍💻
+
+The repository contains root [taskfile](https://taskfile.dev/) which imports other task files specific to each service. To see all available commands just type:
+
+```sh
+task
+```
+
+You should get the following output, where each line is the name of the task:
+
+```sh
+* default:                      Show available tasks
+* lint:
+* test:
+* gw:generate:                  Generate (used for mock generation)
+* gw:install:                   Install all tools
+* gw:install:gofumpt:           Install gofumpt
+* gw:install:lint:              Install golangci-lint
+* gw:install:mock:              Install mockgen
+* gw:lint:                      Run golangci-lint
+* gw:run:
+* gw:test:                      Run tests
+* gw:test:cover:                Run tests & show coverage
+* gw:test:race:                 Run tests with a race flag
+* mailer:generate:              Generate (used for mock generation)
+* mailer:install:               Install all tools
+* mailer:install:gofumpt:       Install gofumpt
+* mailer:install:lint:          Install golangci-lint
+* mailer:install:mock:          Install mockgen
+* mailer:lint:                  Run golangci-lint
+* mailer:run:
+* mailer:test:                  Run tests
+* mailer:test:cover:            Run tests & show coverage
+* mailer:test:race:             Run tests with a race flag
+* protos:generate:
+* protos:generate:mailer:
+* protos:generate:rw:
+* protos:generate:sub:
+* rw:generate:                  Generate (used for mock generation)
+* rw:install:                   Install all tools
+* rw:install:gofumpt:           Install gofumpt
+* rw:install:lint:              Install golangci-lint
+* rw:install:mock:              Install mockgen
+* rw:lint:                      Run golangci-lint
+* rw:run:
+* rw:test:                      Run tests
+* rw:test:cover:                Run tests & show coverage
+* rw:test:race:                 Run tests with a race flag
+* sub:generate:                 Generate (used for mock generation)
+* sub:install:                  Install all tools
+* sub:install:gofumpt:          Install gofumpt
+* sub:install:lint:             Install golangci-lint
+* sub:install:mock:             Install mockgen
+* sub:lint:                     Run golangci-lint
+* sub:run:
+* sub:test:                     Run tests
+* sub:test:cover:               Run tests & show coverage
+* sub:test:race:                Run tests with a race flag
+```
+
+They're quite handy to run tests/linters/formatters or to generate grpc-related code and they will install all the deps in case you don't have them.
+
+Before committing anything, you need to also install [pre-commit](https://pre-commit.com/). It will run golangci lint before committing to prevent common dummy issues related to formatting/go code. Typically, it should be covered by the CI job, but I need to reduce possible extra runs, considering GH actions has limit on daily runs.
+
+## CI 🛞
+
+The application uses GI actions (free tear) as a CI runner. It suits perfectly for small non-commercial projects. CI heavily relies on the [taskfile](https://taskfile.dev/) to do its job. This means each CI step could easily be run locally. CI steps are run in parallel to reduce the time spent waiting for the results.
+<img width="1228" alt="image" src="https://github.com/hrvadl/converter/assets/93580374/77b9f5cf-1e9e-485f-a7f8-b29a092811f6">
+
+## Showcase 🎤
+
+TBD...
+
+## App diagram 🏛️
+
+<img width="1100" alt="image" src="https://github.com/hrvadl/converter/assets/93580374/1eeedb0a-7712-43dc-9395-4217d37ded15">
