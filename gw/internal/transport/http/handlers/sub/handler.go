@@ -28,6 +28,15 @@ type Handler struct {
 	log *slog.Logger
 }
 
+// Subscribe godoc
+// @Summary      Subscribe to email rate exchange notification
+// @Tags         Rate
+// @Accept       application/x-www-form-urlencoded
+// @Produce      json
+// @Param        body formData string true "Email to subscribe"
+// @Success      200  {object}  handlers.EmptyResponse
+// @Failure      400  {object}  handlers.ErrorResponse
+// @Router       /api/subscribe [post]
 func (h *Handler) Subscribe(w http.ResponseWriter, r *http.Request) {
 	mail := r.FormValue("email")
 	ctx, cancel := context.WithTimeout(r.Context(), time.Second*5)
@@ -41,5 +50,5 @@ func (h *Handler) Subscribe(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	_, _ = w.Write(handlers.NewSuccessResponse("added email", nil))
+	_, _ = w.Write(handlers.NewEmptyResponse("added email"))
 }

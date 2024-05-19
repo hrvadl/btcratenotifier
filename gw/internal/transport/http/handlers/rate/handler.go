@@ -26,6 +26,13 @@ type Handler struct {
 	rg  Getter
 }
 
+// GetRate godoc
+// @Summary      Get USD -> UAH exchange rate
+// @Tags         Rate
+// @Produce      json
+// @Success      200  {object}  handlers.Response[float32]
+// @Failure      400  {object}  handlers.ErrorResponse
+// @Router       /api/rate [get]
 func (h *Handler) GetRate(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), time.Second*3)
 	defer cancel()
