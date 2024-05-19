@@ -1,6 +1,9 @@
 package validator
 
-import "net/mail"
+import (
+	"net/mail"
+	"strings"
+)
 
 func NewStdlib() *Stdlib {
 	return &Stdlib{}
@@ -9,6 +12,15 @@ func NewStdlib() *Stdlib {
 type Stdlib struct{}
 
 func (r Stdlib) Validate(email string) bool {
-	_, err := mail.ParseAddress(email)
-	return err == nil
+	m, err := mail.ParseAddress(email)
+	if err != nil {
+		return false
+	}
+
+	parts := strings.Split(m.Address, "@")
+	if len(parts) != 2 {
+		return false
+	}
+
+	return len(strings.Split(parts[1], ".")) >= 2
 }
