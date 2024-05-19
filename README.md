@@ -11,21 +11,6 @@ The app contains 4 microservices:
 
 As per the task, I need to send a link to only one repository, it was decided to use go workspaces to fit all microservices to one repo. Typically, it should not be the case and it's antipattern. Basically, you can treat each top-level directory as a separate and independent repository/package/module. The `protos` top-level directory is also a go module, containing grpc-generated code.
 
-## How to run? 🏃
-
-1. Copy .env.example contents to .env
-2. Get a token for exchange rate API (https://app.exchangerate-api.com/)
-3. Populate the `EXCHANGE_API_KEY` variable value with the token you've got
-4. Get a token for resend API (https://resend.com/)
-5. Verify your domain for sending
-6. Populate the `MAILER_API_KEY` variable value with the token you've got
-7. Populate the `MAILER_FROM_ADDR` variable with the email you've verified
-8. From the root of the repo run `docker compose up -d`
-
-## Compose file 🐋
-
-Compose file has definition of 4 microservices + 1 db service (MySQl) + migrator service (used for running DB migrations on startup). Typically, services won't start till DB is up and migrations has succeeded. So, keep in head, that startup could take some time (1-2 minutes). Data is saved in volume and pods communicate using shared private network. The only pod, which port is mapped to the host port is gateway service.
-
 ## Tech stack ⚒️
 
 - [GO](https://go.dev/) as a main programming language
@@ -36,6 +21,21 @@ Compose file has definition of 4 microservices + 1 db service (MySQl) + migrator
 - [MySQL](https://www.mysql.com/) as a database
 - [Golang migrate](https://github.com/golang-migrate/migrate) for DB migrations
 - [Gomock](https://github.com/uber-go/mock) for mock generation
+
+## Demo 🎤
+
+https://drive.google.com/file/d/1jrEaqvzlhKB4HB98VEykbiR00G2OEwJS/view?usp=sharing
+
+## How to run? 🏃
+
+1. Copy .env.example contents to .env
+2. Get a token for exchange rate API (https://app.exchangerate-api.com/)
+3. Populate the `EXCHANGE_API_KEY` variable value with the token you've got
+4. Get a token for resend API (https://resend.com/)
+5. Verify your domain for sending
+6. Populate the `MAILER_API_KEY` variable value with the token you've got
+7. Populate the `MAILER_FROM_ADDR` variable with the email you've verified
+8. From the root of the repo run `docker compose up -d`
 
 ## Local development 🧑🏻‍💻
 
@@ -101,23 +101,26 @@ They're quite handy to run tests/linters/formatters or to generate grpc-related 
 
 Before committing anything, you need to also install [pre-commit](https://pre-commit.com/). It will run golangci lint before committing to prevent common dummy issues related to formatting/go code. Typically, it should be covered by the CI job, but I need to reduce possible extra runs, considering GH actions has limit on daily runs.
 
-## CI 🛞
+## Compose file 🐋
 
-The application uses GI actions (free tear) as a CI runner. It suits perfectly for small non-commercial projects. CI heavily relies on the [taskfile](https://taskfile.dev/) to do its job. This means each CI step could easily be run locally. CI steps are run in parallel to reduce the time spent waiting for the results.
-<img width="1228" alt="image" src="https://github.com/hrvadl/converter/assets/93580374/77b9f5cf-1e9e-485f-a7f8-b29a092811f6">
-
-## Showcase 🎤
-
-https://drive.google.com/file/d/1jrEaqvzlhKB4HB98VEykbiR00G2OEwJS/view?usp=sharing
+Compose file has definition of 4 microservices + 1 db service (MySQl) + migrator service (used for running DB migrations on startup). Typically, services won't start till DB is up and migrations has succeeded. So, keep in head, that startup could take some time (1-2 minutes). Data is saved in volume and pods communicate using shared private network. The only pod, which port is mapped to the host port is gateway service.
 
 ## Documentation
+
 Services are perfectly documented with Godoc comments. You can host godoc server running following command from the root of the repo:
+
 ```sh
 task godoc
 ```
+
 Then you can visit http://localhost:6060/pkg/github.com/hrvadl/converter/?m=all and see documentation for all my packages
 <img width="1704" alt="image" src="https://github.com/hrvadl/converter/assets/93580374/e026750c-b399-4801-acc2-76da4d316298">
 
 ## App diagram 🏛️
 
 <img width="1100" alt="image" src="https://github.com/hrvadl/converter/assets/93580374/1eeedb0a-7712-43dc-9395-4217d37ded15">
+
+## CI 🛞
+
+The application uses GI actions (free tear) as a CI runner. It suits perfectly for small non-commercial projects. CI heavily relies on the [taskfile](https://taskfile.dev/) to do its job. This means each CI step could easily be run locally. CI steps are run in parallel to reduce the time spent waiting for the results.
+<img width="1228" alt="image" src="https://github.com/hrvadl/converter/assets/93580374/77b9f5cf-1e9e-485f-a7f8-b29a092811f6">
