@@ -3,7 +3,7 @@ package mailer.v1;
 
 import "google/protobuf/empty.proto";
 
-option go_package = "github.com/hrvadl/converter/protos/v1/mailer";
+option go_package = "github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/protos/v1/mailer";
 
 service MailerService {
   rpc Send(Mail) returns (google.protobuf.Empty);

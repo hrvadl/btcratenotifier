@@ -5,7 +5,6 @@ go 1.22.0
 require (
 	github.com/go-chi/chi/v5 v5.0.12
 	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.1.0
-	github.com/hrvadl/converter/protos v0.0.0-20240518194626-a433395afb0b
 	github.com/swaggo/http-swagger v1.3.4
 	github.com/swaggo/swag v1.16.3
 	go.uber.org/mock v0.4.0
@@ -14,6 +13,7 @@ require (
 )
 
 require (
+	github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/protos v0.0.0-20240609093758-f84e7233cbf3 // indirect
 	github.com/KyleBanks/depth v1.2.1 // indirect
 	github.com/go-openapi/jsonpointer v0.21.0 // indirect
 	github.com/go-openapi/jsonreference v0.21.0 // indirect
