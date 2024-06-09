@@ -10,10 +10,10 @@ import (
 
 	"google.golang.org/grpc"
 
-	"github.com/hrvadl/converter/mailer/internal/cfg"
-	"github.com/hrvadl/converter/mailer/internal/platform/mail/resend"
-	"github.com/hrvadl/converter/mailer/internal/transport/grpc/server/mailer"
-	"github.com/hrvadl/converter/mailer/pkg/logger"
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/mailer/internal/cfg"
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/mailer/internal/platform/mail/resend"
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/mailer/internal/transport/grpc/server/mailer"
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/mailer/pkg/logger"
 )
 
 const operation = "app init"

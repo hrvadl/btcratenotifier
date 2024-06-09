@@ -9,8 +9,8 @@ import (
 
 	"go.uber.org/mock/gomock"
 
-	"github.com/hrvadl/converter/sub/internal/service/sender/mocks"
-	"github.com/hrvadl/converter/sub/internal/storage/subscriber"
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/sub/internal/service/sender/mocks"
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/sub/internal/storage/subscriber"
 )
 
 func TestNew(t *testing.T) {

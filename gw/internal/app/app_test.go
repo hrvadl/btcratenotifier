@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/hrvadl/converter/gw/internal/cfg"
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/gw/internal/cfg"
 )
 
 func TestNew(t *testing.T) {

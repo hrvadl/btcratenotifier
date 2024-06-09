@@ -7,11 +7,11 @@ import (
 	"reflect"
 	"testing"
 
-	pb "github.com/hrvadl/converter/protos/gen/go/v1/mailer"
+	pb "github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/protos/gen/go/v1/mailer"
 	"go.uber.org/mock/gomock"
 	"google.golang.org/protobuf/types/known/emptypb"
 
-	"github.com/hrvadl/converter/mailer/internal/transport/grpc/server/mailer/mocks"
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/mailer/internal/transport/grpc/server/mailer/mocks"
 )
 
 func TestServerSend(t *testing.T) {

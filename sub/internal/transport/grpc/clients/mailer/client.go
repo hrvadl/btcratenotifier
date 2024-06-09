@@ -1,4 +1,4 @@
-//go:generate mockgen -destination=./mocks/mock_parser.go -package=mocks github.com/hrvadl/converter/protos/gen/go/v1/mailer MailerServiceClient
+//go:generate mockgen -destination=./mocks/mock_parser.go -package=mocks github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/protos/gen/go/v1/mailer MailerServiceClient
 package mailer
 
 import (
@@ -8,12 +8,12 @@ import (
 	"time"
 
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/retry"
-	pb "github.com/hrvadl/converter/protos/gen/go/v1/mailer"
+	pb "github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/protos/gen/go/v1/mailer"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials/insecure"
 
-	"github.com/hrvadl/converter/sub/pkg/logger"
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/sub/pkg/logger"
 )
 
 const (

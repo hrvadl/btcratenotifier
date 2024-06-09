@@ -12,13 +12,13 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	httpSwagger "github.com/swaggo/http-swagger"
 
-	_ "github.com/hrvadl/converter/gw/docs"
-	"github.com/hrvadl/converter/gw/internal/cfg"
-	"github.com/hrvadl/converter/gw/internal/transport/grpc/clients/ratewatcher"
-	ssvc "github.com/hrvadl/converter/gw/internal/transport/grpc/clients/sub"
-	"github.com/hrvadl/converter/gw/internal/transport/http/handlers/rate"
-	"github.com/hrvadl/converter/gw/internal/transport/http/handlers/sub"
-	"github.com/hrvadl/converter/gw/pkg/logger"
+	_ "github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/gw/docs"
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/gw/internal/cfg"
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/gw/internal/transport/grpc/clients/ratewatcher"
+	ssvc "github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/gw/internal/transport/grpc/clients/sub"
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/gw/internal/transport/http/handlers/rate"
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/gw/internal/transport/http/handlers/sub"
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/gw/pkg/logger"
 )
 
 const operation = "app init"

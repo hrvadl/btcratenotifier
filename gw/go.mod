@@ -1,4 +1,4 @@
-module github.com/hrvadl/converter/gw
+module github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/gw
 
 go 1.22.0
 

@@ -10,10 +10,10 @@ import (
 
 	"google.golang.org/grpc"
 
-	"github.com/hrvadl/converter/rw/internal/cfg"
-	"github.com/hrvadl/converter/rw/internal/platform/rates/exchangerate"
-	"github.com/hrvadl/converter/rw/internal/transport/grpc/server/ratewatcher"
-	"github.com/hrvadl/converter/rw/pkg/logger"
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/rw/internal/cfg"
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/rw/internal/platform/rates/exchangerate"
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/rw/internal/transport/grpc/server/ratewatcher"
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/rw/pkg/logger"
 )
 
 const operation = "app init"

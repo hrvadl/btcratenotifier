@@ -7,7 +7,7 @@ import (
 	"github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 
-	"github.com/hrvadl/converter/sub/internal/storage/platform/db"
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/sub/internal/storage/platform/db"
 )
 
 // Repo is a thin abstraction to not do sqlx queries

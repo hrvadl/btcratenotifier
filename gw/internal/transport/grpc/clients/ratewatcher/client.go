@@ -1,4 +1,4 @@
-//go:generate mockgen -destination=./mocks/mock_rw.go -package=mocks github.com/hrvadl/converter/protos/gen/go/v1/ratewatcher RateWatcherServiceClient
+//go:generate mockgen -destination=./mocks/mock_rw.go -package=mocks github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/protos/gen/go/v1/ratewatcher RateWatcherServiceClient
 package ratewatcher
 
 import (
@@ -8,13 +8,13 @@ import (
 	"time"
 
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/retry"
-	pb "github.com/hrvadl/converter/protos/gen/go/v1/ratewatcher"
+	pb "github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/protos/gen/go/v1/ratewatcher"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/protobuf/types/known/emptypb"
 
-	"github.com/hrvadl/converter/gw/pkg/logger"
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/gw/pkg/logger"
 )
 
 const (

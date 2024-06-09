@@ -6,12 +6,12 @@ import (
 	"reflect"
 	"testing"
 
-	pb "github.com/hrvadl/converter/protos/gen/go/v1/sub"
+	pb "github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/protos/gen/go/v1/sub"
 	"go.uber.org/mock/gomock"
 	"golang.org/x/net/context"
 	"google.golang.org/protobuf/types/known/emptypb"
 
-	"github.com/hrvadl/converter/sub/internal/transport/grpc/server/sub/mocks"
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/sub/internal/transport/grpc/server/sub/mocks"
 )
 
 func TestServerSubscribe(t *testing.T) {

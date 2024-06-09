@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/hrvadl/converter/gw/internal/transport/http/handlers"
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/gw/internal/transport/http/handlers"
 )
 
 func NewHandler(rg Getter, log *slog.Logger) *Handler {

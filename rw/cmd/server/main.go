@@ -3,9 +3,9 @@ package main
 import (
 	"os"
 
-	"github.com/hrvadl/converter/rw/internal/app"
-	"github.com/hrvadl/converter/rw/internal/cfg"
-	"github.com/hrvadl/converter/rw/pkg/logger"
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/rw/internal/app"
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/rw/internal/cfg"
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/rw/pkg/logger"
 )
 
 const source = "rateWatcher"

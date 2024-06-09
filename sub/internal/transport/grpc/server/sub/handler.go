@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log/slog"
 
-	pb "github.com/hrvadl/converter/protos/gen/go/v1/sub"
+	pb "github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/protos/gen/go/v1/sub"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"

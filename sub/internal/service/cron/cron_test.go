@@ -8,7 +8,7 @@ import (
 
 	"go.uber.org/mock/gomock"
 
-	"github.com/hrvadl/converter/sub/internal/service/cron/mocks"
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/sub/internal/service/cron/mocks"
 )
 
 func TestNewDailyJob(t *testing.T) {

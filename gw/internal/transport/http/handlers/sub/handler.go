@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"time"
 
-	pb "github.com/hrvadl/converter/protos/gen/go/v1/sub"
+	pb "github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/protos/gen/go/v1/sub"
 
-	"github.com/hrvadl/converter/gw/internal/transport/http/handlers"
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/gw/internal/transport/http/handlers"
 )
 
 func NewHandler(svc Service, log *slog.Logger) *Handler {

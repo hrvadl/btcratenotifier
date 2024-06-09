@@ -5,10 +5,10 @@ import (
 	"errors"
 	"testing"
 
-	pb "github.com/hrvadl/converter/protos/gen/go/v1/ratewatcher"
+	pb "github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/protos/gen/go/v1/ratewatcher"
 	"go.uber.org/mock/gomock"
 
-	"github.com/hrvadl/converter/gw/internal/transport/grpc/clients/ratewatcher/mocks"
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/gw/internal/transport/grpc/clients/ratewatcher/mocks"
 )
 
 func TestClientGetRate(t *testing.T) {

@@ -10,10 +10,10 @@ import (
 	"reflect"
 	"testing"
 
-	pb "github.com/hrvadl/converter/protos/gen/go/v1/sub"
+	pb "github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/protos/gen/go/v1/sub"
 	"go.uber.org/mock/gomock"
 
-	"github.com/hrvadl/converter/gw/internal/transport/http/handlers/sub/mocks"
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/gw/internal/transport/http/handlers/sub/mocks"
 )
 
 func TestNewHandler(t *testing.T) {

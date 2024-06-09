@@ -3,9 +3,9 @@ package main
 import (
 	"os"
 
-	"github.com/hrvadl/converter/sub/internal/app"
-	"github.com/hrvadl/converter/sub/internal/cfg"
-	"github.com/hrvadl/converter/sub/pkg/logger"
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/sub/internal/app"
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/sub/internal/cfg"
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/sub/pkg/logger"
 )
 
 const (

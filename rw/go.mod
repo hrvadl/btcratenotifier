@@ -1,10 +1,9 @@
-module github.com/hrvadl/converter/rw
+module github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/rw
 
 go 1.22.0
 
 require (
 	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.1.0
-	github.com/hrvadl/converter/protos v0.0.0-20240518194626-a433395afb0b
 	go.uber.org/mock v0.4.0
 	google.golang.org/grpc v1.64.0
 	google.golang.org/protobuf v1.34.1
