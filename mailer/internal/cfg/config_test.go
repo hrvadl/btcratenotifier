@@ -129,6 +129,7 @@ func TestNewFromEnv(t *testing.T) {
 				return
 			}
 
+			require.NoError(t, err)
 			require.Equal(t, tt.want, got)
 		})
 	}

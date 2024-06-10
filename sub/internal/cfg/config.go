@@ -2,7 +2,8 @@ package cfg
 
 import (
 	"fmt"
-	"os"
+
+	"github.com/caarlos0/env/v11"
 )
 
 const operation = "config parsing"
@@ -19,12 +20,12 @@ const (
 // Config struct represents application config,
 // which is used application-wide.
 type Config struct {
-	MailerAddr      string
-	Dsn             string
-	RateWatcherAddr string
-	Port            string
-	LogLevel        string
-	MailerFromAddr  string
+	MailerAddr      string `env:"MAILER_ADDR,required,notEmpty"`
+	Dsn             string `env:"SUB_DSN,required,notEmpty"`
+	RateWatcherAddr string `env:"RATE_WATCH_ADDR,required,notEmpty"`
+	Port            string `env:"SUB_PORT,required,notEmpty"`
+	LogLevel        string `env:"SUB_LOG_LEVEL,required,notEmpty"`
+	MailerFromAddr  string `env:"MAILER_FROM_ADDR,required,notEmpty"`
 }
 
 // Must is a handly wrapper around return results from
@@ -42,42 +43,9 @@ func Must(cfg *Config, err error) *Config {
 // the Config struct. Returns an error if any of required variables
 // is missing or contains invalid value.
 func NewFromEnv() (*Config, error) {
-	mAddr := os.Getenv(mailerServiceAddrEnvKey)
-	if mAddr == "" {
-		return nil, fmt.Errorf("%s: mailer addr can't be empty", operation)
+	var cfg Config
+	if err := env.Parse(&cfg); err != nil {
+		return nil, fmt.Errorf("%s failed: %w", operation, err)
 	}
-
-	rwAddr := os.Getenv(rateWatchAddrEnvKey)
-	if rwAddr == "" {
-		return nil, fmt.Errorf("%s: rate watcher addr can't be empty", operation)
-	}
-
-	logLevel := os.Getenv(logLevelEnvKey)
-	if logLevel == "" {
-		return nil, fmt.Errorf("%s: log level can't be empty", operation)
-	}
-
-	port := os.Getenv(portEnvKey)
-	if port == "" {
-		return nil, fmt.Errorf("%s: port can't be empty", operation)
-	}
-
-	dsn := os.Getenv(dsnEnvKey)
-	if dsn == "" {
-		return nil, fmt.Errorf("%s: dsn can't be empty", operation)
-	}
-
-	mailerFromAddr := os.Getenv(mailerFromAddrEnvKey)
-	if mailerFromAddr == "" {
-		return nil, fmt.Errorf("%s: mailer from addr can't be empty", mailerFromAddr)
-	}
-
-	return &Config{
-		LogLevel:        logLevel,
-		Port:            port,
-		RateWatcherAddr: rwAddr,
-		MailerAddr:      mAddr,
-		Dsn:             dsn,
-		MailerFromAddr:  mailerFromAddr,
-	}, nil
+	return &cfg, nil
 }

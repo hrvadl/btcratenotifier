@@ -2,7 +2,8 @@ package cfg
 
 import (
 	"fmt"
-	"os"
+
+	"github.com/caarlos0/env/v11"
 )
 
 const operation = "config parsing"
@@ -16,9 +17,9 @@ const (
 // Config struct represents application config,
 // which is used application-wide.
 type Config struct {
-	MailerToken string
-	LogLevel    string
-	Port        string
+	MailerToken string `env:"API_KEY,required,notEmpty"`
+	LogLevel    string `env:"LOG_LEVEL,required,notEmpty"`
+	Port        string `env:"PORT,required,notEmpty"`
 }
 
 // Must is a handly wrapper around return results from
@@ -36,24 +37,9 @@ func Must(cfg *Config, err error) *Config {
 // the Config struct. Returns an error if any of required variables
 // is missing or contains invalid value.
 func NewFromEnv() (*Config, error) {
-	logLevel := os.Getenv(logLevelEnvKey)
-	if logLevel == "" {
-		return nil, fmt.Errorf("%s: log level can't be empty", operation)
+	var cfg Config
+	if err := env.ParseWithOptions(&cfg, env.Options{Prefix: "MAILER_"}); err != nil {
+		return nil, fmt.Errorf("%s failed: %w", operation, err)
 	}
-
-	port := os.Getenv(portEnvKey)
-	if port == "" {
-		return nil, fmt.Errorf("%s: port can't be empty", operation)
-	}
-
-	mailerToken := os.Getenv(mailerTokenEnvKey)
-	if mailerToken == "" {
-		return nil, fmt.Errorf("%s: token can't be empty", operation)
-	}
-
-	return &Config{
-		LogLevel:    logLevel,
-		Port:        port,
-		MailerToken: mailerToken,
-	}, nil
+	return &cfg, nil
 }

@@ -13,6 +13,7 @@ output:
 linters:
   enable-all: true
   disable:
+    - tagalign
     - godot
     - contextcheck # Check whether the function uses a non-inherited context
     - depguard # Go linter that checks if package imports are in a list of acceptable packages
