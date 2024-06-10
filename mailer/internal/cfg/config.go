@@ -10,7 +10,7 @@ const operation = "config parsing"
 const (
 	logLevelEnvKey    = "MAILER_LOG_LEVEL"
 	portEnvKey        = "MAILER_PORT"
-	mailerTokenEnvKey = "MAILER_API_KEY"
+	mailerTokenEnvKey = "MAILER_API_KEY" // #nosec G101
 )
 
 // Config struct represents application config,

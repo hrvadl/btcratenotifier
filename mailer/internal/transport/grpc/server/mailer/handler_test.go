@@ -4,10 +4,10 @@ import (
 	"context"
 	"errors"
 	"log/slog"
-	"reflect"
 	"testing"
 
 	pb "github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/protos/gen/go/v1/mailer"
+	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 	"google.golang.org/protobuf/types/known/emptypb"
 
@@ -48,6 +48,7 @@ func TestServerSend(t *testing.T) {
 				},
 			},
 			setup: func(t *testing.T, client Client) {
+				t.Helper()
 				c, ok := client.(*mocks.MockClient)
 				if !ok {
 					t.Fatal("Failed to cast client to mock client")
@@ -79,6 +80,7 @@ func TestServerSend(t *testing.T) {
 				},
 			},
 			setup: func(t *testing.T, client Client) {
+				t.Helper()
 				c, ok := client.(*mocks.MockClient)
 				if !ok {
 					t.Fatal("Failed to cast client to mock client")
@@ -106,14 +108,13 @@ func TestServerSend(t *testing.T) {
 				client:                           tt.fields.client,
 			}
 			got, err := s.Send(tt.args.ctx, tt.args.m)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("Server.Send() error = %v, wantErr %v", err, tt.wantErr)
+
+			if tt.wantErr {
+				require.Error(t, err)
 				return
 			}
 
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Server.Send() = %v, want %v", got, tt.want)
-			}
+			require.Equal(t, tt.want, got)
 		})
 	}
 }

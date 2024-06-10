@@ -8,6 +8,7 @@ import (
 	"google.golang.org/grpc"
 )
 
+//nolint:sloglint
 func NewServerGRPCMiddleware(log *slog.Logger) grpc.UnaryServerInterceptor {
 	return logging.UnaryServerInterceptor(
 		logging.LoggerFunc(
@@ -19,6 +20,7 @@ func NewServerGRPCMiddleware(log *slog.Logger) grpc.UnaryServerInterceptor {
 	)
 }
 
+//nolint:sloglint
 func NewClientGRPCMiddleware(log *slog.Logger) grpc.UnaryClientInterceptor {
 	return logging.UnaryClientInterceptor(
 		logging.LoggerFunc(

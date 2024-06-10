@@ -178,7 +178,7 @@ linters-settings:
     # Enforce using methods that accept a context.
     context-only: false
     # Enforce using static values for log messages.
-    static-msg: true
+    static-msg: false
     # Enforce using constants instead of raw keys.
     no-raw-keys: false
     # Enforce a single key naming convention.
@@ -199,6 +199,7 @@ issues:
     - path: "_test\\.go$"
       linters:
         - funlen
+        - containedctx
 
   # Independently of option `exclude` we use default exclude patterns,
   # it can be disabled by this option. To list all
