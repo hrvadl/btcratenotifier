@@ -6,6 +6,8 @@ import (
 	"time"
 )
 
+const jobTimeout = 10 * time.Second
+
 // NewCronJobAdapter constructs CronJobAdapter for Sender interface
 // compatible structure.
 // NOTE: neither of arguments can't be nil, or service will panic in the future.
@@ -32,7 +34,7 @@ type CronJobAdapter struct {
 // and then executes original function, returning the error if any.
 func (c *CronJobAdapter) Do() error {
 	c.log.Info("Sending mails in cron job")
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	ctx, cancel := context.WithTimeout(context.Background(), jobTimeout)
 	defer cancel()
 	return c.sender.Send(ctx)
 }

@@ -52,7 +52,7 @@ func NewClient(addr string, log *slog.Logger) (*Client, error) {
 	}, nil
 }
 
-// Client represents GRPC rate wathcer client which
+// Client represents GRPC rate watcher client which
 // is responsible for getting latest exchange rates and
 // returning it in response.
 type Client struct {
@@ -65,5 +65,5 @@ func (c *Client) GetRate(ctx context.Context) (float32, error) {
 		return 0, err
 	}
 
-	return resp.Rate, nil
+	return resp.GetRate(), nil
 }

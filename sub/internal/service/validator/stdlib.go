@@ -5,6 +5,11 @@ import (
 	"strings"
 )
 
+const (
+	emailAtLength   = 2
+	minDomainLength = 2
+)
+
 func NewStdlib() *Stdlib {
 	return &Stdlib{}
 }
@@ -24,9 +29,9 @@ func (r Stdlib) Validate(email string) bool {
 	}
 
 	parts := strings.Split(m.Address, "@")
-	if len(parts) != 2 {
+	if len(parts) != emailAtLength {
 		return false
 	}
 
-	return len(strings.Split(parts[1], ".")) >= 2
+	return len(strings.Split(parts[1], ".")) >= minDomainLength
 }

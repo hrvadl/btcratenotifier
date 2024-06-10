@@ -20,7 +20,7 @@ const (
 
 // usdUahResponse represents exchange rate API's response
 // ConversionRate is how much 1 USD is worth in a UAH.
-// Struct also contains some meta fields which can be usefull in long run,
+// Struct also contains some meta fields which can be useful in long run,
 // such as UpdatedAt and TargetCode.
 type usdUahResponse struct {
 	ConversionRate float32 `json:"conversion_rate"`
@@ -82,7 +82,10 @@ func (c Client) getRate(
 		return fmt.Errorf("failed to send request: %w", err)
 	}
 
-	defer res.Body.Close()
+	defer func() {
+		_ = res.Body.Close()
+	}()
+
 	bytes, err := io.ReadAll(res.Body)
 	if err != nil {
 		return fmt.Errorf("failed to read body bytes: %w", err)

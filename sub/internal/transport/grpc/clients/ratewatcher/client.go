@@ -66,5 +66,5 @@ func (c *Client) GetRate(ctx context.Context) (float32, error) {
 		return 0, err
 	}
 
-	return resp.Rate, nil
+	return resp.GetRate(), nil
 }

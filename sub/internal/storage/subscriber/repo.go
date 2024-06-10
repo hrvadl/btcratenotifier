@@ -18,7 +18,7 @@ type Repo struct {
 }
 
 // NewRepo constructs repo with provided sqlx DB connection.
-// NOTE: it expectes db connection to be connection MySQL.
+// NOTE: it expects db connection to be connection MySQL.
 func NewRepo(db *sqlx.DB) *Repo {
 	return &Repo{
 		db: db,

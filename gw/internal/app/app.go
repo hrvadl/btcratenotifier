@@ -1,6 +1,5 @@
 package app
 
-//nolint:revive
 import (
 	"fmt"
 	"log/slog"
@@ -50,25 +49,25 @@ func (a *App) MustRun() {
 }
 
 // Run method creates new GRPC server then initializes MySQL DB connection,
-// after that initializes all neccessary domain related services and finally
+// after that initializes all necessary domain related services and finally
 // starts listening on the provided ports. Could return an error if any of
 // described above steps failed
 func (a *App) Run() error {
 	rw, err := ratewatcher.NewClient(
 		a.cfg.RateWatcherAddr,
-		a.log.With("source", "rateWatcherClient"),
+		a.log.With(slog.String("source", "rateWatcherClient")),
 	)
 	if err != nil {
 		return fmt.Errorf("%s: failed to initialize ratewatcher client: %w", operation, err)
 	}
 
-	subsvc, err := ssvc.NewClient(a.cfg.SubAddr, a.log.With("source", "subClient"))
+	subsvc, err := ssvc.NewClient(a.cfg.SubAddr, a.log.With(slog.String("source", "subClient")))
 	if err != nil {
 		return fmt.Errorf("%s: failed to init sub service: %w", operation, err)
 	}
 
-	sh := sub.NewHandler(subsvc, a.log.With("source", "subHandler"))
-	rh := rate.NewHandler(rw, a.log.With("source", "rateHandler"))
+	sh := sub.NewHandler(subsvc, a.log.With(slog.String("source", "subHandler")))
+	rh := rate.NewHandler(rw, a.log.With(slog.String("source", "rateHandler")))
 
 	r := chi.NewRouter()
 	r.Use(
@@ -90,7 +89,7 @@ func (a *App) Run() error {
 		r.Get("/docs/*", httpSwagger.WrapHandler)
 	}
 
-	a.log.Info("Starting web server", "addr", a.cfg.Addr)
+	a.log.Info("Starting web server", slog.String("addr", a.cfg.Addr))
 	srv := newServer(
 		r,
 		a.cfg.Addr,
@@ -101,12 +100,12 @@ func (a *App) Run() error {
 }
 
 // GracefulStop method gracefully stop the server. It listens to the OS sigals.
-// After it recieves signal it terminates all currently active servers,
+// After it receives signal it terminates all currently active servers,
 // client, connections (if any) and gracefully exits.
 func (a *App) GracefulStop() {
 	ch := make(chan os.Signal, 1)
 	signal.Notify(ch, syscall.SIGTERM, syscall.SIGINT)
 	signal := <-ch
-	a.log.Info("Recieved stop signal. Terminating...", "signal", signal)
+	a.log.Info("Received stop signal. Terminating...", slog.Any("signal", signal))
 	a.log.Info("Successfully terminated server. Bye!")
 }

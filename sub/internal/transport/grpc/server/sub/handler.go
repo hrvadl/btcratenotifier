@@ -12,7 +12,7 @@ import (
 
 const operation = "sub server"
 
-// Registers subscribe handler to the given GRPC server.
+// Register registers subscribe handler to the given GRPC server.
 // NOTE: all parameters are required, the service will panic if
 // either of them is missing.
 func Register(srv *grpc.Server, svc Service, log *slog.Logger) {
@@ -39,8 +39,8 @@ type Server struct {
 // Subscribe method calls underlying service method and returns an error, in case there was a
 // failure.
 func (s *Server) Subscribe(ctx context.Context, req *pb.SubscribeRequest) (*emptypb.Empty, error) {
-	if _, err := s.svc.Subscribe(ctx, req.Email); err != nil {
+	if _, err := s.svc.Subscribe(ctx, req.GetEmail()); err != nil {
 		return nil, fmt.Errorf("%s: failed to subscribe user: %w", operation, err)
 	}
-	return nil, nil
+	return &emptypb.Empty{}, nil
 }

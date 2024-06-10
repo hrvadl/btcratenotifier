@@ -59,9 +59,9 @@ func (a *App) MustRun() {
 }
 
 // Run method creates new GRPC server then initializes MySQL DB connection,
-// after that initializes all neccessary domain related services and finally
+// after that initializes all necessary domain related services and finally
 // starts listening on the provided ports. Could return an error if any of
-// described above steps failed
+// described above steps failed.
 func (a *App) Run() error {
 	a.srv = grpc.NewServer(grpc.ChainUnaryInterceptor(
 		logger.NewServerGRPCMiddleware(a.log),
@@ -75,7 +75,7 @@ func (a *App) Run() error {
 	sr := subscriber.NewRepo(db)
 	v := validator.NewStdlib()
 	svc := subs.NewService(sr, v)
-	sub.Register(a.srv, svc, a.log.With("source", "sub"))
+	sub.Register(a.srv, svc, a.log.With(slog.String("source", "sub")))
 
 	m, err := mailer.NewClient(a.cfg.MailerAddr, a.cfg.MailerFromAddr, a.log)
 	if err != nil {
@@ -84,7 +84,10 @@ func (a *App) Run() error {
 
 	sg := subscriber.NewRepo(db)
 	fmter := formatter.NewWithDate()
-	rw, err := ratewatcher.NewClient(a.cfg.RateWatcherAddr, a.log.With("source", "rateWatcher"))
+	rw, err := ratewatcher.NewClient(
+		a.cfg.RateWatcherAddr,
+		a.log.With(slog.String("source", "rateWatcher")),
+	)
 	if err != nil {
 		return fmt.Errorf("%s: failed to connect to rate watcher: %w", operation, err)
 	}
@@ -94,11 +97,14 @@ func (a *App) Run() error {
 		sg,
 		fmter,
 		rw,
-		a.log.With("source", "cron sender"),
+		a.log.With(slog.String("source", "cron sender")),
 	)
 
-	cronAdapter := sender.NewCronJobAdapter(mailSender, a.log.With("source", "adapter"))
-	job := cron.NewDailyJob(cronJobHour, cronJobMinute, a.log.With("source", "cron"))
+	cronAdapter := sender.NewCronJobAdapter(
+		mailSender,
+		a.log.With(slog.String("source", "adapter")),
+	)
+	job := cron.NewDailyJob(cronJobHour, cronJobMinute, a.log.With(slog.String("source", "cron")))
 	job.Do(cronAdapter)
 
 	l, err := net.Listen("tcp", net.JoinHostPort("", a.cfg.Port))
@@ -110,13 +116,13 @@ func (a *App) Run() error {
 }
 
 // GracefulStop method gracefully stop the server. It listens to the OS sigals.
-// After it recieves signal it terminates all currently active servers,
+// After it receives signal it terminates all currently active servers,
 // client, connections (if any) and gracefully exits.
 func (a *App) GracefulStop() {
 	ch := make(chan os.Signal, 1)
 	signal.Notify(ch, syscall.SIGTERM, syscall.SIGINT)
 	signal := <-ch
-	a.log.Info("Recieved stop signal. Terminating...", "signal", signal)
+	a.log.Info("Received stop signal. Terminating...", slog.Any("signal", signal))
 	a.srv.Stop()
 	a.log.Info("Successfully terminated server. Bye!")
 }

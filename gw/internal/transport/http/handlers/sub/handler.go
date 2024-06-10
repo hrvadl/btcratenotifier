@@ -11,6 +11,8 @@ import (
 	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/gw/internal/transport/http/handlers"
 )
 
+const subscribeTimeout = 5 * time.Second
+
 func NewHandler(svc Service, log *slog.Logger) *Handler {
 	return &Handler{
 		svc: svc,
@@ -38,17 +40,50 @@ type Handler struct {
 // @Failure      400  {object}  handlers.ErrorResponse
 // @Router       /api/subscribe [post]
 func (h *Handler) Subscribe(w http.ResponseWriter, r *http.Request) {
-	mail := r.FormValue("email")
-	ctx, cancel := context.WithTimeout(r.Context(), time.Second*5)
+	ctx, cancel := context.WithTimeout(r.Context(), subscribeTimeout)
 	defer cancel()
 
+	mail := r.FormValue("email")
 	if err := h.svc.Subscribe(ctx, &pb.SubscribeRequest{Email: mail}); err != nil {
-		h.log.Error("Failed to subscribe user", "err", err)
-		w.WriteHeader(http.StatusConflict)
-		_, _ = w.Write(handlers.NewErrResponse(err))
+		h.httpFail(w, http.StatusConflict, err)
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
-	_, _ = w.Write(handlers.NewEmptyResponse("added email"))
+	h.httpSuccess(w, http.StatusOK, nil, "aded email")
+}
+
+func (h *Handler) httpSuccess(w http.ResponseWriter, code int, data any, msg string) {
+	res, err := handlers.NewSuccessResponse(msg, data)
+	if err != nil {
+		h.log.Error("Failed to construct success response", slog.Any("err", err))
+		http.Error(
+			w,
+			http.StatusText(http.StatusInternalServerError),
+			http.StatusInternalServerError,
+		)
+		return
+	}
+
+	w.WriteHeader(code)
+	if _, err := w.Write(res); err != nil {
+		h.log.Error("Failed to write response", slog.Any("err", err))
+	}
+}
+
+func (h *Handler) httpFail(w http.ResponseWriter, code int, err error) {
+	res, err := handlers.NewErrResponse(err)
+	if err != nil {
+		h.log.Error("Failed to construct error response", slog.Any("err", err))
+		http.Error(
+			w,
+			http.StatusText(http.StatusInternalServerError),
+			http.StatusInternalServerError,
+		)
+		return
+	}
+
+	w.WriteHeader(code)
+	if _, err := w.Write(res); err != nil {
+		h.log.Error("Failed to write response", slog.Any("err", err))
+	}
 }

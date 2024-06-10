@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log/slog"
 	"os"
 
 	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/rw/internal/app"
@@ -13,11 +14,11 @@ const source = "rateWatcher"
 func main() {
 	cfg := cfg.Must(cfg.NewFromEnv())
 	l := logger.New(os.Stdout, cfg.LogLevel).With(
-		"source", source,
-		"pid", os.Getpid(),
+		slog.String("source", source),
+		slog.Int("pid", os.Getpid()),
 	)
 
-	l.Info("Successfuly parsed config and initialized logger")
+	l.Info("Successfully parsed config and initialized logger")
 	app := app.New(*cfg, l)
 	go app.MustRun()
 	app.GracefulStop()

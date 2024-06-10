@@ -12,7 +12,7 @@ import (
 
 const operation = "mailer server"
 
-// Registers subscribe handler to the given GRPC server.
+// Register registers subscribe handler to the given GRPC server.
 // NOTE: all parameters are required, the service will panic if
 // either of them is missing.
 func Register(srv *grpc.Server, client Client, log *slog.Logger) {
@@ -42,5 +42,5 @@ func (s *Server) Send(ctx context.Context, m *pb.Mail) (*emptypb.Empty, error) {
 	if err := s.client.Send(ctx, m); err != nil {
 		return nil, fmt.Errorf("%s: failed to send mail: %w", operation, err)
 	}
-	return nil, nil
+	return &emptypb.Empty{}, nil
 }

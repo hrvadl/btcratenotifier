@@ -26,10 +26,10 @@ type Client struct {
 }
 
 // Send method initiates a call to the resend API using
-// bult-in resend's SDK. Blocks untill call is finished, or
+// bult-in resend's SDK. Blocks until call is finished, or
 // error is raised, or context is done.
 func (c *Client) Send(ctx context.Context, m *pb.Mail) error {
-	if len(m.To) == 0 {
+	if len(m.GetTo()) == 0 {
 		return fmt.Errorf("%s: recipients cannot be empty", operation)
 	}
 
@@ -38,10 +38,10 @@ func (c *Client) Send(ctx context.Context, m *pb.Mail) error {
 
 	go func() {
 		res, err := c.c.Emails.Send(&rs.SendEmailRequest{
-			From:    m.From,
-			To:      m.To,
-			Subject: m.Subject,
-			Html:    m.Html,
+			From:    m.GetFrom(),
+			To:      m.GetTo(),
+			Subject: m.GetSubject(),
+			Html:    m.GetHtml(),
 		})
 		if err != nil {
 			errCh <- err

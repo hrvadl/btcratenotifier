@@ -12,7 +12,7 @@ import (
 
 const operation = "converted server"
 
-// Registers rate watcher handler to the given GRPC server.
+// Register registers rate watcher handler to the given GRPC server.
 // NOTE: all parameters are required, the service will panic if
 // either of them is missing.
 func Register(srv *grpc.Server, cnv Converter, log *slog.Logger) {

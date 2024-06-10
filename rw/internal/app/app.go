@@ -46,7 +46,7 @@ func (a *App) MustRun() {
 }
 
 // Run method creates new GRPC server then initializes MySQL DB connection,
-// after that initializes all neccessary domain related services and finally
+// after that initializes all necessary domain related services and finally
 // starts listening on the provided ports. Could return an error if any of
 // described above steps failed
 func (a *App) Run() error {
@@ -57,9 +57,9 @@ func (a *App) Run() error {
 	ratewatcher.Register(
 		a.srv,
 		exchangerate.NewClient(a.cfg.ExchangeServiceToken, a.cfg.ExchangeServiceBaseURL),
-		a.log.With("source", "rateWatcherSrv"),
+		a.log.With(slog.String("source", "rateWatcherSrv")),
 	)
-	a.log.Info("Successfuly initialized all deps")
+	a.log.Info("Successfully initialized all deps")
 
 	listener, err := net.Listen("tcp", net.JoinHostPort("", a.cfg.Port))
 	if err != nil {
@@ -70,13 +70,13 @@ func (a *App) Run() error {
 }
 
 // GracefulStop method gracefully stop the server. It listens to the OS sigals.
-// After it recieves signal it terminates all currently active servers,
+// After it receives signal it terminates all currently active servers,
 // client, connections (if any) and gracefully exits.
 func (a *App) GracefulStop() {
 	ch := make(chan os.Signal, 1)
 	signal.Notify(ch, syscall.SIGTERM, syscall.SIGINT)
 	signal := <-ch
-	a.log.Info("Recieved stop signal. Terminating...", "signal", signal)
+	a.log.Info("Received stop signal. Terminating...", slog.Any("signal", signal))
 	a.srv.Stop()
 	a.log.Info("Successfully terminated server. Bye!")
 }
