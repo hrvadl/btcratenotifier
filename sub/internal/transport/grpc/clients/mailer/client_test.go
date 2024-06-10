@@ -49,10 +49,7 @@ func TestClientSend(t *testing.T) {
 			setup: func(t *testing.T, mailer pb.MailerServiceClient) {
 				t.Helper()
 				m, ok := mailer.(*mocks.MockMailerServiceClient)
-				if !ok {
-					t.Fatal("Failed to cast mailer client to mock mailer client")
-				}
-
+				require.True(t, ok, "Failed to cast mailer client to mock mailer client")
 				m.EXPECT().Send(gomock.Any(), &pb.Mail{
 					From:    "vadym@hrashchenko.com",
 					To:      []string{"to@to.com", "to1@to.com"},
@@ -78,10 +75,7 @@ func TestClientSend(t *testing.T) {
 			setup: func(t *testing.T, mailer pb.MailerServiceClient) {
 				t.Helper()
 				m, ok := mailer.(*mocks.MockMailerServiceClient)
-				if !ok {
-					t.Fatal("Failed to cast mailer client to mock mailer client")
-				}
-
+				require.True(t, ok, "Failed to cast mailer client to mock mailer client")
 				m.EXPECT().Send(gomock.Any(), &pb.Mail{
 					From:    "vadym@hrashchenko.com",
 					To:      []string{"to@to.com", "to1@to.com"},

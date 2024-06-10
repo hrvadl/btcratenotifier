@@ -50,10 +50,7 @@ func TestServerSend(t *testing.T) {
 			setup: func(t *testing.T, client Client) {
 				t.Helper()
 				c, ok := client.(*mocks.MockClient)
-				if !ok {
-					t.Fatal("Failed to cast client to mock client")
-				}
-
+				require.True(t, ok, "Failed to cast client to mock client")
 				c.EXPECT().Send(gomock.Any(), &pb.Mail{
 					From:    "vadym@hrashchenko.com",
 					To:      []string{"to@to.com", "to1@to.com"},
@@ -61,7 +58,7 @@ func TestServerSend(t *testing.T) {
 					Subject: "test subject",
 				}).Times(1).Return(nil)
 			},
-			want:    nil,
+			want:    &emptypb.Empty{},
 			wantErr: false,
 		},
 		{
@@ -82,10 +79,7 @@ func TestServerSend(t *testing.T) {
 			setup: func(t *testing.T, client Client) {
 				t.Helper()
 				c, ok := client.(*mocks.MockClient)
-				if !ok {
-					t.Fatal("Failed to cast client to mock client")
-				}
-
+				require.True(t, ok, "Failed to cast client to mock client")
 				c.EXPECT().Send(gomock.Any(), &pb.Mail{
 					From:    "vadym@hrashchenko.com",
 					To:      []string{"to@to.com", "to1@to.com"},

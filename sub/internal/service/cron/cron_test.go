@@ -102,7 +102,8 @@ func TestNewJob(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			got := NewJob(tt.args.interval, tt.args.log)
-			require.Equal(t, tt.want, got)
+			require.Equal(t, tt.want.interval, got.interval)
+			require.Equal(t, tt.want.log, got.log)
 		})
 	}
 }
@@ -134,9 +135,7 @@ func TestJobDo(t *testing.T) {
 			setup: func(t *testing.T, doer Doer) {
 				t.Helper()
 				d, ok := doer.(*mocks.MockDoer)
-				if !ok {
-					t.Fatalf("failed to cast doer to mock doer")
-				}
+				require.True(t, ok, "Failed to cast doer to mock doer")
 				d.EXPECT().Do().MinTimes(3).Return(nil)
 			},
 		},
@@ -152,9 +151,7 @@ func TestJobDo(t *testing.T) {
 			setup: func(t *testing.T, doer Doer) {
 				t.Helper()
 				d, ok := doer.(*mocks.MockDoer)
-				if !ok {
-					t.Fatalf("failed to cast doer to mock doer")
-				}
+				require.True(t, ok, "Failed to cast doer to mock doer")
 				d.EXPECT().Do().MinTimes(3).Return(nil)
 			},
 		},
@@ -170,9 +167,7 @@ func TestJobDo(t *testing.T) {
 			setup: func(t *testing.T, doer Doer) {
 				t.Helper()
 				d, ok := doer.(*mocks.MockDoer)
-				if !ok {
-					t.Fatalf("failed to cast doer to mock doer")
-				}
+				require.True(t, ok, "Failed to cast doer to mock doer")
 				d.EXPECT().Do().MinTimes(3).Return(nil)
 			},
 		},

@@ -86,15 +86,10 @@ func TestServiceSubscribe(t *testing.T) {
 			setup: func(t *testing.T, saver RecipientSaver, validator Validator) {
 				t.Helper()
 				rs, ok := saver.(*mocks.MockRecipientSaver)
-				if !ok {
-					t.Fatalf("Failed to cast saver to mock saver")
-				}
+				require.True(t, ok, "Failed to cast saver to mock saver")
 
 				v, ok := validator.(*mocks.MockValidator)
-				if !ok {
-					t.Fatalf("Failed to cast validator to mock saver")
-				}
-
+				require.True(t, ok, "Failed to cast validator to mock saver")
 				v.EXPECT().Validate("mail@gmail.com").Times(1).Return(true)
 				rs.EXPECT().
 					Save(gomock.Any(), subscriber.Subscriber{Email: "mail@gmail.com"}).
@@ -117,15 +112,10 @@ func TestServiceSubscribe(t *testing.T) {
 			setup: func(t *testing.T, saver RecipientSaver, validator Validator) {
 				t.Helper()
 				rs, ok := saver.(*mocks.MockRecipientSaver)
-				if !ok {
-					t.Fatalf("Failed to cast saver to mock saver")
-				}
+				require.True(t, ok, "Failed to cast saver to mock saver")
 
 				v, ok := validator.(*mocks.MockValidator)
-				if !ok {
-					t.Fatalf("Failed to cast validator to mock saver")
-				}
-
+				require.True(t, ok, "Failed to cast validator to mock saver")
 				v.EXPECT().Validate("mail@gmail.com").Times(1).Return(true)
 				rs.EXPECT().
 					Save(gomock.Any(), subscriber.Subscriber{Email: "mail@gmail.com"}).
@@ -148,15 +138,10 @@ func TestServiceSubscribe(t *testing.T) {
 			setup: func(t *testing.T, saver RecipientSaver, validator Validator) {
 				t.Helper()
 				rs, ok := saver.(*mocks.MockRecipientSaver)
-				if !ok {
-					t.Fatalf("Failed to cast saver to mock saver")
-				}
+				require.True(t, ok, "Failed to cast saver to mock saver")
 
 				v, ok := validator.(*mocks.MockValidator)
-				if !ok {
-					t.Fatalf("Failed to cast validator to mock saver")
-				}
-
+				require.True(t, ok, "Failed to cast validator to mock saver")
 				v.EXPECT().Validate("").Times(1).Return(false)
 				rs.EXPECT().
 					Save(gomock.Any(), subscriber.Subscriber{Email: "mail@gmail.com"}).

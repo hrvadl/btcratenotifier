@@ -76,10 +76,7 @@ func TestHandlerGetRate(t *testing.T) {
 			setup: func(t *testing.T, getter Getter) {
 				t.Helper()
 				g, ok := getter.(*mocks.MockGetter)
-				if !ok {
-					t.Fatal("Failed to cast getter to mock")
-				}
-
+				require.True(t, ok, "Failed to cast getter to mock")
 				g.EXPECT().GetRate(gomock.Any()).Times(1).Return(float32(39.8), nil)
 			},
 			want: http.StatusOK,
@@ -97,10 +94,7 @@ func TestHandlerGetRate(t *testing.T) {
 			setup: func(t *testing.T, getter Getter) {
 				t.Helper()
 				g, ok := getter.(*mocks.MockGetter)
-				if !ok {
-					t.Fatal("Failed to cast getter to mock")
-				}
-
+				require.True(t, ok, "Failed to cast getter to mock")
 				g.EXPECT().
 					GetRate(gomock.Any()).
 					Times(1).

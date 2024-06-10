@@ -33,9 +33,7 @@ func TestCronJobAdapterDo(t *testing.T) {
 			setup: func(t *testing.T, m Sender) {
 				t.Helper()
 				ss, ok := m.(*mocks.MockSender)
-				if !ok {
-					t.Fatal("failed to cast sender to mock")
-				}
+				require.True(t, ok, "Failed to cast sender to mock")
 				err := errors.New("failed to send")
 				ss.EXPECT().Send(gomock.Any()).Times(1).Return(err)
 			},
@@ -50,9 +48,7 @@ func TestCronJobAdapterDo(t *testing.T) {
 			setup: func(t *testing.T, m Sender) {
 				t.Helper()
 				ss, ok := m.(*mocks.MockSender)
-				if !ok {
-					t.Fatal("failed to cast sender to mock")
-				}
+				require.True(t, ok, "Failed to cast sender to mock")
 				ss.EXPECT().Send(gomock.Any()).Times(1).Return(nil)
 			},
 		},

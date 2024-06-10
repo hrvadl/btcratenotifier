@@ -83,10 +83,7 @@ func TestHandlerSubscribe(t *testing.T) {
 			setup: func(t *testing.T, service Service) {
 				t.Helper()
 				svc, ok := service.(*mocks.MockService)
-				if !ok {
-					t.Fatal("Failed to cast service to mock")
-				}
-
+				require.True(t, ok, "Failed to cast service to mock")
 				svc.EXPECT().
 					Subscribe(gomock.Any(), &pb.SubscribeRequest{Email: "test@test.com"}).
 					Times(1).
@@ -111,10 +108,7 @@ func TestHandlerSubscribe(t *testing.T) {
 			setup: func(t *testing.T, service Service) {
 				t.Helper()
 				svc, ok := service.(*mocks.MockService)
-				if !ok {
-					t.Fatal("Failed to cast service to mock")
-				}
-
+				require.True(t, ok, "Failed to cast service to mock")
 				svc.EXPECT().
 					Subscribe(gomock.Any(), &pb.SubscribeRequest{Email: "test@test.com"}).
 					Times(1).

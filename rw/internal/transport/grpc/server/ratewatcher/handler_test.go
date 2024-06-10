@@ -45,10 +45,7 @@ func TestServerGetRate(t *testing.T) {
 			setup: func(t *testing.T, converter Converter) {
 				t.Helper()
 				c, ok := converter.(*mocks.MockConverter)
-				if !ok {
-					t.Fatal("Failed to cast converter to mock converter")
-				}
-
+				require.True(t, ok, "Failed to cast converter to mock converter")
 				c.EXPECT().Convert(gomock.Any()).Times(1).Return(float32(3.3), nil)
 			},
 			want:    &pb.RateResponse{Rate: 3.3},
@@ -67,10 +64,7 @@ func TestServerGetRate(t *testing.T) {
 			setup: func(t *testing.T, converter Converter) {
 				t.Helper()
 				c, ok := converter.(*mocks.MockConverter)
-				if !ok {
-					t.Fatal("Failed to cast converter to mock converter")
-				}
-
+				require.True(t, ok, "Failed to cast converter to mock converter")
 				c.EXPECT().
 					Convert(gomock.Any()).
 					Times(1).

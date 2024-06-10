@@ -43,10 +43,7 @@ func TestClientSubscribe(t *testing.T) {
 			setup: func(t *testing.T, subscriber pb.SubServiceClient) {
 				t.Helper()
 				s, ok := subscriber.(*mocks.MockSubServiceClient)
-				if !ok {
-					t.Fatal("Failed to convert subscribe server client")
-				}
-
+				require.True(t, ok, "Failed to convert subscribe server client")
 				s.EXPECT().Subscribe(gomock.Any(), &pb.SubscribeRequest{
 					Email: "sub@me.com",
 				}).Times(1).Return(nil, nil)
@@ -67,10 +64,7 @@ func TestClientSubscribe(t *testing.T) {
 			setup: func(t *testing.T, subscriber pb.SubServiceClient) {
 				t.Helper()
 				s, ok := subscriber.(*mocks.MockSubServiceClient)
-				if !ok {
-					t.Fatal("Failed to convert subscribe server client")
-				}
-
+				require.True(t, ok, "Failed to convert subscribe server client")
 				s.EXPECT().Subscribe(gomock.Any(), &pb.SubscribeRequest{
 					Email: "sub@me.com",
 				}).Times(1).Return(nil, errors.New("failed to subscribe user"))

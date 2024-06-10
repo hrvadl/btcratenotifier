@@ -41,10 +41,7 @@ func TestClientGetRate(t *testing.T) {
 			setup: func(t *testing.T, rws pb.RateWatcherServiceClient) {
 				t.Helper()
 				rw, ok := rws.(*mocks.MockRateWatcherServiceClient)
-				if !ok {
-					t.Fatal("Failed to cast rw to mock rw")
-				}
-
+				require.True(t, ok, "Failed to cast rw to mock rw")
 				rw.EXPECT().
 					GetRate(gomock.Any(), gomock.Any()).
 					Times(1).
@@ -63,10 +60,7 @@ func TestClientGetRate(t *testing.T) {
 			setup: func(t *testing.T, rws pb.RateWatcherServiceClient) {
 				t.Helper()
 				rw, ok := rws.(*mocks.MockRateWatcherServiceClient)
-				if !ok {
-					t.Fatal("Failed to cast rw to mock rw")
-				}
-
+				require.True(t, ok, "Failed to cast rw to mock rw")
 				rw.EXPECT().
 					GetRate(gomock.Any(), gomock.Any()).
 					Times(1).

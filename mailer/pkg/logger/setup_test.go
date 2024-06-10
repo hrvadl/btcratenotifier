@@ -5,8 +5,9 @@ import (
 	"io"
 	"log/slog"
 	"os"
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestMapLevels(t *testing.T) {
@@ -52,9 +53,8 @@ func TestMapLevels(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			if got := mapLevels(tt.args.lvl); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("MapLevels() = %v, want %v", got, tt.want)
-			}
+			got := mapLevels(tt.args.lvl)
+			require.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -95,9 +95,8 @@ func TestNew(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			if got := New(tt.args.w, tt.args.lvl); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("New() = %v, want %v", got, tt.want)
-			}
+			got := New(tt.args.w, tt.args.lvl)
+			require.Equal(t, tt.want, got)
 		})
 	}
 }

@@ -45,10 +45,7 @@ func TestServerSubscribe(t *testing.T) {
 			setup: func(t *testing.T, svc Service) {
 				t.Helper()
 				s, ok := svc.(*mocks.MockService)
-				if !ok {
-					t.Fatalf("Failed to cast service to mock service")
-				}
-
+				require.True(t, ok, "Failed to cast service to mock service")
 				s.EXPECT().Subscribe(gomock.Any(), "test@test.com").Times(1).Return(int64(1), nil)
 			},
 			want:    &emptypb.Empty{},
@@ -67,10 +64,7 @@ func TestServerSubscribe(t *testing.T) {
 			setup: func(t *testing.T, svc Service) {
 				t.Helper()
 				s, ok := svc.(*mocks.MockService)
-				if !ok {
-					t.Fatalf("Failed to cast service to mock service")
-				}
-
+				require.True(t, ok, "Failed to cast service to mock service")
 				s.EXPECT().
 					Subscribe(gomock.Any(), "test@test.com").
 					Times(1).
