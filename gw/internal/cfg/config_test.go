@@ -3,8 +3,9 @@ package cfg
 import (
 	"errors"
 	"os"
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestMust(t *testing.T) {
@@ -42,15 +43,14 @@ func TestMust(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			if tt.wantErr {
-				defer func() {
-					if recover() == nil {
-						t.Fatal("Expected to panic")
-					}
-				}()
+				require.Panics(t, func() {
+					Must(tt.args.cfg, tt.args.err)
+				})
+				return
 			}
-			if got := Must(tt.args.cfg, tt.args.err); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Must() = %v, want %v", got, tt.want)
-			}
+
+			got := Must(tt.args.cfg, tt.args.err)
+			require.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -58,17 +58,18 @@ func TestMust(t *testing.T) {
 func TestNewFromEnv(t *testing.T) {
 	tests := []struct {
 		name    string
-		setup   func()
+		setup   func(t *testing.T)
 		want    *Config
 		wantErr bool
 	}{
 		{
 			name: "Should parse config correctly when all env vars are present",
-			setup: func() {
-				os.Setenv(logLevelEnvKey, "debug")
-				os.Setenv(addrEnvKey, "0.0.0.0:80")
-				os.Setenv(rateWatchAddrEnvKey, "rw:3333")
-				os.Setenv(subServiceAddrEnvKey, "ss:6666")
+			setup: func(t *testing.T) {
+				t.Helper()
+				require.NoError(t, os.Setenv(logLevelEnvKey, "debug"))
+				require.NoError(t, os.Setenv(addrEnvKey, "0.0.0.0:80"))
+				require.NoError(t, os.Setenv(rateWatchAddrEnvKey, "rw:3333"))
+				require.NoError(t, os.Setenv(subServiceAddrEnvKey, "ss:6666"))
 			},
 			want: &Config{
 				LogLevel:        "debug",
@@ -80,44 +81,48 @@ func TestNewFromEnv(t *testing.T) {
 		},
 		{
 			name: "Should not parse config when log level is missing",
-			setup: func() {
-				os.Setenv(logLevelEnvKey, "")
-				os.Setenv(addrEnvKey, "0.0.0.0:80")
-				os.Setenv(rateWatchAddrEnvKey, "rw:3333")
-				os.Setenv(subServiceAddrEnvKey, "ss:6666")
+			setup: func(t *testing.T) {
+				t.Helper()
+				require.NoError(t, os.Setenv(logLevelEnvKey, ""))
+				require.NoError(t, os.Setenv(addrEnvKey, "0.0.0.0:80"))
+				require.NoError(t, os.Setenv(rateWatchAddrEnvKey, "rw:3333"))
+				require.NoError(t, os.Setenv(subServiceAddrEnvKey, "ss:6666"))
 			},
 			want:    nil,
 			wantErr: true,
 		},
 		{
 			name: "Should not parse config when addr is missing",
-			setup: func() {
-				os.Setenv(logLevelEnvKey, "debug")
-				os.Setenv(addrEnvKey, "")
-				os.Setenv(rateWatchAddrEnvKey, "rw:3333")
-				os.Setenv(subServiceAddrEnvKey, "ss:6666")
+			setup: func(t *testing.T) {
+				t.Helper()
+				require.NoError(t, os.Setenv(logLevelEnvKey, "debug"))
+				require.NoError(t, os.Setenv(addrEnvKey, ""))
+				require.NoError(t, os.Setenv(rateWatchAddrEnvKey, "rw:3333"))
+				require.NoError(t, os.Setenv(subServiceAddrEnvKey, "ss:6666"))
 			},
 			want:    nil,
 			wantErr: true,
 		},
 		{
 			name: "Should not parse config when rw addr is missing",
-			setup: func() {
-				os.Setenv(logLevelEnvKey, "debug")
-				os.Setenv(addrEnvKey, "0.0.0.0:80")
-				os.Setenv(rateWatchAddrEnvKey, "")
-				os.Setenv(subServiceAddrEnvKey, "ss:6666")
+			setup: func(t *testing.T) {
+				t.Helper()
+				require.NoError(t, os.Setenv(logLevelEnvKey, "debug"))
+				require.NoError(t, os.Setenv(addrEnvKey, "0.0.0.0:80"))
+				require.NoError(t, os.Setenv(rateWatchAddrEnvKey, ""))
+				require.NoError(t, os.Setenv(subServiceAddrEnvKey, "ss:6666"))
 			},
 			want:    nil,
 			wantErr: true,
 		},
 		{
 			name: "Should not parse config when ss addr is missing",
-			setup: func() {
-				os.Setenv(logLevelEnvKey, "debug")
-				os.Setenv(addrEnvKey, "0.0.0.0:80")
-				os.Setenv(rateWatchAddrEnvKey, "rw:3333")
-				os.Setenv(subServiceAddrEnvKey, "")
+			setup: func(t *testing.T) {
+				t.Helper()
+				require.NoError(t, os.Setenv(logLevelEnvKey, "debug"))
+				require.NoError(t, os.Setenv(addrEnvKey, "0.0.0.0:80"))
+				require.NoError(t, os.Setenv(rateWatchAddrEnvKey, "rw:3333"))
+				require.NoError(t, os.Setenv(subServiceAddrEnvKey, ""))
 			},
 			want:    nil,
 			wantErr: true,
@@ -127,21 +132,20 @@ func TestNewFromEnv(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Cleanup(func() {
-				os.Unsetenv(logLevelEnvKey)
-				os.Unsetenv(addrEnvKey)
-				os.Unsetenv(rateWatchAddrEnvKey)
-				os.Unsetenv(subServiceAddrEnvKey)
+				require.NoError(t, os.Unsetenv(logLevelEnvKey))
+				require.NoError(t, os.Unsetenv(addrEnvKey))
+				require.NoError(t, os.Unsetenv(rateWatchAddrEnvKey))
+				require.NoError(t, os.Unsetenv(subServiceAddrEnvKey))
 			})
 
-			tt.setup()
+			tt.setup(t)
 			got, err := NewFromEnv()
-			if (err != nil) != tt.wantErr {
-				t.Errorf("NewFromEnv() error = %v, wantErr %v", err, tt.wantErr)
+			if tt.wantErr {
+				require.Error(t, err)
 				return
 			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("NewFromEnv() = %v, want %v", got, tt.want)
-			}
+
+			require.Equal(t, tt.want, got)
 		})
 	}
 }

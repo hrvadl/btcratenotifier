@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	pb "github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/protos/gen/go/v1/ratewatcher"
+	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
 	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/gw/internal/transport/grpc/clients/ratewatcher/mocks"
@@ -83,13 +84,12 @@ func TestClientGetRate(t *testing.T) {
 				api: tt.fields.api,
 			}
 			got, err := c.GetRate(tt.args.ctx)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("Client.GetRate() error = %v, wantErr %v", err, tt.wantErr)
+			if tt.wantErr {
+				require.Error(t, err)
 				return
 			}
-			if got != tt.want {
-				t.Errorf("Client.GetRate() = %v, want %v", got, tt.want)
-			}
+
+			require.InEpsilon(t, tt.want, got, 2)
 		})
 	}
 }

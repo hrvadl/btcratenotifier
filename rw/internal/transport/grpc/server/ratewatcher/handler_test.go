@@ -4,10 +4,10 @@ import (
 	"context"
 	"errors"
 	"log/slog"
-	"reflect"
 	"testing"
 
 	pb "github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/protos/gen/go/v1/ratewatcher"
+	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 	"google.golang.org/protobuf/types/known/emptypb"
 
@@ -43,6 +43,7 @@ func TestServerGetRate(t *testing.T) {
 				in1: nil,
 			},
 			setup: func(t *testing.T, converter Converter) {
+				t.Helper()
 				c, ok := converter.(*mocks.MockConverter)
 				if !ok {
 					t.Fatal("Failed to cast converter to mock converter")
@@ -64,6 +65,7 @@ func TestServerGetRate(t *testing.T) {
 				in1: nil,
 			},
 			setup: func(t *testing.T, converter Converter) {
+				t.Helper()
 				c, ok := converter.(*mocks.MockConverter)
 				if !ok {
 					t.Fatal("Failed to cast converter to mock converter")
@@ -88,15 +90,14 @@ func TestServerGetRate(t *testing.T) {
 				log:                                   tt.fields.log,
 				converter:                             tt.fields.converter,
 			}
+
 			got, err := s.GetRate(tt.args.ctx, tt.args.in1)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("Server.GetRate() error = %v, wantErr %v", err, tt.wantErr)
+			if tt.wantErr {
+				require.Error(t, err)
 				return
 			}
 
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Server.GetRate() = %v, want %v", got, tt.want)
-			}
+			require.Equal(t, tt.want, got)
 		})
 	}
 }

@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	pb "github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/protos/gen/go/v1/sub"
+	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
 	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/gw/internal/transport/grpc/clients/sub/mocks"
@@ -40,6 +41,7 @@ func TestClientSubscribe(t *testing.T) {
 				},
 			},
 			setup: func(t *testing.T, subscriber pb.SubServiceClient) {
+				t.Helper()
 				s, ok := subscriber.(*mocks.MockSubServiceClient)
 				if !ok {
 					t.Fatal("Failed to convert subscribe server client")
@@ -63,6 +65,7 @@ func TestClientSubscribe(t *testing.T) {
 				},
 			},
 			setup: func(t *testing.T, subscriber pb.SubServiceClient) {
+				t.Helper()
 				s, ok := subscriber.(*mocks.MockSubServiceClient)
 				if !ok {
 					t.Fatal("Failed to convert subscribe server client")
@@ -83,9 +86,14 @@ func TestClientSubscribe(t *testing.T) {
 			c := &Client{
 				api: tt.fields.api,
 			}
-			if err := c.Subscribe(tt.args.ctx, tt.args.req); (err != nil) != tt.wantErr {
-				t.Errorf("Client.Subscribe() error = %v, wantErr %v", err, tt.wantErr)
+
+			err := c.Subscribe(tt.args.ctx, tt.args.req)
+			if tt.wantErr {
+				require.Error(t, err)
+				return
 			}
+
+			require.NoError(t, err)
 		})
 	}
 }

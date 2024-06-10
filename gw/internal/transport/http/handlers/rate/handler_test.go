@@ -5,9 +5,9 @@ import (
 	"log/slog"
 	"net/http"
 	"net/http/httptest"
-	"reflect"
 	"testing"
 
+	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
 	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/gw/internal/transport/http/handlers/rate/mocks"
@@ -40,9 +40,8 @@ func TestNewHandler(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			if got := NewHandler(tt.args.rg, tt.args.log); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("NewHandler() = %v, want %v", got, tt.want)
-			}
+			got := NewHandler(tt.args.rg, tt.args.log)
+			require.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -114,15 +113,17 @@ func TestHandlerGetRate(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
+			t.Cleanup(func() {
+			})
 			tt.setup(t, tt.fields.rg)
 			h := &Handler{
 				log: tt.fields.log,
 				rg:  tt.fields.rg,
 			}
 			h.GetRate(tt.args.w, tt.args.r)
-			if got := tt.args.w.Result().StatusCode; got != tt.want {
-				t.Errorf("GetRate() = %v, want %v", got, tt.want)
-			}
+			got := tt.args.w.Result().StatusCode
+			require.NoError(t, tt.args.w.Result().Body.Close())
+			require.Equal(t, tt.want, got)
 		})
 	}
 }

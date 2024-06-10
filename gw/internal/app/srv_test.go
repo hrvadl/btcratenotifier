@@ -4,8 +4,9 @@ import (
 	"log"
 	"net"
 	"net/http"
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewServer(t *testing.T) {
@@ -28,9 +29,12 @@ func TestNewServer(t *testing.T) {
 				log:  &log.Logger{},
 			},
 			want: &http.Server{
-				Handler:  http.NewServeMux(),
-				Addr:     net.JoinHostPort("0.0.0.0", "80"),
-				ErrorLog: &log.Logger{},
+				ReadHeaderTimeout: readHeaderTimeout,
+				WriteTimeout:      writeHeaderTimeout,
+				IdleTimeout:       idleTimeout,
+				Handler:           http.NewServeMux(),
+				Addr:              net.JoinHostPort("0.0.0.0", "80"),
+				ErrorLog:          &log.Logger{},
 			},
 		},
 	}
@@ -39,17 +43,9 @@ func TestNewServer(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			got := newServer(tt.args.h, tt.args.addr, tt.args.log)
-			if !reflect.DeepEqual(got.ErrorLog, tt.want.ErrorLog) {
-				t.Fatal("logger doesn't match")
-			}
-
-			if !reflect.DeepEqual(got.Addr, tt.want.Addr) {
-				t.Fatal("addr doesn't match")
-			}
-
-			if !reflect.DeepEqual(got.Handler, tt.want.Handler) {
-				t.Fatal("handler doesn't match")
-			}
+			require.Equal(t, tt.want.ErrorLog, got.ErrorLog)
+			require.Equal(t, tt.want.Addr, got.Addr)
+			require.Equal(t, tt.want.Handler, got.Handler)
 		})
 	}
 }

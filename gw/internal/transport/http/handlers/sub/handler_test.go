@@ -7,10 +7,10 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
-	"reflect"
 	"testing"
 
 	pb "github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/protos/gen/go/v1/sub"
+	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
 	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/gw/internal/transport/http/handlers/sub/mocks"
@@ -43,9 +43,8 @@ func TestNewHandler(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			if got := NewHandler(tt.args.svc, tt.args.log); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("NewHandler() = %v, want %v", got, tt.want)
-			}
+			got := NewHandler(tt.args.svc, tt.args.log)
+			require.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -134,9 +133,8 @@ func TestHandlerSubscribe(t *testing.T) {
 				log: tt.fields.log,
 			}
 			h.Subscribe(tt.args.w, tt.args.r)
-			if got := tt.args.w.Result().StatusCode; got != tt.want {
-				t.Errorf("Subscribe() = %v, want %v", got, tt.want)
-			}
+			got := tt.args.w.Result().StatusCode
+			require.Equal(t, tt.want, got)
 		})
 	}
 }
