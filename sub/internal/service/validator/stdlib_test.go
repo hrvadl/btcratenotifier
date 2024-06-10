@@ -1,8 +1,9 @@
 package validator
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestStdlibValidate(t *testing.T) {
@@ -105,9 +106,8 @@ func TestStdlibValidate(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			r := Stdlib{}
-			if got := r.Validate(tt.args.email); got != tt.want {
-				t.Errorf("Stdlib.Validate() = %v, want %v", got, tt.want)
-			}
+			got := r.Validate(tt.args.email)
+			require.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -127,9 +127,8 @@ func TestNewStdlib(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			if got := NewStdlib(); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("NewStdlib() = %v, want %v", got, tt.want)
-			}
+			got := NewStdlib()
+			require.Equal(t, tt.want, got)
 		})
 	}
 }

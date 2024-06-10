@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	pb "github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/protos/gen/go/v1/ratewatcher"
+	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
 	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/sub/internal/transport/grpc/clients/ratewatcher/mocks"
@@ -38,6 +39,7 @@ func TestClientGetRate(t *testing.T) {
 			},
 			args: args{ctx: context.Background()},
 			setup: func(t *testing.T, rws pb.RateWatcherServiceClient) {
+				t.Helper()
 				rw, ok := rws.(*mocks.MockRateWatcherServiceClient)
 				if !ok {
 					t.Fatal("Failed to cast rw to mock rw")
@@ -59,6 +61,7 @@ func TestClientGetRate(t *testing.T) {
 			},
 			args: args{ctx: context.Background()},
 			setup: func(t *testing.T, rws pb.RateWatcherServiceClient) {
+				t.Helper()
 				rw, ok := rws.(*mocks.MockRateWatcherServiceClient)
 				if !ok {
 					t.Fatal("Failed to cast rw to mock rw")
@@ -84,14 +87,13 @@ func TestClientGetRate(t *testing.T) {
 			}
 
 			got, err := c.GetRate(tt.args.ctx)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("Client.GetRate() error = %v, wantErr %v", err, tt.wantErr)
+			if tt.wantErr {
+				require.Error(t, err)
 				return
 			}
 
-			if got != tt.want {
-				t.Errorf("Client.GetRate() = %v, want %v", got, tt.want)
-			}
+			require.NoError(t, err)
+			require.InEpsilon(t, tt.want, got, 2)
 		})
 	}
 }

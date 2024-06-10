@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/jmoiron/sqlx"
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewRepo(t *testing.T) {
@@ -26,9 +27,8 @@ func TestNewRepo(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			if got := NewRepo(tt.args.db); got == nil {
-				t.Errorf("NewRepo() = %v, want not nil", got)
-			}
+			got := NewRepo(tt.args.db)
+			require.NotNil(t, got)
 		})
 	}
 }

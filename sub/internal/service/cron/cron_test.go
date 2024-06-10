@@ -6,6 +6,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
 	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/sub/internal/service/cron/mocks"
@@ -100,12 +101,8 @@ func TestNewJob(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			if got := NewJob(tt.args.interval, tt.args.log); !reflect.DeepEqual(
-				got.interval,
-				tt.want.interval,
-			) {
-				t.Errorf("NewJob() = %v, want %v", got, tt.want)
-			}
+			got := NewJob(tt.args.interval, tt.args.log)
+			require.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -126,7 +123,7 @@ func TestJobDo(t *testing.T) {
 		setup  func(t *testing.T, doer Doer)
 	}{
 		{
-			name: "Should execute job correcty with 5ms timeout",
+			name: "Should execute job correctly with 5ms timeout",
 			fields: fields{
 				interval: time.Millisecond * 3,
 				log:      slog.Default(),
@@ -144,7 +141,7 @@ func TestJobDo(t *testing.T) {
 			},
 		},
 		{
-			name: "Should execute job correcty with 3ms timeout",
+			name: "Should execute job correctly with 3ms timeout",
 			fields: fields{
 				interval: time.Millisecond,
 				log:      slog.Default(),
@@ -162,7 +159,7 @@ func TestJobDo(t *testing.T) {
 			},
 		},
 		{
-			name: "Should execute job correcty with 3ms timeout",
+			name: "Should execute job correctly with 3ms timeout",
 			fields: fields{
 				interval: time.Millisecond * 3,
 				log:      slog.Default(),

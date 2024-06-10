@@ -3,10 +3,10 @@ package sub
 import (
 	"errors"
 	"log/slog"
-	"reflect"
 	"testing"
 
 	pb "github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/protos/gen/go/v1/sub"
+	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 	"golang.org/x/net/context"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -33,7 +33,7 @@ func TestServerSubscribe(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "Should not return any error when service succeded",
+			name: "Should not return any error when service succeeded",
 			fields: fields{
 				log: slog.Default(),
 				svc: mocks.NewMockService(gomock.NewController(t)),
@@ -51,7 +51,7 @@ func TestServerSubscribe(t *testing.T) {
 
 				s.EXPECT().Subscribe(gomock.Any(), "test@test.com").Times(1).Return(int64(1), nil)
 			},
-			want:    nil,
+			want:    &emptypb.Empty{},
 			wantErr: false,
 		},
 		{
@@ -90,14 +90,13 @@ func TestServerSubscribe(t *testing.T) {
 				svc:                           tt.fields.svc,
 			}
 			got, err := s.Subscribe(tt.args.ctx, tt.args.req)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("Server.Subscribe() error = %v, wantErr %v", err, tt.wantErr)
+			if tt.wantErr {
+				require.Error(t, err)
 				return
 			}
 
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Server.Subscribe() = %v, want %v", got, tt.want)
-			}
+			require.NoError(t, err)
+			require.Equal(t, tt.want, got)
 		})
 	}
 }

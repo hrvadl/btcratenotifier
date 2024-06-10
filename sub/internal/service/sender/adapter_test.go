@@ -3,9 +3,9 @@ package sender
 import (
 	"errors"
 	"log/slog"
-	"reflect"
 	"testing"
 
+	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
 	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/sub/internal/service/sender/mocks"
@@ -67,9 +67,13 @@ func TestCronJobAdapterDo(t *testing.T) {
 				log:    tt.fields.log,
 			}
 
-			if err := c.Do(); (err != nil) != tt.wantErr {
-				t.Errorf("CronJobAdapter.Do() error = %v, wantErr %v", err, tt.wantErr)
+			err := c.Do()
+			if tt.wantErr {
+				require.Error(t, err)
+				return
 			}
+
+			require.NoError(t, err)
 		})
 	}
 }
@@ -123,9 +127,8 @@ func TestNewCronJobAdapter(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			if got := NewCronJobAdapter(tt.args.s, tt.args.log); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("NewCronJobAdapter() = %v, want %v", got, tt.want)
-			}
+			got := NewCronJobAdapter(tt.args.s, tt.args.log)
+			require.Equal(t, tt.want, got)
 		})
 	}
 }

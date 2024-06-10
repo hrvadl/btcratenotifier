@@ -3,9 +3,9 @@ package sub
 import (
 	"context"
 	"errors"
-	"reflect"
 	"testing"
 
+	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
 	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/sub/internal/service/sub/mocks"
@@ -49,9 +49,8 @@ func TestNewService(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			if got := NewService(tt.args.rr, tt.args.vv); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("NewService() = %v, want %v", got, tt.want)
-			}
+			got := NewService(tt.args.rr, tt.args.vv)
+			require.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -171,17 +170,16 @@ func TestServiceSubscribe(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			tt.setup(t, tt.fields.repo, tt.fields.validator)
 			s := &Service{repo: tt.fields.repo, validator: tt.fields.validator}
 			got, err := s.Subscribe(tt.args.ctx, tt.args.mail)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("Service.Subscribe() error = %v, wantErr %v", err, tt.wantErr)
+			if tt.wantErr {
+				require.Error(t, err)
 				return
 			}
 
-			if got != tt.want {
-				t.Errorf("Service.Subscribe() = %v, want %v", got, tt.want)
-			}
+			require.Equal(t, tt.want, got)
 		})
 	}
 }

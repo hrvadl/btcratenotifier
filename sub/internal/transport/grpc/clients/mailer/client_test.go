@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	pb "github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/protos/gen/go/v1/mailer"
+	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
 	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/sub/internal/transport/grpc/clients/mailer/mocks"
@@ -46,6 +47,7 @@ func TestClientSend(t *testing.T) {
 				to:      []string{"to@to.com", "to1@to.com"},
 			},
 			setup: func(t *testing.T, mailer pb.MailerServiceClient) {
+				t.Helper()
 				m, ok := mailer.(*mocks.MockMailerServiceClient)
 				if !ok {
 					t.Fatal("Failed to cast mailer client to mock mailer client")
@@ -74,6 +76,7 @@ func TestClientSend(t *testing.T) {
 				to:      []string{"to@to.com", "to1@to.com"},
 			},
 			setup: func(t *testing.T, mailer pb.MailerServiceClient) {
+				t.Helper()
 				m, ok := mailer.(*mocks.MockMailerServiceClient)
 				if !ok {
 					t.Fatal("Failed to cast mailer client to mock mailer client")
@@ -99,9 +102,13 @@ func TestClientSend(t *testing.T) {
 				api:  tt.fields.api,
 				from: tt.fields.from,
 			}
-			if err := c.Send(tt.args.ctx, tt.args.html, tt.args.subject, tt.args.to...); (err != nil) != tt.wantErr {
-				t.Errorf("Client.Send() error = %v, wantErr %v", err, tt.wantErr)
+			err := c.Send(tt.args.ctx, tt.args.html, tt.args.subject, tt.args.to...)
+			if tt.wantErr {
+				require.Error(t, err)
+				return
 			}
+
+			require.NoError(t, err)
 		})
 	}
 }

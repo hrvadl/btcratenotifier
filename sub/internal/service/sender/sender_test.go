@@ -4,9 +4,9 @@ import (
 	"context"
 	"errors"
 	"log/slog"
-	"reflect"
 	"testing"
 
+	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
 	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/sub/internal/service/sender/mocks"
@@ -83,12 +83,8 @@ func TestNew(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			if got := New(tt.args.m, tt.args.sg, tt.args.mf, tt.args.rg, tt.args.log); !reflect.DeepEqual(
-				got,
-				tt.want,
-			) {
-				t.Errorf("New() = %v, want %v", got, tt.want)
-			}
+			got := New(tt.args.m, tt.args.sg, tt.args.mf, tt.args.rg, tt.args.log)
+			require.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -136,31 +132,22 @@ func TestServiceSend(t *testing.T) {
 				)
 
 				m, ok := f.mailer.(*mocks.MockMailer)
-				if !ok {
-					t.Fatal("failed to cast mailer to mock mailer")
-				}
-
+				require.True(t, ok, "failed to cast mailer to mock mailer")
 				m.EXPECT().
 					Send(gomock.Any(), fmtMsg, subject, "test@test.com", "test2@test.com").
 					Times(1).
 					Return(nil)
 
 				rg, ok := f.rateGetter.(*mocks.MockRateGetter)
-				if !ok {
-					t.Fatal("failed to cast rate getter to mock rate getter")
-				}
+				require.True(t, ok, "failed to cast getter to mock getter")
 				rg.EXPECT().GetRate(gomock.Any()).Times(1).Return(rate, nil)
 
 				fmter, ok := f.formatter.(*mocks.MockRateMessageFormatter)
-				if !ok {
-					t.Fatal("failed to cast formatter to mock formatter")
-				}
+				require.True(t, ok, "failed to cast fmter to mock fmter")
 				fmter.EXPECT().Format(rate).Times(1).Return(fmtMsg)
 
 				sg, ok := f.subGetter.(*mocks.MockSubscriberGetter)
-				if !ok {
-					t.Fatal("failed to cast subscribe getter to mock subscribe getter")
-				}
+				require.True(t, ok, "failed to cast sub getter to mock sub getter")
 				sg.EXPECT().Get(gomock.Any()).Times(1).Return(subs, nil)
 			},
 			wantErr: false,
@@ -189,31 +176,23 @@ func TestServiceSend(t *testing.T) {
 				)
 
 				m, ok := f.mailer.(*mocks.MockMailer)
-				if !ok {
-					t.Fatal("failed to cast mailer to mock mailer")
-				}
-
+				require.True(t, ok, "failed to cast mailer to mock mailer")
 				m.EXPECT().
 					Send(gomock.Any(), fmtMsg, subject, "test@test.com", "test2@test.com").
 					Times(0).
 					Return(nil)
 
 				rg, ok := f.rateGetter.(*mocks.MockRateGetter)
-				if !ok {
-					t.Fatal("failed to cast rate getter to mock rate getter")
-				}
+				require.True(t, ok, "failed to cast getter to mock getter")
 				rg.EXPECT().GetRate(gomock.Any()).Times(0).Return(rate, nil)
 
 				fmter, ok := f.formatter.(*mocks.MockRateMessageFormatter)
-				if !ok {
-					t.Fatal("failed to cast formatter to mock formatter")
-				}
+				require.True(t, ok, "failed to cast fmter to mock fmter")
 				fmter.EXPECT().Format(rate).Times(0).Return(fmtMsg)
 
 				sg, ok := f.subGetter.(*mocks.MockSubscriberGetter)
-				if !ok {
-					t.Fatal("failed to cast subscribe getter to mock subscribe getter")
-				}
+				require.True(t, ok, "failed to cast sub getter to mock sub getter")
+				fmter.EXPECT().Format(rate).Times(0).Return(fmtMsg)
 				sg.EXPECT().
 					Get(gomock.Any()).
 					Times(1).
@@ -251,21 +230,15 @@ func TestServiceSend(t *testing.T) {
 					Return(nil)
 
 				rg, ok := f.rateGetter.(*mocks.MockRateGetter)
-				if !ok {
-					t.Fatal("failed to cast rate getter to mock rate getter")
-				}
+				require.True(t, ok, "failed to cast getter to mock getter")
 				rg.EXPECT().GetRate(gomock.Any()).Times(0).Return(rate, nil)
 
 				fmter, ok := f.formatter.(*mocks.MockRateMessageFormatter)
-				if !ok {
-					t.Fatal("failed to cast formatter to mock formatter")
-				}
+				require.True(t, ok, "failed to cast fmter to mock fmter")
 				fmter.EXPECT().Format(rate).Times(0).Return(fmtMsg)
 
 				sg, ok := f.subGetter.(*mocks.MockSubscriberGetter)
-				if !ok {
-					t.Fatal("failed to cast subscribe getter to mock subscribe getter")
-				}
+				require.True(t, ok, "failed to cast sub getter to mock sub getter")
 				sg.EXPECT().Get(gomock.Any()).Times(1).Return(nil, nil)
 			},
 			wantErr: true,
@@ -294,34 +267,25 @@ func TestServiceSend(t *testing.T) {
 				)
 
 				m, ok := f.mailer.(*mocks.MockMailer)
-				if !ok {
-					t.Fatal("failed to cast mailer to mock mailer")
-				}
-
+				require.True(t, ok, "failed to cast mailer to mock mailer")
 				m.EXPECT().
 					Send(gomock.Any(), fmtMsg, subject, "test@test.com", "test2@test.com").
 					Times(0).
 					Return(nil)
 
 				rg, ok := f.rateGetter.(*mocks.MockRateGetter)
-				if !ok {
-					t.Fatal("failed to cast rate getter to mock rate getter")
-				}
+				require.True(t, ok, "failed to cast rate getter to mock getter")
 				rg.EXPECT().
 					GetRate(gomock.Any()).
 					Times(1).
 					Return(rate, errors.New("failed to get rate"))
 
 				fmter, ok := f.formatter.(*mocks.MockRateMessageFormatter)
-				if !ok {
-					t.Fatal("failed to cast formatter to mock formatter")
-				}
+				require.True(t, ok, "failed to cast fmter to mock fmter")
 				fmter.EXPECT().Format(rate).Times(0).Return(fmtMsg)
 
 				sg, ok := f.subGetter.(*mocks.MockSubscriberGetter)
-				if !ok {
-					t.Fatal("failed to cast subscribe getter to mock subscribe getter")
-				}
+				require.True(t, ok, "failed to cast sub getter to mock sub getter")
 				sg.EXPECT().
 					Get(gomock.Any()).
 					Times(1).
@@ -353,34 +317,25 @@ func TestServiceSend(t *testing.T) {
 				)
 
 				m, ok := f.mailer.(*mocks.MockMailer)
-				if !ok {
-					t.Fatal("failed to cast mailer to mock mailer")
-				}
-
+				require.True(t, ok, "failed to cast mailer to mock mailer")
 				m.EXPECT().
 					Send(gomock.Any(), fmtMsg, subject, "test@test.com", "test2@test.com").
 					Times(1).
 					Return(errors.New("failed to send msg"))
 
 				rg, ok := f.rateGetter.(*mocks.MockRateGetter)
-				if !ok {
-					t.Fatal("failed to cast rate getter to mock rate getter")
-				}
+				require.True(t, ok, "failed to cast rate getter to mock rate getter")
 				rg.EXPECT().
 					GetRate(gomock.Any()).
 					Times(1).
 					Return(rate, nil)
 
 				fmter, ok := f.formatter.(*mocks.MockRateMessageFormatter)
-				if !ok {
-					t.Fatal("failed to cast formatter to mock formatter")
-				}
+				require.True(t, ok, "failed to cast fmter to mock fmter")
 				fmter.EXPECT().Format(rate).Times(1).Return(fmtMsg)
 
 				sg, ok := f.subGetter.(*mocks.MockSubscriberGetter)
-				if !ok {
-					t.Fatal("failed to cast subscribe getter to mock subscribe getter")
-				}
+				require.True(t, ok, "failed to cast sub getter to mock sub getter")
 				sg.EXPECT().
 					Get(gomock.Any()).
 					Times(1).
@@ -401,9 +356,14 @@ func TestServiceSend(t *testing.T) {
 				rateGetter: tt.fields.rateGetter,
 				log:        tt.fields.log,
 			}
-			if err := w.Send(tt.args.ctx); (err != nil) != tt.wantErr {
-				t.Errorf("Service.Send() error = %v, wantErr %v", err, tt.wantErr)
+
+			err := w.Send(tt.args.ctx)
+			if tt.wantErr {
+				require.Error(t, err)
+				return
 			}
+
+			require.NoError(t, err)
 		})
 	}
 }
@@ -454,9 +414,8 @@ func TestMapSubsToMails(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			if got := mapSubsToMails(tt.args.s); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("mapSubsToMails() = %v, want %v", got, tt.want)
-			}
+			got := mapSubsToMails(tt.args.s)
+			require.Equal(t, tt.want, got)
 		})
 	}
 }

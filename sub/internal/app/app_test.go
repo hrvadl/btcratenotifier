@@ -2,8 +2,9 @@ package app
 
 import (
 	"log/slog"
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 
 	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/sub/internal/cfg"
 )
@@ -35,9 +36,8 @@ func TestNew(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			if got := New(tt.args.cfg, tt.args.log); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("New() = %v, want %v", got, tt.want)
-			}
+			got := New(tt.args.cfg, tt.args.log)
+			require.Equal(t, tt.want, got)
 		})
 	}
 }
