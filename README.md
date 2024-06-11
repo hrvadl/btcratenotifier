@@ -8,6 +8,7 @@ The app contains 4 microservices:
 - Gateway (gw) for mapping HTTP -> GRPC requests and entry point purposes
 - Mailer - dumb service for sending emails
 - RateWatcher (rw) - service for getting the latest currency exchange rates
+- Shared package (pkg) - pkg containing code, which can be used accross modules (logger setup etc.)
 
 As per the task, I need to send a link to only one repository, it was decided to use go workspaces to fit all microservices to one repo. Typically, it should not be the case and it's antipattern. Basically, you can treat each top-level directory as a separate and independent repository/package/module. The `protos` top-level directory is also a go module, containing grpc-generated code.
 
@@ -99,7 +100,7 @@ You should get the following output, where each line is the name of the task:
 
 They're quite handy to run tests/linters/formatters or to generate grpc-related code and they will install all the deps in case you don't have them.
 
-Before committing anything, you need to also install [pre-commit](https://pre-commit.com/). It will run golangci lint before committing to prevent common dummy issues related to formatting/go code. Typically, it should be covered by the CI job, but I need to reduce possible extra runs, considering GH actions has limit on daily runs.
+Before committing anything, you need to also install [left-hook](https://github.com/evilmartians/lefthook). It will run golangci lint before committing to prevent common dummy issues related to formatting/go code. Typically, it should be covered by the CI job, but I need to reduce possible extra runs, considering GH actions has limit on daily runs.
 
 ## Compose file 🐋
 
@@ -126,6 +127,7 @@ The application uses GI actions (free tear) as a CI runner. It suits perfectly f
 <img width="1228" alt="image" src="https://github.com/hrvadl/converter/assets/93580374/77b9f5cf-1e9e-485f-a7f8-b29a092811f6">
 
 ## Per service documentation 📃
+
 - [Gateway](https://github.com/hrvadl/converter/blob/main/gw/README.md)
 - [Mailer](https://github.com/hrvadl/converter/blob/main/mailer/README.md)
 - [Ratewatcher](https://github.com/hrvadl/converter/blob/main/rw/README.md)
