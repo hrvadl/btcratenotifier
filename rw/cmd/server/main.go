@@ -4,9 +4,9 @@ import (
 	"log/slog"
 	"os"
 
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/kit/logger"
 	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/rw/internal/app"
 	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/rw/internal/cfg"
-	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/kit/logger"
 )
 
 const source = "rateWatcher"

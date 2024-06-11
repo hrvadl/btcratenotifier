@@ -21,6 +21,12 @@ tasks:
         - SUB_ADDR
     cmds:
       - go run ./cmd/server
+  format:
+    desc: "Run gofumpt"
+    deps: [install:gofumpt]
+    cmds:
+      - echo "Running formatter..."
+      - gofumpt -e -l -w .
   lint:
     desc: "Run golangci-lint"
     deps: [install:lint]
