@@ -6,7 +6,7 @@ import (
 
 	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/gw/internal/app"
 	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/gw/internal/cfg"
-	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/gw/pkg/logger"
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/kit/logger"
 )
 
 const source = "gateway"

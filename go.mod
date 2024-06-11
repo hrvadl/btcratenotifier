@@ -1,4 +1,4 @@
-module github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl
+module github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/kit/logger
 
 go 1.22.0
 
