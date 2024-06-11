@@ -3,6 +3,7 @@ module github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/rw
 go 1.22.0
 
 require (
+	github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/kit v0.0.0-20240611191827-9dced801b9c9
 	github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/protos v0.0.0-20240609093758-f84e7233cbf3
 	github.com/caarlos0/env/v11 v11.0.1
 	github.com/stretchr/testify v1.9.0
@@ -13,6 +14,7 @@ require (
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.1.0 // indirect
 	github.com/kr/pretty v0.3.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rogpeppe/go-internal v1.11.0 // indirect

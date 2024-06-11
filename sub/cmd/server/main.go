@@ -4,9 +4,10 @@ import (
 	"log/slog"
 	"os"
 
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/kit/logger"
+
 	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/sub/internal/app"
 	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/sub/internal/cfg"
-	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/kit/logger"
 )
 
 const (

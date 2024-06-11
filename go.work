@@ -7,4 +7,5 @@ use (
 	./protos
 	./rw
 	./sub
+	./kit
 )
