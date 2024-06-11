@@ -1,4 +1,4 @@
-module github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/kit
+module github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/pkg
 
 go 1.22.0
 

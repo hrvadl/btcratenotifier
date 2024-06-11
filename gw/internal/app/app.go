@@ -10,7 +10,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/kit/logger"
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/pkg/logger"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	httpSwagger "github.com/swaggo/http-swagger"
