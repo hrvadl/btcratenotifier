@@ -107,8 +107,6 @@ func TestHandlerGetRate(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			t.Cleanup(func() {
-			})
 			tt.setup(t, tt.fields.rg)
 			h := &Handler{
 				log: tt.fields.log,
