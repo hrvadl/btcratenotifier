@@ -1,5 +1,5 @@
-github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/kit v0.0.0-20240611191827-9dced801b9c9 h1:h1vcQrfQX8/kuzYLRj/E5EafslxyLi9uBsWDgPR9ezE=
-github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/kit v0.0.0-20240611191827-9dced801b9c9/go.mod h1:Sq78F+fFHw5WzGaGqOpfB1QZO8sTcRwgXO3wuSVcCUc=
+github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/pkg v0.0.0-20240611200006-6cb860ffd131 h1:6vTTy+npDPqRRFU2hy76bg6RvCjM3Rwty2WVhrz9sD4=
+github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/pkg v0.0.0-20240611200006-6cb860ffd131/go.mod h1:v+H7qIT9G87SPMHlB7JexwlvIIzYdqY8Y9MCTJYCBxU=
 github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/protos v0.0.0-20240609093758-f84e7233cbf3 h1:DC0LLLdvRa63Itlcd6ODGKpxMp9yT+dS13ZJpT9phAg=
 github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/protos v0.0.0-20240609093758-f84e7233cbf3/go.mod h1:b5WCaav9NWOrZXPTq7QQ8S/vQGZpOoYd5D4hJdpCvJw=
 github.com/caarlos0/env/v11 v11.0.1 h1:A8dDt9Ub9ybqRSUF3fQc/TA/gTam2bKT4Pit+cwrsPs=
