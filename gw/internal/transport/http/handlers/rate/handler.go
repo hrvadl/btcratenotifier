@@ -39,13 +39,13 @@ func (h *Handler) GetRate(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), getRateTimeout)
 	defer cancel()
 
-	rat, err := h.rg.GetRate(ctx)
+	exchangeRate, err := h.rg.GetRate(ctx)
 	if err != nil {
 		h.httpFail(w, http.StatusBadRequest, err)
 		return
 	}
 
-	h.httpSuccess(w, http.StatusOK, rat, "successfully got rate")
+	h.httpSuccess(w, http.StatusOK, exchangeRate, "successfully got rate")
 }
 
 func (h *Handler) httpSuccess(w http.ResponseWriter, code int, data any, msg string) {
