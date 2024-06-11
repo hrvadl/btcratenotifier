@@ -8,6 +8,7 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/kit/logger"
 	"google.golang.org/grpc"
 
 	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/sub/internal/cfg"
@@ -21,7 +22,6 @@ import (
 	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/sub/internal/transport/grpc/clients/mailer"
 	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/sub/internal/transport/grpc/clients/ratewatcher"
 	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/sub/internal/transport/grpc/server/sub"
-	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/kit/logger"
 )
 
 const operation = "app init"
