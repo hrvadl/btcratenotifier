@@ -1,11 +1,14 @@
 package app
 
 import (
+	"context"
 	"fmt"
 	"log/slog"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -22,6 +25,8 @@ import (
 
 const operation = "app init"
 
+const shutdownTimeout = 5 * time.Second
+
 // New constructs new App with provided arguments.
 // NOTE: than neither cfg or log can't be nil or App will panic.
 func New(cfg cfg.Config, log *slog.Logger) *App {
@@ -35,6 +40,7 @@ func New(cfg cfg.Config, log *slog.Logger) *App {
 // db connections, and GRPC server/clients. Could return an error if any
 // of described above steps failed.
 type App struct {
+	srv *http.Server
 	cfg cfg.Config
 	log *slog.Logger
 }
@@ -90,13 +96,13 @@ func (a *App) Run() error {
 	}
 
 	a.log.Info("Starting web server", slog.String("addr", a.cfg.Addr))
-	srv := newServer(
+	a.srv = newServer(
 		r,
 		a.cfg.Addr,
 		slog.NewLogLogger(a.log.Handler(), logger.MapLevels(a.cfg.LogLevel)),
 	)
 
-	return srv.ListenAndServe()
+	return a.srv.ListenAndServe()
 }
 
 // GracefulStop method gracefully stop the server. It listens to the OS sigals.
@@ -107,5 +113,10 @@ func (a *App) GracefulStop() {
 	signal.Notify(ch, syscall.SIGTERM, syscall.SIGINT)
 	signal := <-ch
 	a.log.Info("Received stop signal. Terminating...", slog.Any("signal", signal))
+	ctx, cancel := context.WithTimeout(context.Background(), shutdownTimeout)
+	defer cancel()
+	if err := a.srv.Shutdown(ctx); err != nil {
+		a.log.Error("Failed to gracefully stop the server", slog.Any("err", err))
+	}
 	a.log.Info("Successfully terminated server. Bye!")
 }
