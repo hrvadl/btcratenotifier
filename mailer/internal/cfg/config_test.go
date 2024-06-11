@@ -124,13 +124,12 @@ func TestNewFromEnv(t *testing.T) {
 
 			tt.setup(t)
 			got, err := NewFromEnv()
+			require.Equal(t, tt.want, got)
 			if tt.wantErr {
 				require.Error(t, err)
 				return
 			}
-
 			require.NoError(t, err)
-			require.Equal(t, tt.want, got)
 		})
 	}
 }
