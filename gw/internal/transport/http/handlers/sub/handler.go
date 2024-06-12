@@ -55,10 +55,12 @@ func (h *Handler) Subscribe(w http.ResponseWriter, r *http.Request) {
 
 	if errors.Is(err, subSvc.ErrAlreadyExists) {
 		h.httpFail(w, http.StatusConflict, err)
+		return
 	}
 
 	if errors.Is(err, subSvc.ErrInvalidEmail) {
 		h.httpFail(w, http.StatusBadRequest, err)
+		return
 	}
 
 	h.httpFail(w, http.StatusInternalServerError, err)

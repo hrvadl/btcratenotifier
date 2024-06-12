@@ -117,6 +117,7 @@ func (a *App) GracefulStop() {
 	defer cancel()
 	if err := a.srv.Shutdown(ctx); err != nil {
 		a.log.Error("Failed to gracefully stop the server", slog.Any("err", err))
+		return
 	}
 	a.log.Info("Successfully terminated server. Bye!")
 }
