@@ -63,7 +63,10 @@ func (c *Client) Subscribe(ctx context.Context, req *pb.SubscribeRequest) error 
 	if err == nil {
 		return nil
 	}
+	return mapGRPCError(err)
+}
 
+func mapGRPCError(err error) error {
 	switch status.Convert(err).Code() {
 	case codes.AlreadyExists:
 		return ErrAlreadyExists
