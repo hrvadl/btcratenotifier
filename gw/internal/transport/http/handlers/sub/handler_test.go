@@ -92,7 +92,7 @@ func TestHandlerSubscribe(t *testing.T) {
 			want: http.StatusOK,
 		},
 		{
-			name: "Should return 409 when service failed",
+			name: "Should return 500 when service failed",
 			fields: fields{
 				svc: mocks.NewMockService(gomock.NewController(t)),
 				log: slog.Default(),
@@ -114,7 +114,7 @@ func TestHandlerSubscribe(t *testing.T) {
 					Times(1).
 					Return(errors.New("failed to subscribe"))
 			},
-			want: http.StatusConflict,
+			want: http.StatusInternalServerError,
 		},
 	}
 
