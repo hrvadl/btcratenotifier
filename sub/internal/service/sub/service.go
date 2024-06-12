@@ -3,12 +3,9 @@ package sub
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/sub/internal/storage/subscriber"
 )
-
-const operation = "ratesender service"
 
 // NewService constructs new Service with provided arguments.
 // NOTE: neither of arguments can't be nil, or service will panic in
@@ -43,13 +40,17 @@ type Service struct {
 // If OK returns ID of saved subscriber, if not - returns an error.
 func (s *Service) Subscribe(ctx context.Context, mail string) (int64, error) {
 	if !s.validator.Validate(mail) {
-		return 0, errors.New("invalid email")
+		return 0, ErrInvalidEmail
 	}
 
 	resp, err := s.repo.Save(ctx, subscriber.Subscriber{Email: mail})
-	if err != nil {
-		return 0, fmt.Errorf("%s: failed to save recipient: %w", operation, err)
+	if err == nil {
+		return resp, nil
 	}
 
-	return resp, nil
+	if errors.Is(err, subscriber.ErrAlreadyExists) {
+		return 0, ErrAlreadyExists
+	}
+
+	return 0, ErrFailedToSave
 }

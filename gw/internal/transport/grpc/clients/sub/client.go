@@ -7,13 +7,13 @@ import (
 	"log/slog"
 	"time"
 
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/pkg/logger"
 	pb "github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/protos/gen/go/v1/sub"
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/retry"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials/insecure"
-
-	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/pkg/logger"
+	"google.golang.org/grpc/status"
 )
 
 const (
@@ -60,5 +60,16 @@ type Client struct {
 
 func (c *Client) Subscribe(ctx context.Context, req *pb.SubscribeRequest) error {
 	_, err := c.api.Subscribe(ctx, req)
-	return err
+	if err == nil {
+		return nil
+	}
+
+	switch status.Convert(err).Code() {
+	case codes.AlreadyExists:
+		return ErrAlreadyExists
+	case codes.InvalidArgument:
+		return ErrInvalidEmail
+	default:
+		return ErrFailedToSave
+	}
 }

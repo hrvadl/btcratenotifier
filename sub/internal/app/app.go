@@ -27,8 +27,8 @@ import (
 const operation = "app init"
 
 const (
-	cronJobHour   = 12
-	cronJobMinute = 0
+	cronJobHour   = 6
+	cronJobMinute = 35
 )
 
 // New constructs new App with provided arguments.

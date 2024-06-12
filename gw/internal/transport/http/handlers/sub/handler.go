@@ -2,12 +2,14 @@ package sub
 
 import (
 	"context"
+	"errors"
 	"log/slog"
 	"net/http"
 	"time"
 
 	pb "github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/protos/gen/go/v1/sub"
 
+	subSvc "github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/gw/internal/transport/grpc/clients/sub"
 	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/gw/internal/transport/http/handlers"
 )
 
@@ -37,6 +39,7 @@ type Handler struct {
 // @Produce      json
 // @Param        body formData string true "Email to subscribe"
 // @Success      200  {object}  handlers.EmptyResponse
+// @Failure      400  {object}  handlers.ErrorResponse
 // @Failure      409  {object}  handlers.ErrorResponse
 // @Router       /api/subscribe [post]
 func (h *Handler) Subscribe(w http.ResponseWriter, r *http.Request) {
@@ -44,12 +47,21 @@ func (h *Handler) Subscribe(w http.ResponseWriter, r *http.Request) {
 	defer cancel()
 
 	mail := r.FormValue("email")
-	if err := h.svc.Subscribe(ctx, &pb.SubscribeRequest{Email: mail}); err != nil {
-		h.httpFail(w, http.StatusConflict, err)
+	err := h.svc.Subscribe(ctx, &pb.SubscribeRequest{Email: mail})
+	if err == nil {
+		h.httpSuccess(w, http.StatusOK, nil, "aded email")
 		return
 	}
 
-	h.httpSuccess(w, http.StatusOK, nil, "aded email")
+	if errors.Is(err, subSvc.ErrAlreadyExists) {
+		h.httpFail(w, http.StatusConflict, err)
+	}
+
+	if errors.Is(err, subSvc.ErrInvalidEmail) {
+		h.httpFail(w, http.StatusBadRequest, err)
+	}
+
+	h.httpFail(w, http.StatusInternalServerError, err)
 }
 
 func (h *Handler) httpSuccess(w http.ResponseWriter, code int, data any, msg string) {
