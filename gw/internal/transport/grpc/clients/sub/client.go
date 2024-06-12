@@ -67,10 +67,21 @@ func (c *Client) Subscribe(ctx context.Context, req *pb.SubscribeRequest) error 
 }
 
 func mapGRPCError(err error) error {
-	switch status.Convert(err).Code() {
-	case codes.AlreadyExists:
+	s := status.Convert(err)
+	details := s.Details()
+	if len(details) == 0 {
+		return ErrFailedToSave
+	}
+
+	d, ok := details[0].(*pb.BadRequest)
+	if !ok {
+		return ErrFailedToSave
+	}
+
+	switch d.GetCode() {
+	case pb.ErrorCode_ERROR_CODE_ALREADY_EXISTS:
 		return ErrAlreadyExists
-	case codes.InvalidArgument:
+	case pb.ErrorCode_ERROR_CODE_INVALID_EMAIL_FORMAT:
 		return ErrInvalidEmail
 	default:
 		return ErrFailedToSave

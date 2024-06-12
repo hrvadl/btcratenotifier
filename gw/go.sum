@@ -2,6 +2,8 @@ github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/pkg v0.0.
 github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/pkg v0.0.0-20240611200006-6cb860ffd131/go.mod h1:v+H7qIT9G87SPMHlB7JexwlvIIzYdqY8Y9MCTJYCBxU=
 github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/protos v0.0.0-20240609093758-f84e7233cbf3 h1:DC0LLLdvRa63Itlcd6ODGKpxMp9yT+dS13ZJpT9phAg=
 github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/protos v0.0.0-20240609093758-f84e7233cbf3/go.mod h1:b5WCaav9NWOrZXPTq7QQ8S/vQGZpOoYd5D4hJdpCvJw=
+github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/protos v0.0.0-20240612164006-17b96cb38775 h1:xYr70I47S7cocmuXg81zbudtHJWJoDGkAeN12d36ugI=
+github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/protos v0.0.0-20240612164006-17b96cb38775/go.mod h1:R/8NhLAzpjp7j4FiFoMVEcbUHRWaLQ5Q/FpUHRRwWvA=
 github.com/KyleBanks/depth v1.2.1 h1:5h8fQADFrWtarTdtDudMmGsC7GPbOAu6RVB3ffsVFHc=
 github.com/KyleBanks/depth v1.2.1/go.mod h1:jzSb9d0L43HxTQfT+oSA1EEp2q+ne2uh6XgeJcm8brE=
 github.com/caarlos0/env/v11 v11.0.1 h1:A8dDt9Ub9ybqRSUF3fQc/TA/gTam2bKT4Pit+cwrsPs=

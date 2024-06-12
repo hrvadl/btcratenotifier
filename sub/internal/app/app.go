@@ -65,6 +65,7 @@ func (a *App) MustRun() {
 func (a *App) Run() error {
 	a.srv = grpc.NewServer(grpc.ChainUnaryInterceptor(
 		logger.NewServerGRPCMiddleware(a.log),
+		sub.NewErrorMappingInterceptor(),
 	))
 
 	db, err := db.NewConn(a.cfg.Dsn)

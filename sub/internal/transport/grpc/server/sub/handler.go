@@ -1,17 +1,12 @@
 package sub
 
 import (
-	"errors"
 	"log/slog"
 
 	pb "github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/protos/gen/go/v1/sub"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
-
-	subSvc "github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/sub/internal/service/sub"
 )
 
 // Register registers subscribe handler to the given GRPC server.
@@ -43,19 +38,7 @@ type Server struct {
 func (s *Server) Subscribe(ctx context.Context, req *pb.SubscribeRequest) (*emptypb.Empty, error) {
 	_, err := s.svc.Subscribe(ctx, req.GetEmail())
 	if err != nil {
-		return nil, mapDomainError(err)
+		return nil, err
 	}
 	return &emptypb.Empty{}, nil
-}
-
-func mapDomainError(err error) error {
-	if errors.Is(err, subSvc.ErrInvalidEmail) {
-		return status.Error(codes.InvalidArgument, err.Error())
-	}
-
-	if errors.Is(err, subSvc.ErrAlreadyExists) {
-		return status.Error(codes.AlreadyExists, err.Error())
-	}
-
-	return status.Error(codes.Internal, err.Error())
 }
