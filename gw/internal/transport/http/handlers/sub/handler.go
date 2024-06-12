@@ -37,7 +37,7 @@ type Handler struct {
 // @Produce      json
 // @Param        body formData string true "Email to subscribe"
 // @Success      200  {object}  handlers.EmptyResponse
-// @Failure      400  {object}  handlers.ErrorResponse
+// @Failure      409  {object}  handlers.ErrorResponse
 // @Router       /api/subscribe [post]
 func (h *Handler) Subscribe(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), subscribeTimeout)
