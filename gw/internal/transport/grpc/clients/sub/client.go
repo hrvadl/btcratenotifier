@@ -60,10 +60,10 @@ type Client struct {
 
 func (c *Client) Subscribe(ctx context.Context, req *pb.SubscribeRequest) error {
 	_, err := c.api.Subscribe(ctx, req)
-	if err == nil {
-		return nil
+	if err != nil {
+		return mapGRPCError(err)
 	}
-	return mapGRPCError(err)
+	return nil
 }
 
 func mapGRPCError(err error) error {

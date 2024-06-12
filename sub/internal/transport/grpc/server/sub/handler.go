@@ -42,17 +42,20 @@ type Server struct {
 // failure.
 func (s *Server) Subscribe(ctx context.Context, req *pb.SubscribeRequest) (*emptypb.Empty, error) {
 	_, err := s.svc.Subscribe(ctx, req.GetEmail())
-	if err == nil {
-		return &emptypb.Empty{}, nil
+	if err != nil {
+		return nil, mapDomainError(err)
 	}
+	return &emptypb.Empty{}, nil
+}
 
+func mapDomainError(err error) error {
 	if errors.Is(err, subSvc.ErrInvalidEmail) {
-		return nil, status.Error(codes.InvalidArgument, err.Error())
+		return status.Error(codes.InvalidArgument, err.Error())
 	}
 
 	if errors.Is(err, subSvc.ErrAlreadyExists) {
-		return nil, status.Error(codes.AlreadyExists, err.Error())
+		return status.Error(codes.AlreadyExists, err.Error())
 	}
 
-	return nil, status.Error(codes.Internal, err.Error())
+	return status.Error(codes.Internal, err.Error())
 }
