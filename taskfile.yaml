@@ -1,0 +1,60 @@
+version: "3"
+
+includes:
+  gw:
+    taskfile: ./gw/taskfile.yaml
+    dir: ./gw
+  mailer:
+    taskfile: ./mailer/taskfile.yaml
+    dir: ./mailer
+  rw:
+    taskfile: ./rw/taskfile.yaml
+    dir: ./rw
+  sub:
+    taskfile: ./sub/taskfile.yaml
+    dir: ./sub
+  protos:
+    taskfile: ./protos/taskfile.yaml
+    dir: ./protos
+
+tasks:
+  default:
+    desc: "Show available tasks"
+    cmds:
+      - task --list-all
+  format:
+    deps:
+      - gw:format
+      - mailer:format
+      - rw:format
+      - sub:format
+  lint:
+    cmds:
+      - task gw:lint
+      - task mailer:lint
+      - task rw:lint
+      - task sub:lint
+  test:
+    deps:
+      - gw:test
+      - mailer:test
+      - rw:test
+      - sub:test
+  test:race:
+    deps:
+      - gw:test:race
+      - mailer:test:race
+      - rw:test:race
+      - sub:test:race
+  godoc:
+    desc: "Host a Godoc web server on the http://localhost:6060/pkg/github.com/hrvadl/converter?m=all"
+    deps: [install:godoc]
+    cmds:
+      - echo "go to the http://localhost:6060/pkg/github.com/hrvadl/converter?m=all"
+      - godoc -http=:6060
+  install:godoc:
+    desc: "Installed godoc util"
+    cmds:
+      - go install -v golang.org/x/tools/cmd/godoc@latest
+    status:
+      - command godoc -h

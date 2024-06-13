@@ -1,0 +1,90 @@
+services:
+  gw:
+    build:
+      context: gw
+      dockerfile: ./Dockerfile
+    image: gw
+    restart: on-failure
+    ports:
+      - "8080:${GATEWAY_PORT}"
+    depends_on:
+      - sub
+      - rw
+    env_file:
+      - .env
+    networks:
+      - converter
+
+  sub:
+    build:
+      context: sub
+      dockerfile: ./Dockerfile
+    image: sub
+    restart: on-failure
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      rw:
+        condition: service_started
+    env_file:
+      - .env
+    networks:
+      - converter
+
+  rw:
+    build:
+      context: rw
+      dockerfile: ./Dockerfile
+    image: rw
+    restart: on-failure
+    env_file:
+      - .env
+    networks:
+      - converter
+
+  mailer:
+    build:
+      context: mailer
+      dockerfile: ./Dockerfile
+    image: mailer
+    restart: on-failure
+    env_file:
+      - .env
+    networks:
+      - converter
+
+  db:
+    image: mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      start_period: 5s
+      interval: 3s
+      timeout: 3s
+      retries: 30
+    env_file:
+      - .env
+    volumes:
+      - converterdata:/var/lib/mysql
+    networks:
+      - converter
+
+  migrate:
+    image: migrate/migrate
+    restart: on-failure
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - .env
+    networks:
+      - converter
+    volumes:
+      - ./sub/migrations:/database
+    command: ["-path", "/database", "-database", "mysql://${SUB_DSN}", "up"]
+
+networks:
+  converter:
+    driver: bridge
+
+volumes:
+  converterdata:
