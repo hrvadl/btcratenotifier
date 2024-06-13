@@ -55,7 +55,7 @@ func NewDB(ctx context.Context) (*mysqlc.MySQLContainer, error) {
 	return container, nil
 }
 
-func Migrate(path, dsn string) error {
+func MigrateDB(path, dsn string) error {
 	migrations, err := filepath.Abs(path)
 	if err != nil {
 		return fmt.Errorf("failed to find migrations dir %s: %w", migrations, err)
