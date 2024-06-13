@@ -9,7 +9,6 @@ import (
 	"testing"
 	"time"
 
-	_ "github.com/go-sql-driver/mysql"
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/mysql"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
@@ -149,6 +148,7 @@ func TestServiceSend(t *testing.T) {
 				return
 			}
 
+			require.NoError(t, err)
 			require.NotZero(t, id)
 		})
 	}
