@@ -111,7 +111,7 @@ func TestServiceSend(t *testing.T) {
 		{
 			name: "Should subscribe correctly",
 			args: args{
-				ctx:  context.TODO(),
+				ctx:  context.Background(),
 				mail: "test@mail.com",
 			},
 			wantErr: false,
@@ -119,7 +119,7 @@ func TestServiceSend(t *testing.T) {
 		{
 			name: "Should not subscribe when email is incorrect",
 			args: args{
-				ctx:  context.TODO(),
+				ctx:  context.Background(),
 				mail: "tetmail.com",
 			},
 			wantErr: true,
@@ -127,7 +127,7 @@ func TestServiceSend(t *testing.T) {
 		{
 			name: "Should not subscribe when email already exists",
 			args: args{
-				ctx:  context.TODO(),
+				ctx:  context.Background(),
 				mail: "test@mail.com",
 			},
 			wantErr: true,
