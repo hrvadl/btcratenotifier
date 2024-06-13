@@ -1,6 +1,6 @@
 //go:build integration
 
-package sub
+package subscriber
 
 import (
 	"context"
@@ -14,9 +14,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/testcontainers/testcontainers-go/modules/mysql"
 
-	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/sub/internal/service/validator"
 	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/sub/internal/storage/platform/db"
-	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/sub/internal/storage/subscriber"
 )
 
 var mySQLContainer *mysql.MySQLContainer
@@ -62,10 +60,10 @@ func TestMain(m *testing.M) {
 	}
 }
 
-func TestServiceSend(t *testing.T) {
+func TestSave(t *testing.T) {
 	type args struct {
-		ctx  context.Context
-		mail string
+		ctx context.Context
+		sub Subscriber
 	}
 	testCases := []struct {
 		name    string
@@ -73,42 +71,25 @@ func TestServiceSend(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "Should subscribe correctly",
+			name: "Should save subscriber correctly",
 			args: args{
-				ctx:  context.Background(),
-				mail: "test@mail.com",
+				ctx: context.Background(),
+				sub: Subscriber{Email: "test@mail.com"},
 			},
 			wantErr: false,
 		},
 		{
-			name: "Should not subscribe correctly when it takes too long",
+			name: "Should not save subscriber twice",
 			args: args{
-				ctx:  newImmediateCtx(),
-				mail: "test1111@mail.com",
+				ctx: context.Background(),
+				sub: Subscriber{Email: "test@mail.com"},
 			},
 			wantErr: true,
 		},
 		{
-			name: "Should not subscribe when email is empty",
+			name: "Should not get subscribers correctly when it takes too long",
 			args: args{
-				ctx:  context.Background(),
-				mail: "",
-			},
-			wantErr: true,
-		},
-		{
-			name: "Should not subscribe when email is incorrect",
-			args: args{
-				ctx:  context.Background(),
-				mail: "tetmail.com",
-			},
-			wantErr: true,
-		},
-		{
-			name: "Should not subscribe when email already exists",
-			args: args{
-				ctx:  context.Background(),
-				mail: "test@mail.com",
+				ctx: newImmediateCtx(),
 			},
 			wantErr: true,
 		},
@@ -117,12 +98,10 @@ func TestServiceSend(t *testing.T) {
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			db, err := db.NewConn(tests.MustGetDSN(mySQLContainer))
-			require.NoError(t, err, "Failed to connect to db")
+			require.NoError(t, err, "Failed to connect to test DB")
 
-			rs := subscriber.NewRepo(db)
-			v := validator.NewStdlib()
-			s := NewService(rs, v)
-			id, err := s.Subscribe(tt.args.ctx, tt.args.mail)
+			r := NewRepo(db)
+			id, err := r.Save(tt.args.ctx, tt.args.sub)
 			if tt.wantErr {
 				require.Error(t, err)
 				return
@@ -134,8 +113,77 @@ func TestServiceSend(t *testing.T) {
 	}
 }
 
+func TestGet(t *testing.T) {
+	type args struct {
+		ctx context.Context
+	}
+	testCases := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "Should get subscribers correctly",
+			args: args{
+				ctx: context.Background(),
+			},
+			wantErr: false,
+		},
+		{
+			name: "Should not get subscribers correctly when it takes too long",
+			args: args{
+				ctx: newImmediateCtx(),
+			},
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range testCases {
+		t.Run(tt.name, func(t *testing.T) {
+			db, err := db.NewConn(tests.MustGetDSN(mySQLContainer))
+			require.NoError(t, err, "Failed to connect to test DB")
+
+			r := NewRepo(db)
+			want := seed(t, r, 30)
+
+			got, err := r.Get(tt.args.ctx)
+			if tt.wantErr {
+				require.Error(t, err)
+				return
+			}
+
+			require.NoError(t, err)
+			require.Subset(t, mapSubsToMails(got), mapSubsToMails(want))
+		})
+	}
+}
+
+func seed(t *testing.T, repo *Repo, amount int) []Subscriber {
+	t.Helper()
+
+	subs := make([]Subscriber, 0, amount)
+	for range amount {
+		mail := fmt.Sprintf("mail%v@mail.com", time.Now().Nanosecond())
+		sub := Subscriber{Email: mail}
+		subs = append(subs, sub)
+		id, err := repo.Save(context.Background(), sub)
+		require.NoError(t, err)
+		require.NotZero(t, id)
+	}
+
+	return subs
+}
+
 func newImmediateCtx() context.Context {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Nanosecond)
 	defer cancel()
 	return ctx
+}
+
+func mapSubsToMails(s []Subscriber) []string {
+	mails := make([]string, 0, len(s))
+	for i := range s {
+		mails = append(mails, s[i].Email)
+	}
+	return mails
 }
