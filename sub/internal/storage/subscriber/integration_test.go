@@ -9,6 +9,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/require"
 
 	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/sub/internal/storage/platform/db"
@@ -53,8 +54,7 @@ func TestSave(t *testing.T) {
 			r := NewRepo(db)
 			id, err := r.Save(tt.args.ctx, tt.args.sub)
 			t.Cleanup(func() {
-				_, err = db.Exec("DELETE FROM subscribers WHERE id = ?", id)
-				require.NoError(t, err, "Failed to clean up subscriber")
+				cleanupSub(t, db, id)
 			})
 
 			if tt.wantErr {
@@ -78,17 +78,17 @@ func TestSaveSubscriberTwice(t *testing.T) {
 		args args
 	}{
 		{
-			name: "Should not save subscriber twice",
-			args: args{
-				ctx: context.Background(),
-				sub: Subscriber{Email: "test@mail.com"},
-			},
-		},
-		{
 			name: "Should save subscriber correctly",
 			args: args{
 				ctx: context.Background(),
 				sub: Subscriber{Email: "testagain@mail.com"},
+			},
+		},
+		{
+			name: "Should not save subscriber twice",
+			args: args{
+				ctx: context.Background(),
+				sub: Subscriber{Email: "test@mail.com"},
 			},
 		},
 	}
@@ -103,8 +103,7 @@ func TestSaveSubscriberTwice(t *testing.T) {
 			r := NewRepo(db)
 			id, err := r.Save(tt.args.ctx, tt.args.sub)
 			t.Cleanup(func() {
-				_, err = db.Exec("DELETE FROM subscribers WHERE id = ?", id)
-				require.NoError(t, err, "Failed to clean up subscriber")
+				cleanupSub(t, db, id)
 			})
 
 			require.NoError(t, err)
@@ -153,8 +152,7 @@ func TestGet(t *testing.T) {
 			want := seed(t, r, 30)
 			t.Cleanup(func() {
 				for _, s := range want {
-					_, err = db.Exec("DELETE FROM subscribers WHERE id = ?", s.ID)
-					require.NoError(t, err, "Failed to clean up subscriber")
+					cleanupSub(t, db, s.ID)
 				}
 			})
 
@@ -199,4 +197,10 @@ func mapSubsToMails(s []Subscriber) []string {
 		mails = append(mails, s[i].Email)
 	}
 	return mails
+}
+
+func cleanupSub(t *testing.T, db *sqlx.DB, id int64) {
+	t.Helper()
+	_, err := db.Exec("DELETE FROM subscribers WHERE id = ?", id)
+	require.NoError(t, err, "Failed to clean up subscriber")
 }
