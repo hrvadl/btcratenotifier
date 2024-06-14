@@ -15,7 +15,9 @@ import (
 	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/sub/internal/storage/subscriber"
 )
 
-func TestServiceSend(t *testing.T) {
+const testDSNEnvKey = "SUB_TEST_DSN"
+
+func TestServiceSubscribeInt(t *testing.T) {
 	type args struct {
 		ctx  context.Context
 		mail string
@@ -57,19 +59,11 @@ func TestServiceSend(t *testing.T) {
 			},
 			wantErr: true,
 		},
-		{
-			name: "Should not subscribe when email already exists",
-			args: args{
-				ctx:  context.Background(),
-				mail: "test@mail.com",
-			},
-			wantErr: true,
-		},
 	}
 
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
-			dsn := os.Getenv("SUB_DSN")
+			dsn := os.Getenv(testDSNEnvKey)
 			require.NotZero(t, dsn, "test DSN can not be empty")
 			db, err := db.NewConn(dsn)
 			require.NoError(t, err, "Failed to connect to db")
@@ -77,14 +71,72 @@ func TestServiceSend(t *testing.T) {
 			rs := subscriber.NewRepo(db)
 			v := validator.NewStdlib()
 			s := NewService(rs, v)
+
 			id, err := s.Subscribe(tt.args.ctx, tt.args.mail)
 			if tt.wantErr {
 				require.Error(t, err)
 				return
 			}
 
+			t.Cleanup(func() {
+				_, err = db.Exec("DELETE FROM subscribers WHERE id = ?", id)
+				require.NoError(t, err, "Failed to clean up subscriber")
+			})
+
 			require.NoError(t, err)
 			require.NotZero(t, id)
+		})
+	}
+}
+
+func TestServiceSubscribeTwice(t *testing.T) {
+	type args struct {
+		ctx  context.Context
+		mail string
+	}
+	testCases := []struct {
+		name string
+		args args
+	}{
+		{
+			name: "Should not subscribe twice",
+			args: args{
+				ctx:  context.Background(),
+				mail: "test@mail.com",
+			},
+		},
+		{
+			name: "Should not subscribe twice",
+			args: args{
+				ctx:  context.Background(),
+				mail: "testnew@mail.com",
+			},
+		},
+	}
+
+	for _, tt := range testCases {
+		t.Run(tt.name, func(t *testing.T) {
+			dsn := os.Getenv(testDSNEnvKey)
+			require.NotZero(t, dsn, "test DSN can not be empty")
+			db, err := db.NewConn(dsn)
+			require.NoError(t, err, "Failed to connect to db")
+
+			rs := subscriber.NewRepo(db)
+			v := validator.NewStdlib()
+			s := NewService(rs, v)
+
+			id, err := s.Subscribe(tt.args.ctx, tt.args.mail)
+			t.Cleanup(func() {
+				_, err = db.Exec("DELETE FROM subscribers WHERE id = ?", id)
+				require.NoError(t, err, "Failed to clean up subscriber")
+			})
+
+			require.NoError(t, err)
+			require.NotZero(t, id)
+
+			id, err = s.Subscribe(tt.args.ctx, tt.args.mail)
+			require.Error(t, err)
+			require.Zero(t, id)
 		})
 	}
 }
