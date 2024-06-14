@@ -78,8 +78,9 @@ func TestCronJobAdapterDo(t *testing.T) {
 func TestNewCronJobAdapter(t *testing.T) {
 	t.Parallel()
 	type args struct {
-		s   Sender
-		log *slog.Logger
+		s       Sender
+		log     *slog.Logger
+		timeout time.Duration
 	}
 	tests := []struct {
 		name string
@@ -89,34 +90,27 @@ func TestNewCronJobAdapter(t *testing.T) {
 		{
 			name: "Should return crob job adapter with correct arguments provided",
 			args: args{
-				s:   mocks.NewMockSender(gomock.NewController(t)),
-				log: slog.Default(),
+				s:       mocks.NewMockSender(gomock.NewController(t)),
+				log:     slog.Default(),
+				timeout: time.Second,
 			},
 			want: &CronJobAdapter{
-				sender: mocks.NewMockSender(gomock.NewController(t)),
-				log:    slog.Default(),
+				sender:  mocks.NewMockSender(gomock.NewController(t)),
+				log:     slog.Default(),
+				timeout: time.Second,
 			},
 		},
 		{
-			name: "Should return crob job adapter with allowed arguments provided",
+			name: "Should return crob job adapter with correct arguments provided",
 			args: args{
-				s:   nil,
-				log: nil,
+				s:       mocks.NewMockSender(gomock.NewController(t)),
+				log:     slog.Default(),
+				timeout: time.Microsecond,
 			},
 			want: &CronJobAdapter{
-				sender: nil,
-				log:    nil,
-			},
-		},
-		{
-			name: "Should return crob job adapter with allowed arguments provided",
-			args: args{
-				s:   nil,
-				log: slog.Default(),
-			},
-			want: &CronJobAdapter{
-				sender: nil,
-				log:    slog.Default(),
+				sender:  mocks.NewMockSender(gomock.NewController(t)),
+				log:     slog.Default(),
+				timeout: time.Microsecond,
 			},
 		},
 	}
@@ -124,7 +118,7 @@ func TestNewCronJobAdapter(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			got := NewCronJobAdapter(tt.args.s, time.Second, tt.args.log)
+			got := NewCronJobAdapter(tt.args.s, tt.args.timeout, tt.args.log)
 			require.Equal(t, tt.want, got)
 		})
 	}
