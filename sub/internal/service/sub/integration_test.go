@@ -15,10 +15,6 @@ import (
 	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/sub/internal/storage/subscriber"
 )
 
-func TestMain(m *testing.M) {
-	os.Exit(m.Run())
-}
-
 func TestServiceSend(t *testing.T) {
 	type args struct {
 		ctx  context.Context
