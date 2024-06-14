@@ -3,7 +3,7 @@ module github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/ma
 go 1.22.0
 
 require (
-	github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/pkg v0.0.0-20240614142708-6998dfa141e7
+	github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/pkg v0.0.0-20240614151000-f8a739618c46
 	github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/protos v0.0.0-20240609093758-f84e7233cbf3
 	github.com/caarlos0/env/v11 v11.0.1
 	github.com/stretchr/testify v1.9.0

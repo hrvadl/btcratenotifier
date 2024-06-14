@@ -4,16 +4,12 @@ package gomail
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
-	"io"
-	"net"
-	"net/http"
 	"os"
 	"strconv"
 	"testing"
 	"time"
 
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/pkg/mailhog"
 	pb "github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/protos/gen/go/v1/mailer"
 	"github.com/stretchr/testify/require"
 )
@@ -25,100 +21,6 @@ const (
 	mailerSMTPPortEnvKey     = "MAILER_TEST_SMTP_PORT"
 	mailerTestAPIPortEnvKey  = "MAILER_TEST_API_PORT"
 )
-
-type From struct {
-	Domain  string `json:"domain,omitempty"`
-	Mailbox string `json:"mailbox,omitempty"`
-}
-
-type To struct {
-	Domain  string `json:"domain,omitempty"`
-	Mailbox string `json:"mailbox,omitempty"`
-}
-
-type Headers struct {
-	From    []string `json:"from,omitempty"`
-	To      []string `json:"to,omitempty"`
-	Subject []string `json:"subject,omitempty"`
-}
-
-type Content struct {
-	Body    string  `json:"body,omitempty"`
-	Headers Headers `json:"headers,omitempty"`
-}
-
-type MailhogMail struct {
-	ID      string  `json:"id,omitempty"`
-	From    From    `json:"from,omitempty"`
-	To      []To    `json:"to,omitempty"`
-	Content Content `json:"content,omitempty"`
-}
-
-func newMailhogClient(host string, port int) *mailhogClient {
-	return &mailhogClient{
-		addr: net.JoinHostPort(host, strconv.Itoa(port)),
-		cl: &http.Client{
-			Timeout: 3 * time.Second,
-		},
-	}
-}
-
-type mailhogClient struct {
-	addr string
-	cl   *http.Client
-}
-
-func (c *mailhogClient) toURL(h string) string {
-	return "http://" + c.addr + h
-}
-
-func (c *mailhogClient) getAll() ([]MailhogMail, error) {
-	r, err := http.NewRequest(http.MethodGet, c.toURL("/api/v1/messages"), nil)
-	if err != nil {
-		return nil, fmt.Errorf("failed to create req: %w", err)
-	}
-
-	res, err := c.cl.Do(r)
-	if err != nil {
-		return nil, fmt.Errorf("failed to send req: %w", err)
-	}
-
-	defer func() { _ = res.Body.Close() }()
-	if res.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("mailhog returned negative status code: %d", res.StatusCode)
-	}
-
-	b, err := io.ReadAll(res.Body)
-	if err != nil {
-		return nil, fmt.Errorf("failed to read bytes: %w", err)
-	}
-
-	var msg []MailhogMail
-	if err := json.Unmarshal(b, &msg); err != nil {
-		return nil, fmt.Errorf("failed to unmarshall: %w", err)
-	}
-
-	return msg, nil
-}
-
-func (c *mailhogClient) deleteAll() error {
-	r, err := http.NewRequest(http.MethodDelete, c.toURL("/api/v1/messages"), nil)
-	if err != nil {
-		return fmt.Errorf("failed to create req: %w", err)
-	}
-
-	res, err := c.cl.Do(r)
-	if err != nil {
-		return fmt.Errorf("failed to send req: %w", err)
-	}
-
-	defer func() { _ = res.Body.Close() }()
-	if res.StatusCode != http.StatusOK {
-		return fmt.Errorf("mailhog returned negative status code: %d", res.StatusCode)
-	}
-
-	return nil
-}
 
 func TestClientSend(t *testing.T) {
 	type fields struct {
@@ -228,15 +130,16 @@ func TestClientSend(t *testing.T) {
 		},
 	}
 
-	mh := newMailhogClient(
+	mh := mailhog.NewClient(
 		mustGetEnv(t, mailerSMTPHostEnvKey),
 		mustAtoi(t, mustGetEnv(t, mailerTestAPIPortEnvKey)),
+		time.Second*3,
 	)
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Cleanup(func() {
-				require.NoError(t, mh.deleteAll(), "Failed to cleanup emails")
+				require.NoError(t, mh.DeleteAll(), "Failed to cleanup emails")
 			})
 
 			c := NewClient(tt.fields.from, tt.fields.password, tt.fields.host, tt.fields.port)
@@ -247,7 +150,7 @@ func TestClientSend(t *testing.T) {
 			}
 
 			require.NoError(t, err)
-			msg, err := mh.getAll()
+			msg, err := mh.GetAll()
 			require.NotZero(t, len(msg))
 
 			mail := msg[0]
@@ -259,7 +162,7 @@ func TestClientSend(t *testing.T) {
 	}
 }
 
-func getToMails(to []To) []string {
+func getToMails(to []mailhog.To) []string {
 	mails := make([]string, 0, len(to))
 	for _, t := range to {
 		mails = append(mails, t.Mailbox+"@"+t.Domain)
