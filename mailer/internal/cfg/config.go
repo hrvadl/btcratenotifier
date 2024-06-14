@@ -8,16 +8,13 @@ import (
 
 const operation = "config parsing"
 
-const (
-	logLevelEnvKey    = "MAILER_LOG_LEVEL"
-	portEnvKey        = "MAILER_PORT"
-	mailerTokenEnvKey = "MAILER_API_KEY" // #nosec G101
-)
-
 // Config struct represents application config,
 // which is used application-wide.
 type Config struct {
-	MailerToken string `env:"API_KEY,required,notEmpty"`
+	MailerToken string `env:"SMTP_PASSWORD,required,notEmpty"`
+	MailerFrom  string `env:"SMTP_FROM,required,notEmpty"`
+	MailerHost  string `env:"SMTP_HOST,required,notEmpty"`
+	MailerPort  int    `env:"SMTP_PORT,required,notEmpty"`
 	LogLevel    string `env:"LOG_LEVEL,required,notEmpty"`
 	Port        string `env:"PORT,required,notEmpty"`
 }

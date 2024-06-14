@@ -8,12 +8,12 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/pkg/logger"
 	"google.golang.org/grpc"
 
 	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/mailer/internal/cfg"
-	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/mailer/internal/platform/mail/resend"
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/mailer/internal/platform/mail/gomail"
 	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/mailer/internal/transport/grpc/server/mailer"
-	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/pkg/logger"
 )
 
 const operation = "app init"
@@ -56,7 +56,7 @@ func (a *App) Run() error {
 
 	mailer.Register(
 		a.srv,
-		resend.NewClient(a.cfg.MailerToken),
+		gomail.NewClient(a.cfg.MailerFrom, a.cfg.MailerToken, a.cfg.MailerHost, a.cfg.MailerPort),
 		a.log.With(slog.String("source", "mailerSrv")),
 	)
 

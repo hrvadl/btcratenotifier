@@ -4,6 +4,7 @@ import (
 	"errors"
 	"log/slog"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
@@ -123,7 +124,7 @@ func TestNewCronJobAdapter(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			got := NewCronJobAdapter(tt.args.s, tt.args.log)
+			got := NewCronJobAdapter(tt.args.s, time.Second, tt.args.log)
 			require.Equal(t, tt.want, got)
 		})
 	}

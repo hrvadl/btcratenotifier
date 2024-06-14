@@ -92,9 +92,8 @@ func TestClientSend(t *testing.T) {
 			t.Parallel()
 			tt.setup(t, tt.fields.api)
 			c := &Client{
-				log:  tt.fields.log,
-				api:  tt.fields.api,
-				from: tt.fields.from,
+				log: tt.fields.log,
+				api: tt.fields.api,
 			}
 			err := c.Send(tt.args.ctx, tt.args.html, tt.args.subject, tt.args.to...)
 			if tt.wantErr {
