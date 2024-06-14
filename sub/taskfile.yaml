@@ -62,6 +62,76 @@ tasks:
     cmds:
       - go test -race -count=8 -failfast ./...
 
+  test:integration:
+    desc: "Run integration tests"
+    cmds:
+      - godotenv -f .env.test task test:integration-with-env
+
+  test:integration-with-env:
+    vars:
+      CONTAINER_NAME: "testdb_mysql"
+      MIGRATIONS_SOURCE: "migrations"
+    cmds:
+      - cmd: echo "$MYSQL_PORT"
+      - task: create:db
+        vars:
+          CONTAINER_NAME: "{{ .CONTAINER_NAME }}"
+      - defer:
+          task: cleanup:db
+          vars:
+            CONTAINER_NAME: "{{ .CONTAINER_NAME }}"
+      - task: migrate:db
+        vars: 
+          MIGRATIONS_SOURCE: "{{ .MIGRATIONS_SOURCE }}"
+      - go test -tags=integration ./...
+
+  create:db:
+    desc: "Create DB for integration tests"
+    requires: 
+      vars:
+        - MYSQL_DATABASE
+        - MYSQL_ROOT_PASSWORD
+        - MYSQL_HOSTNAME
+        - MYSQL_PORT
+        - CONTAINER_NAME
+    deps:
+      - task: cleanup:db
+        vars: 
+          CONTAINER_NAME: "{{ .CONTAINER_NAME }}"
+    cmds:
+      - |
+        docker run -d --name {{ .CONTAINER_NAME }} \
+        -p {{ .MYSQL_PORT }}:3306 \
+        -e MYSQL_ROOT_PASSWORD={{ .MYSQL_ROOT_PASSWORD }} \
+        -e MYSQL_DATABASE={{ .MYSQL_DATABASE }} \
+        mysql:latest \
+      - |
+        exit_code=0
+        docker exec -it {{ .CONTAINER_NAME }} mysqladmin ping -h {{ .MYSQL_HOSTNAME }} -uroot -p{{ .MYSQL_ROOT_PASSWORD }} || exit_code=1
+        while [ "$exit_code" -gt 0 ]; do
+            sleep 3
+            exit_code=0
+            docker exec -it {{ .CONTAINER_NAME }} mysqladmin ping -h {{ .MYSQL_HOSTNAME }} -uroot -p{{ .MYSQL_ROOT_PASSWORD }} || exit_code=1
+        done
+
+  cleanup:db:
+    desc: "Cleanup test DB"
+    requires:
+      vars: [CONTAINER_NAME]
+    cmds: 
+      - cmd: docker stop "{{ .CONTAINER_NAME }}"
+        ignore_error: true
+      - cmd: docker rm "{{ .CONTAINER_NAME }}"
+        ignore_error: true
+
+  migrate:db:
+    required:
+      vars:
+        - SUB_DSN
+        - MIGRATIONS_SOURCE
+    cmds: 
+      - migrate -source "file://{{ .MIGRATIONS_SOURCE }}" -database "mysql://{{ .SUB_DSN }}" up
+
   generate:
     desc: "Generate (used for mock generation)"
     deps: [install:mock]
