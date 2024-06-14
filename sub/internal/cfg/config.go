@@ -14,7 +14,6 @@ const (
 	logLevelEnvKey          = "SUB_LOG_LEVEL"
 	portEnvKey              = "SUB_PORT"
 	dsnEnvKey               = "SUB_DSN"
-	mailerFromAddrEnvKey    = "MAILER_FROM_ADDR"
 )
 
 // Config struct represents application config,
@@ -25,7 +24,6 @@ type Config struct {
 	RateWatcherAddr string `env:"RATE_WATCH_ADDR,required,notEmpty"`
 	Port            string `env:"SUB_PORT,required,notEmpty"`
 	LogLevel        string `env:"SUB_LOG_LEVEL,required,notEmpty"`
-	MailerFromAddr  string `env:"MAILER_FROM_ADDR,required,notEmpty"`
 }
 
 // Must is a handly wrapper around return results from

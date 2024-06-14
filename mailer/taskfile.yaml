@@ -61,6 +61,27 @@ tasks:
     cmds:
       - go test -race -count=8 -failfast ./...
 
+  test:integration:
+    desc: "Run integration tests"
+    cmds:
+      - godotenv -f .env.test task test:integration-with-env -- {{ .CLI_ARGS }}
+
+  test:integration-with-env:
+    vars:
+      CONTAINER_NAME: "mailhog"
+    requires:
+      vars:
+        - MAILER_TEST_SMTP_PASSWORD
+        - MAILER_TEST_SMTP_FROM
+        - MAILER_TEST_SMTP_HOST
+        - MAILER_TEST_SMTP_PORT
+        - MAILER_TEST_API_PORT
+    cmds:
+      - docker run -d --name {{ .CONTAINER_NAME }} -p {{ .MAILER_TEST_SMTP_PORT }}:1025 -p {{ .MAILER_TEST_API_PORT }}:8025 mailhog/mailhog
+      - defer: docker stop {{ .CONTAINER_NAME }} && docker rm {{ .CONTAINER_NAME }}
+      - sleep 3
+      - go test -tags=integration ./... {{ .CLI_ARGS }}
+
   generate:
     desc: "Generate (used for mock generation)"
     deps: [install:mock]

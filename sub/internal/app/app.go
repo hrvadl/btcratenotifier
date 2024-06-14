@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/pkg/logger"
 	"google.golang.org/grpc"
@@ -27,8 +28,9 @@ import (
 const operation = "app init"
 
 const (
-	cronJobHour   = 12
-	cronJobMinute = 0o0
+	cronJobHour    = 12
+	cronJobMinute  = 0o0
+	cronJobTimeout = time.Minute * 1
 )
 
 // New constructs new App with provided arguments.
@@ -78,7 +80,7 @@ func (a *App) Run() error {
 	svc := subs.NewService(sr, v)
 	sub.Register(a.srv, svc, a.log.With(slog.String("source", "sub")))
 
-	m, err := mailer.NewClient(a.cfg.MailerAddr, a.cfg.MailerFromAddr, a.log)
+	m, err := mailer.NewClient(a.cfg.MailerAddr, a.log)
 	if err != nil {
 		return fmt.Errorf("%s: failed to connect to mailer service: %w", operation, err)
 	}
@@ -103,6 +105,7 @@ func (a *App) Run() error {
 
 	cronAdapter := sender.NewCronJobAdapter(
 		mailSender,
+		cronJobTimeout,
 		a.log.With(slog.String("source", "adapter")),
 	)
 	job := cron.NewDailyJob(cronJobHour, cronJobMinute, a.log.With(slog.String("source", "cron")))
