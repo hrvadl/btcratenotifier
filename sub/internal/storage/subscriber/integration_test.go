@@ -17,6 +17,22 @@ import (
 
 const testDSNEnvKey = "SUB_TEST_DSN"
 
+func TestMain(t *testing.M) {
+	code := t.Run()
+	dsn := os.Getenv(testDSNEnvKey)
+
+	db, err := db.NewConn(dsn)
+	if err != nil {
+		panic("failed to connect to test db")
+	}
+
+	if _, err := db.Exec("DELETE FROM subscribers"); err != nil {
+		panic("failed to cleanup")
+	}
+
+	os.Exit(code)
+}
+
 func TestSave(t *testing.T) {
 	type args struct {
 		ctx context.Context
