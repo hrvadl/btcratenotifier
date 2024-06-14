@@ -63,6 +63,7 @@ tasks:
       - go test -race -count=8 -failfast ./...
 
   test:integration:
+    deps: [install:godotenv]
     desc: "Run integration tests"
     cmds:
       - godotenv -f .env.test task test:integration-with-env -- {{ .CLI_ARGS }}
@@ -81,13 +82,13 @@ tasks:
           vars:
             CONTAINER_NAME: "{{ .CONTAINER_NAME }}"
       - task: migrate:db
-        vars: 
+        vars:
           MIGRATIONS_SOURCE: "{{ .MIGRATIONS_SOURCE }}"
       - go test -tags=integration ./... {{ .CLI_ARGS }}
 
   create:db:
     desc: "Create DB for integration tests"
-    requires: 
+    requires:
       vars:
         - SUB_TEST_MYSQL_DATABASE
         - SUB_TEST_MYSQL_ROOT_PASSWORD
@@ -132,7 +133,7 @@ tasks:
     desc: "Cleanup test DB"
     requires:
       vars: [CONTAINER_NAME]
-    cmds: 
+    cmds:
       - cmd: docker stop "{{ .CONTAINER_NAME }}"
         ignore_error: true
       - cmd: docker rm "{{ .CONTAINER_NAME }}"
@@ -143,7 +144,7 @@ tasks:
       vars:
         - SUB_DSN
         - MIGRATIONS_SOURCE
-    cmds: 
+    cmds:
       - migrate -source "file://{{ .MIGRATIONS_SOURCE }}" -database "mysql://{{ .SUB_TEST_DSN }}" up
 
   generate:

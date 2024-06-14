@@ -40,6 +40,10 @@ tasks:
       - mailer:test
       - rw:test
       - sub:test
+  test:integration:
+    deps:
+      - mailer:test:integration
+      - sub:test:integration
   test:race:
     deps:
       - gw:test:race

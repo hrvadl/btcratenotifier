@@ -8,6 +8,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/require"
 
 	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/sub/internal/service/validator"
@@ -79,8 +80,7 @@ func TestServiceSubscribeInt(t *testing.T) {
 			}
 
 			t.Cleanup(func() {
-				_, err = db.Exec("DELETE FROM subscribers WHERE id = ?", id)
-				require.NoError(t, err, "Failed to clean up subscriber")
+				cleanupSub(t, db, id)
 			})
 
 			require.NoError(t, err)
@@ -127,8 +127,7 @@ func TestServiceSubscribeTwice(t *testing.T) {
 
 			id, err := s.Subscribe(tt.args.ctx, tt.args.mail)
 			t.Cleanup(func() {
-				_, err = db.Exec("DELETE FROM subscribers WHERE id = ?", id)
-				require.NoError(t, err, "Failed to clean up subscriber")
+				cleanupSub(t, db, id)
 			})
 
 			require.NoError(t, err)
@@ -145,4 +144,10 @@ func newImmediateCtx() context.Context {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Nanosecond)
 	defer cancel()
 	return ctx
+}
+
+func cleanupSub(t *testing.T, db *sqlx.DB, id int64) {
+	t.Helper()
+	_, err := db.Exec("DELETE FROM subscribers WHERE id = ?", id)
+	require.NoError(t, err, "Failed to clean up subscriber")
 }
