@@ -3,7 +3,7 @@ module github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/su
 go 1.22.0
 
 require (
-	github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/pkg v0.0.0-20240611200006-6cb860ffd131
+	github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/pkg v0.0.0-20240614142708-6998dfa141e7
 	github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/protos v0.0.0-20240612164006-17b96cb38775
 	github.com/caarlos0/env/v11 v11.0.1
 	github.com/go-sql-driver/mysql v1.8.1
@@ -25,6 +25,5 @@ require (
 	golang.org/x/sys v0.21.0 // indirect
 	golang.org/x/text v0.16.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240604185151-ef581f913117 // indirect
-	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
