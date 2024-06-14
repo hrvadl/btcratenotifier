@@ -73,7 +73,6 @@ func TestNewFromEnv(t *testing.T) {
 				require.NoError(t, os.Setenv(logLevelEnvKey, "debug"))
 				require.NoError(t, os.Setenv(portEnvKey, "3030"))
 				require.NoError(t, os.Setenv(dsnEnvKey, "mysql://test:tests@(db:testse)/shgsoh"))
-				require.NoError(t, os.Setenv(mailerFromAddrEnvKey, "from@from.com"))
 			},
 			want: &Config{
 				MailerAddr:      "mailer:80",
@@ -81,7 +80,6 @@ func TestNewFromEnv(t *testing.T) {
 				LogLevel:        "debug",
 				Port:            "3030",
 				Dsn:             "mysql://test:tests@(db:testse)/shgsoh",
-				MailerFromAddr:  "from@from.com",
 			},
 			wantErr: false,
 		},
@@ -89,12 +87,10 @@ func TestNewFromEnv(t *testing.T) {
 			name: "Should not parse config when mailer addr is missing",
 			setup: func(t *testing.T) {
 				t.Helper()
-				require.NoError(t, os.Setenv(mailerServiceAddrEnvKey, ""))
 				require.NoError(t, os.Setenv(rateWatchAddrEnvKey, "rw:8080"))
 				require.NoError(t, os.Setenv(logLevelEnvKey, "debug"))
 				require.NoError(t, os.Setenv(portEnvKey, "3030"))
 				require.NoError(t, os.Setenv(dsnEnvKey, "mysql://test:tests@(db:testse)/shgsoh"))
-				require.NoError(t, os.Setenv(mailerFromAddrEnvKey, "from@from.com"))
 			},
 			want:    nil,
 			wantErr: true,
@@ -108,7 +104,6 @@ func TestNewFromEnv(t *testing.T) {
 				require.NoError(t, os.Setenv(logLevelEnvKey, "debug"))
 				require.NoError(t, os.Setenv(portEnvKey, "3030"))
 				require.NoError(t, os.Setenv(dsnEnvKey, "mysql://test:tests@(db:testse)/shgsoh"))
-				require.NoError(t, os.Setenv(mailerFromAddrEnvKey, "from@from.com"))
 			},
 			want:    nil,
 			wantErr: true,
@@ -122,7 +117,6 @@ func TestNewFromEnv(t *testing.T) {
 				require.NoError(t, os.Setenv(logLevelEnvKey, ""))
 				require.NoError(t, os.Setenv(portEnvKey, "3030"))
 				require.NoError(t, os.Setenv(dsnEnvKey, "mysql://test:tests@(db:testse)/shgsoh"))
-				require.NoError(t, os.Setenv(mailerFromAddrEnvKey, "from@from.com"))
 			},
 			want:    nil,
 			wantErr: true,
@@ -136,7 +130,6 @@ func TestNewFromEnv(t *testing.T) {
 				require.NoError(t, os.Setenv(logLevelEnvKey, "debug"))
 				require.NoError(t, os.Setenv(portEnvKey, ""))
 				require.NoError(t, os.Setenv(dsnEnvKey, "mysql://test:tests@(db:testse)/shgsoh"))
-				require.NoError(t, os.Setenv(mailerFromAddrEnvKey, "from@from.com"))
 			},
 			want:    nil,
 			wantErr: true,
@@ -150,21 +143,6 @@ func TestNewFromEnv(t *testing.T) {
 				require.NoError(t, os.Setenv(logLevelEnvKey, "debug"))
 				require.NoError(t, os.Setenv(portEnvKey, "801"))
 				require.NoError(t, os.Setenv(dsnEnvKey, ""))
-				require.NoError(t, os.Setenv(mailerFromAddrEnvKey, "from@from.com"))
-			},
-			want:    nil,
-			wantErr: true,
-		},
-		{
-			name: "Should not parse config when mailer from is missing",
-			setup: func(t *testing.T) {
-				t.Helper()
-				require.NoError(t, os.Setenv(mailerServiceAddrEnvKey, "mailer:80"))
-				require.NoError(t, os.Setenv(rateWatchAddrEnvKey, "rw:2209"))
-				require.NoError(t, os.Setenv(logLevelEnvKey, "debug"))
-				require.NoError(t, os.Setenv(portEnvKey, "2424"))
-				require.NoError(t, os.Setenv(dsnEnvKey, "mysql://test:tests@(db:testse)/shgsoh"))
-				require.NoError(t, os.Setenv(mailerFromAddrEnvKey, ""))
 			},
 			want:    nil,
 			wantErr: true,
@@ -179,7 +157,6 @@ func TestNewFromEnv(t *testing.T) {
 				require.NoError(t, os.Unsetenv(logLevelEnvKey))
 				require.NoError(t, os.Unsetenv(portEnvKey))
 				require.NoError(t, os.Unsetenv(dsnEnvKey))
-				require.NoError(t, os.Unsetenv(mailerFromAddrEnvKey))
 			})
 
 			tt.setup(t)
