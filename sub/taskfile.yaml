@@ -73,7 +73,6 @@ tasks:
       CONTAINER_NAME: "testdb_mysql"
       MIGRATIONS_SOURCE: "migrations"
     cmds:
-      - cmd: echo "$MYSQL_PORT"
       - task: create:db
         vars:
           CONTAINER_NAME: "{{ .CONTAINER_NAME }}"
@@ -118,13 +117,13 @@ tasks:
     cmds:
       - |
         exit_code=0
-        docker exec -it {{ .CONTAINER_NAME }} mysqladmin ping \
+        docker exec -t {{ .CONTAINER_NAME }} mysqladmin ping \
         -h {{ .SUB_TEST_MYSQL_HOSTNAME }} \
         -uroot -p{{ .SUB_TEST_MYSQL_ROOT_PASSWORD }} || exit_code=1
         while [ "$exit_code" -gt 0 ]; do
             sleep 3
             exit_code=0
-            docker exec -it {{ .CONTAINER_NAME }} mysqladmin ping \
+            docker exec -t {{ .CONTAINER_NAME }} mysqladmin ping \
             -h {{ .SUB_TEST_MYSQL_HOSTNAME }} \
             -uroot -p{{ .SUB_TEST_MYSQL_ROOT_PASSWORD }} || exit_code=1
         done
@@ -140,6 +139,7 @@ tasks:
         ignore_error: true
 
   migrate:db:
+    deps: [install:migrate]
     required:
       vars:
         - SUB_DSN
@@ -178,6 +178,13 @@ tasks:
       - go install mvdan.cc/gofumpt@latest
     status:
       - command -v gofumpt
+
+  install:migrate:
+    desc: "Install gomidrate"
+    cmds:
+      - go install github.com/golang-migrate/migrate/cmd/migrate
+    status:
+      - command migrate -help
 
   install:mock:
     desc: "Install mockgen"

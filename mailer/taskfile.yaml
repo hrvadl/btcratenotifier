@@ -80,7 +80,7 @@ tasks:
     cmds:
       - docker run -d --name {{ .CONTAINER_NAME }} -p {{ .MAILER_TEST_SMTP_PORT }}:1025 -p {{ .MAILER_TEST_API_PORT }}:8025 axllent/mailpit
       - defer: docker stop {{ .CONTAINER_NAME }} && docker rm {{ .CONTAINER_NAME }}
-      - sleep 3
+      - sleep 10
       - go test -tags=integration ./... {{ .CLI_ARGS }}
 
   generate:
