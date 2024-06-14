@@ -69,7 +69,7 @@ tasks:
 
   test:integration-with-env:
     vars:
-      CONTAINER_NAME: "mailhog"
+      CONTAINER_NAME: "mailpit"
     requires:
       vars:
         - MAILER_TEST_SMTP_PASSWORD
@@ -80,8 +80,26 @@ tasks:
     cmds:
       - docker run -d --name {{ .CONTAINER_NAME }} -p {{ .MAILER_TEST_SMTP_PORT }}:1025 -p {{ .MAILER_TEST_API_PORT }}:8025 axllent/mailpit
       - defer: docker stop {{ .CONTAINER_NAME }} && docker rm {{ .CONTAINER_NAME }}
-      - sleep 10
+      - task healthcheck:mailpit
       - go test -tags=integration ./... {{ .CLI_ARGS }}
+
+  healthcheck:mailpit:
+    requires:
+      vars:
+        - MAILER_TEST_API_PORT
+    cmds:
+      - |
+        exit_code=0
+        docker exec -t mailpit wget --server-response http://localhost:8025/readyz 2>&1 \
+        | awk '/^  HTTP/{print $2}' \
+        | grep 200 || exit_code=1
+        while [ "$exit_code" -gt 0 ]; do
+            sleep 3
+            exit_code=0
+            docker exec -t mailpit wget --server-response http://localhost:8025/readyz 2>&1 \
+            | awk '/^  HTTP/{print $2}' \
+            | grep 200 || exit_code=1
+        done
 
   generate:
     desc: "Generate (used for mock generation)"

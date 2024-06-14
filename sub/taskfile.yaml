@@ -71,7 +71,7 @@ tasks:
   test:integration-with-env:
     vars:
       CONTAINER_NAME: "testdb_mysql"
-      MIGRATIONS_SOURCE: "migrations"
+      MIGRATIONS_SOURCE: "./migrations"
     cmds:
       - task: create:db
         vars:
@@ -139,13 +139,11 @@ tasks:
         ignore_error: true
 
   migrate:db:
-    deps: [install:migrate]
     required:
       vars:
-        - SUB_DSN
         - MIGRATIONS_SOURCE
     cmds:
-      - migrate -source "file://{{ .MIGRATIONS_SOURCE }}" -database "mysql://{{ .SUB_TEST_DSN }}" up
+      - docker run -v {{ .MIGRATIONS_SOURCE }}:/database --network host migrate/migrate -path="/database" -database "mysql://{{ .SUB_TEST_DSN }}" up
 
   generate:
     desc: "Generate (used for mock generation)"
