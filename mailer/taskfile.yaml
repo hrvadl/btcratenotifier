@@ -103,12 +103,6 @@ tasks:
             | grep 200 || exit_code=1
         done
         exit_code=0
-        docker exec -t {{ .CONTAINER_NAME }} exec -t mailpit netstat  -tulpn | grep ':1025' || exit_code=1
-        while [ "$exit_code" -gt 0 ]; do
-            sleep 3
-            exit_code=0
-            docker exec -t {{ .CONTAINER_NAME }} exec -t mailpit netstat  -tulpn | grep ':1025' || exit_code=1
-        done
 
   generate:
     desc: "Generate (used for mock generation)"
