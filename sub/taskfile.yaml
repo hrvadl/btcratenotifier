@@ -65,7 +65,7 @@ tasks:
   test:integration:
     desc: "Run integration tests"
     cmds:
-      - godotenv -f .env.test task test:integration-with-env
+      - godotenv -f .env.test task test:integration-with-env -- {{ .CLI_ARGS }}
 
   test:integration-with-env:
     vars:
@@ -83,27 +83,27 @@ tasks:
       - task: migrate:db
         vars: 
           MIGRATIONS_SOURCE: "{{ .MIGRATIONS_SOURCE }}"
-      - go test -tags=integration ./...
+      - go test -tags=integration ./... {{ .CLI_ARGS }}
 
   create:db:
     desc: "Create DB for integration tests"
     requires: 
       vars:
-        - MYSQL_DATABASE
-        - MYSQL_ROOT_PASSWORD
-        - MYSQL_HOSTNAME
-        - MYSQL_PORT
+        - SUB_TEST_MYSQL_DATABASE
+        - SUB_TEST_MYSQL_ROOT_PASSWORD
+        - SUB_TEST_MYSQL_HOSTNAME
+        - SUB_TEST_MYSQL_PORT
         - CONTAINER_NAME
     deps:
       - task: cleanup:db
         vars:
-          CONTAINER_NAME: "{{ .CONTAINER_NAME }}"
+          CONTAINER_NAME: "{{ .SUB_TEST_CONTAINER_NAME }}"
     cmds:
       - |
         docker run -d --name {{ .CONTAINER_NAME }} \
-        -p {{ .MYSQL_PORT }}:3306 \
-        -e MYSQL_ROOT_PASSWORD={{ .MYSQL_ROOT_PASSWORD }} \
-        -e MYSQL_DATABASE={{ .MYSQL_DATABASE }} \
+        -p {{ .SUB_TEST_MYSQL_PORT }}:3306 \
+        -e MYSQL_ROOT_PASSWORD={{ .SUB_TEST_MYSQL_ROOT_PASSWORD }} \
+        -e MYSQL_DATABASE={{ .SUB_TEST_MYSQL_DATABASE }} \
         mysql:latest \
       - task: healthcheck:db
         vars:
@@ -117,11 +117,15 @@ tasks:
     cmds:
       - |
         exit_code=0
-        docker exec -it {{ .CONTAINER_NAME }} mysqladmin ping -h {{ .MYSQL_HOSTNAME }} -uroot -p{{ .MYSQL_ROOT_PASSWORD }} || exit_code=1
+        docker exec -it {{ .CONTAINER_NAME }} mysqladmin ping \
+        -h {{ .SUB_TEST_MYSQL_HOSTNAME }} \
+        -uroot -p{{ .SUB_TEST_MYSQL_ROOT_PASSWORD }} || exit_code=1
         while [ "$exit_code" -gt 0 ]; do
             sleep 3
             exit_code=0
-            docker exec -it {{ .CONTAINER_NAME }} mysqladmin ping -h {{ .MYSQL_HOSTNAME }} -uroot -p{{ .MYSQL_ROOT_PASSWORD }} || exit_code=1
+            docker exec -it {{ .CONTAINER_NAME }} mysqladmin ping \
+            -h {{ .SUB_TEST_MYSQL_HOSTNAME }} \
+            -uroot -p{{ .SUB_TEST_MYSQL_ROOT_PASSWORD }} || exit_code=1
         done
 
   cleanup:db:
@@ -140,7 +144,7 @@ tasks:
         - SUB_DSN
         - MIGRATIONS_SOURCE
     cmds: 
-      - migrate -source "file://{{ .MIGRATIONS_SOURCE }}" -database "mysql://{{ .SUB_DSN }}" up
+      - migrate -source "file://{{ .MIGRATIONS_SOURCE }}" -database "mysql://{{ .SUB_TEST_DSN }}" up
 
   generate:
     desc: "Generate (used for mock generation)"
