@@ -41,7 +41,6 @@ func TestServerSend(t *testing.T) {
 			args: args{
 				ctx: context.Background(),
 				m: &pb.Mail{
-					From:    "vadym@hrashchenko.com",
 					To:      []string{"to@to.com", "to1@to.com"},
 					Html:    "test html",
 					Subject: "test subject",
@@ -52,7 +51,6 @@ func TestServerSend(t *testing.T) {
 				c, ok := client.(*mocks.MockClient)
 				require.True(t, ok, "Failed to cast client to mock client")
 				c.EXPECT().Send(gomock.Any(), &pb.Mail{
-					From:    "vadym@hrashchenko.com",
 					To:      []string{"to@to.com", "to1@to.com"},
 					Html:    "test html",
 					Subject: "test subject",
@@ -70,7 +68,6 @@ func TestServerSend(t *testing.T) {
 			args: args{
 				ctx: context.Background(),
 				m: &pb.Mail{
-					From:    "vadym@hrashchenko.com",
 					To:      []string{"to@to.com", "to1@to.com"},
 					Html:    "test html",
 					Subject: "test subject",
@@ -81,7 +78,6 @@ func TestServerSend(t *testing.T) {
 				c, ok := client.(*mocks.MockClient)
 				require.True(t, ok, "Failed to cast client to mock client")
 				c.EXPECT().Send(gomock.Any(), &pb.Mail{
-					From:    "vadym@hrashchenko.com",
 					To:      []string{"to@to.com", "to1@to.com"},
 					Html:    "test html",
 					Subject: "test subject",
