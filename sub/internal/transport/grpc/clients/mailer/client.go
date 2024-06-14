@@ -5,20 +5,17 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
-	"time"
 
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/pkg/logger"
 	pb "github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/protos/gen/go/v1/mailer"
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/retry"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials/insecure"
-
-	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/pkg/logger"
 )
 
 const (
-	retryCount   = 3
-	retryTimeout = time.Second * 2
+	retryCount = 3
 )
 
 // NewClient constructs a GRPC mailer client with provided arguments. Under the hood
@@ -27,11 +24,10 @@ const (
 // - request logger middleware
 // If initialization of connection has failed it will return an error.
 // NOTE: neither of parameters couldn't be nil or client will panic.
-func NewClient(addr string, from string, log *slog.Logger) (*Client, error) {
+func NewClient(addr string, log *slog.Logger) (*Client, error) {
 	retryOpt := []retry.CallOption{
 		retry.WithCodes(codes.Aborted, codes.NotFound, codes.DeadlineExceeded),
 		retry.WithMax(retryCount),
-		retry.WithPerRetryTimeout(retryTimeout),
 	}
 
 	cc, err := grpc.NewClient(
@@ -47,9 +43,8 @@ func NewClient(addr string, from string, log *slog.Logger) (*Client, error) {
 	}
 
 	return &Client{
-		api:  pb.NewMailerServiceClient(cc),
-		log:  log,
-		from: from,
+		api: pb.NewMailerServiceClient(cc),
+		log: log,
 	}, nil
 }
 
@@ -58,14 +53,12 @@ func NewClient(addr string, from string, log *slog.Logger) (*Client, error) {
 // subscribers. from parameter is author of the message, which is hard-coded
 // on structure creation.
 type Client struct {
-	log  *slog.Logger
-	api  pb.MailerServiceClient
-	from string
+	log *slog.Logger
+	api pb.MailerServiceClient
 }
 
 func (c *Client) Send(ctx context.Context, html, subject string, to ...string) error {
 	_, err := c.api.Send(ctx, &pb.Mail{
-		From:    c.from,
 		To:      to,
 		Subject: subject,
 		Html:    html,
