@@ -61,6 +61,15 @@ tasks:
     cmds:
       - go test -race -count=8 -failfast ./...
 
+  test:integration:
+    desc: "Run integration tests"
+    cmds:
+      - godotenv -f .env.test task test:integration-with-env -- {{ .CLI_ARGS }}
+
+  test:integration-with-env:
+    cmds:
+      - go test -tags=integration ./... {{ .CLI_ARGS }}
+
   generate:
     desc: "Generate (used for mock generation)"
     deps: [install:mock]
