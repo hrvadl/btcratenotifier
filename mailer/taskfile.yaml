@@ -80,7 +80,9 @@ tasks:
     cmds:
       - docker run -d --name {{ .CONTAINER_NAME }} -p {{ .MAILER_TEST_SMTP_PORT }}:1025 -p {{ .MAILER_TEST_API_PORT }}:8025 axllent/mailpit
       - defer: docker stop {{ .CONTAINER_NAME }} && docker rm {{ .CONTAINER_NAME }}
-      - task healthcheck:mailpit
+      - task: healthcheck:mailpit
+        vars:
+          CONTAINER_NAME: "{{ .CONTAINER_NAME }}"
       - go test -tags=integration ./... {{ .CLI_ARGS }}
 
   healthcheck:mailpit:
@@ -90,15 +92,23 @@ tasks:
     cmds:
       - |
         exit_code=0
-        docker exec -t mailpit wget --server-response http://localhost:8025/readyz 2>&1 \
+        docker exec -t {{ .CONTAINER_NAME }} wget --server-response http://localhost:8025/readyz 2>&1 \
         | awk '/^  HTTP/{print $2}' \
         | grep 200 || exit_code=1
         while [ "$exit_code" -gt 0 ]; do
             sleep 3
             exit_code=0
-            docker exec -t mailpit wget --server-response http://localhost:8025/readyz 2>&1 \
+            docker exec -t {{ .CONTAINER_NAME }} wget --server-response http://localhost:8025/readyz 2>&1 \
             | awk '/^  HTTP/{print $2}' \
             | grep 200 || exit_code=1
+        done
+
+        exit_code=0
+        docker exec -t {{ .CONTAINER_NAME }} exec -t mailpit netstat  -tulpn | grep ':1025' || exit_code=1
+        while [ "$exit_code" -gt 0 ]; do
+            sleep 3
+            exit_code=0
+            docker exec -t {{ .CONTAINER_NAME }} exec -t mailpit netstat  -tulpn | grep ':1025' || exit_code=1
         done
 
   generate:
