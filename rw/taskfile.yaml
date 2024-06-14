@@ -62,6 +62,7 @@ tasks:
       - go test -race -count=8 -failfast ./...
 
   test:integration:
+    deps: [install:godotenv]
     desc: "Run integration tests"
     cmds:
       - godotenv -f .env.test task test:integration-with-env -- {{ .CLI_ARGS }}
