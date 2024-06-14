@@ -78,10 +78,10 @@ func TestSaveSubscriberTwice(t *testing.T) {
 		args args
 	}{
 		{
-			name: "Should save subscriber correctly",
+			name: "Should not save subscriber twice",
 			args: args{
 				ctx: context.Background(),
-				sub: Subscriber{Email: "testagain@mail.com"},
+				sub: Subscriber{Email: "test1@mail.com"},
 			},
 		},
 		{

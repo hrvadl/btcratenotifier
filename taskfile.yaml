@@ -44,6 +44,11 @@ tasks:
     deps:
       - mailer:test:integration
       - sub:test:integration
+      - rw:test:integration
+  test:integration-ci:
+    deps:
+      - mailer:test:integration-with-env
+      - sub:test:integration-with-env
   test:race:
     deps:
       - gw:test:race
