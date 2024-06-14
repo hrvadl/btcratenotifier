@@ -3,6 +3,7 @@ package exchangerate
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -67,6 +68,10 @@ func (c Client) getRate(
 	from string,
 	to string,
 ) error {
+	if c.token == "" {
+		return errors.New("token is missing")
+	}
+
 	url, err := url.Parse(fmt.Sprintf("%s/%s/pair/%s/%s", c.url, c.token, from, to))
 	if err != nil {
 		return fmt.Errorf("failed to parse url: %w", err)
