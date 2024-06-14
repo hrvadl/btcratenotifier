@@ -2,7 +2,6 @@ package cfg
 
 import (
 	"errors"
-	"os"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -68,10 +67,10 @@ func TestNewFromEnv(t *testing.T) {
 			name: "Should parse config correctly when all env vars are present",
 			setup: func(t *testing.T) {
 				t.Helper()
-				require.NoError(t, os.Setenv(logLevelEnvKey, "debug"))
-				require.NoError(t, os.Setenv(portEnvKey, "80"))
-				require.NoError(t, os.Setenv(exchangeServiceBaseURLEnvKey, "http://exchange.com"))
-				require.NoError(t, os.Setenv(exchangeServiceTokenEnvKey, "secret"))
+				t.Setenv(logLevelEnvKey, "debug")
+				t.Setenv(portEnvKey, "80")
+				t.Setenv(exchangeServiceBaseURLEnvKey, "http://exchange.com")
+				t.Setenv(exchangeServiceTokenEnvKey, "secret")
 			},
 			want: &Config{
 				LogLevel:               "debug",
@@ -85,10 +84,10 @@ func TestNewFromEnv(t *testing.T) {
 			name: "Should not parse config when log level is missing",
 			setup: func(t *testing.T) {
 				t.Helper()
-				require.NoError(t, os.Setenv(logLevelEnvKey, ""))
-				require.NoError(t, os.Setenv(portEnvKey, "80"))
-				require.NoError(t, os.Setenv(exchangeServiceBaseURLEnvKey, "http://exchange.com"))
-				require.NoError(t, os.Setenv(exchangeServiceTokenEnvKey, "secret"))
+				t.Setenv(logLevelEnvKey, "")
+				t.Setenv(portEnvKey, "80")
+				t.Setenv(exchangeServiceBaseURLEnvKey, "http://exchange.com")
+				t.Setenv(exchangeServiceTokenEnvKey, "secret")
 			},
 			want:    nil,
 			wantErr: true,
@@ -97,10 +96,10 @@ func TestNewFromEnv(t *testing.T) {
 			name: "Should not parse config when port is missing",
 			setup: func(t *testing.T) {
 				t.Helper()
-				require.NoError(t, os.Setenv(logLevelEnvKey, "debug"))
-				require.NoError(t, os.Setenv(portEnvKey, ""))
-				require.NoError(t, os.Setenv(exchangeServiceBaseURLEnvKey, "http://exchange.com"))
-				require.NoError(t, os.Setenv(exchangeServiceTokenEnvKey, "secret"))
+				t.Setenv(logLevelEnvKey, "debug")
+				t.Setenv(portEnvKey, "")
+				t.Setenv(exchangeServiceBaseURLEnvKey, "http://exchange.com")
+				t.Setenv(exchangeServiceTokenEnvKey, "secret")
 			},
 			want:    nil,
 			wantErr: true,
@@ -109,10 +108,10 @@ func TestNewFromEnv(t *testing.T) {
 			name: "Should not parse config when base URL is missing",
 			setup: func(t *testing.T) {
 				t.Helper()
-				require.NoError(t, os.Setenv(logLevelEnvKey, "debug"))
-				require.NoError(t, os.Setenv(portEnvKey, "80"))
-				require.NoError(t, os.Setenv(exchangeServiceBaseURLEnvKey, ""))
-				require.NoError(t, os.Setenv(exchangeServiceTokenEnvKey, "secret"))
+				t.Setenv(logLevelEnvKey, "debug")
+				t.Setenv(portEnvKey, "80")
+				t.Setenv(exchangeServiceBaseURLEnvKey, "")
+				t.Setenv(exchangeServiceTokenEnvKey, "secret")
 			},
 			want:    nil,
 			wantErr: true,
@@ -121,10 +120,10 @@ func TestNewFromEnv(t *testing.T) {
 			name: "Should not parse config when token is missing",
 			setup: func(t *testing.T) {
 				t.Helper()
-				require.NoError(t, os.Setenv(logLevelEnvKey, "debug"))
-				require.NoError(t, os.Setenv(portEnvKey, "80"))
-				require.NoError(t, os.Setenv(exchangeServiceBaseURLEnvKey, "http://exchange.com"))
-				require.NoError(t, os.Setenv(exchangeServiceTokenEnvKey, ""))
+				t.Setenv(logLevelEnvKey, "debug")
+				t.Setenv(portEnvKey, "80")
+				t.Setenv(exchangeServiceBaseURLEnvKey, "http://exchange.com")
+				t.Setenv(exchangeServiceTokenEnvKey, "")
 			},
 			want:    nil,
 			wantErr: true,
@@ -133,13 +132,6 @@ func TestNewFromEnv(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			t.Cleanup(func() {
-				require.NoError(t, os.Unsetenv(logLevelEnvKey))
-				require.NoError(t, os.Unsetenv(portEnvKey))
-				require.NoError(t, os.Unsetenv(exchangeServiceBaseURLEnvKey))
-				require.NoError(t, os.Unsetenv(exchangeServiceTokenEnvKey))
-			})
-
 			tt.setup(t)
 			got, err := NewFromEnv()
 			require.Equal(t, tt.want, got)
