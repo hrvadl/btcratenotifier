@@ -10,32 +10,20 @@ import (
 	"time"
 )
 
-type From struct {
-	Domain  string `json:"domain,omitempty"`
-	Mailbox string `json:"mailbox,omitempty"`
+type Receipient struct {
+	Address string `json:"Address,omitempty"`
+	Name    string `json:"Name,omitempty"`
 }
 
-type To struct {
-	Domain  string `json:"domain,omitempty"`
-	Mailbox string `json:"mailbox,omitempty"`
+type Message struct {
+	ID      string       `json:"ID,omitempty"`
+	From    Receipient   `json:"From,omitempty"`
+	To      []Receipient `json:"To,omitempty"`
+	Subject string       `json:"Subject,omitempty"`
 }
 
-type Headers struct {
-	From    []string `json:"from,omitempty"`
-	To      []string `json:"to,omitempty"`
-	Subject []string `json:"subject,omitempty"`
-}
-
-type Content struct {
-	Body    string  `json:"body,omitempty"`
-	Headers Headers `json:"headers,omitempty"`
-}
-
-type Mail struct {
-	ID      string  `json:"id,omitempty"`
-	From    From    `json:"from,omitempty"`
-	To      []To    `json:"to,omitempty"`
-	Content Content `json:"content,omitempty"`
+type Response struct {
+	Messages []Message `json:"messages,omitempty"`
 }
 
 func NewClient(host string, port int, timeout time.Duration) *Client {
@@ -52,7 +40,7 @@ type Client struct {
 	cl   *http.Client
 }
 
-func (c *Client) GetAll() ([]Mail, error) {
+func (c *Client) GetAll() ([]Message, error) {
 	r, err := http.NewRequest(http.MethodGet, c.toURL("/api/v1/messages"), nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create req: %w", err)
@@ -73,12 +61,12 @@ func (c *Client) GetAll() ([]Mail, error) {
 		return nil, fmt.Errorf("failed to read bytes: %w", err)
 	}
 
-	var msg []Mail
+	var msg Response
 	if err := json.Unmarshal(b, &msg); err != nil {
 		return nil, fmt.Errorf("failed to unmarshall: %w", err)
 	}
 
-	return msg, nil
+	return msg.Messages, nil
 }
 
 func (c *Client) DeleteAll() error {

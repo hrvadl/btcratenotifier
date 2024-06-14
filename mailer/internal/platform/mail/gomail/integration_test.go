@@ -125,7 +125,6 @@ func TestClientSend(t *testing.T) {
 			fields: fields{
 				from:     mustGetEnv(t, mailerSMTPFromEnvKey),
 				password: mustGetEnv(t, mailerSMTPPasswordEnvKey),
-				port:     mustAtoi(t, mustGetEnv(t, mailerSMTPPortEnvKey)),
 			},
 		},
 	}
@@ -151,21 +150,21 @@ func TestClientSend(t *testing.T) {
 
 			require.NoError(t, err)
 			msg, err := mh.GetAll()
+			require.NoError(t, err)
 			require.NotZero(t, len(msg))
 
 			mail := msg[0]
 			require.NoError(t, err)
 			require.Equal(t, tt.args.in.GetTo(), getToMails(mail.To))
-			require.Contains(t, mail.Content.Headers.Subject, tt.args.in.GetSubject())
-			require.Equal(t, tt.args.in.GetHtml(), mail.Content.Body)
+			require.Contains(t, mail.Subject, tt.args.in.GetSubject())
 		})
 	}
 }
 
-func getToMails(to []mailhog.To) []string {
+func getToMails(to []mailhog.Receipient) []string {
 	mails := make([]string, 0, len(to))
 	for _, t := range to {
-		mails = append(mails, t.Mailbox+"@"+t.Domain)
+		mails = append(mails, t.Address)
 	}
 	return mails
 }
