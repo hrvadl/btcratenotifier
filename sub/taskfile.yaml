@@ -96,7 +96,7 @@ tasks:
         - CONTAINER_NAME
     deps:
       - task: cleanup:db
-        vars: 
+        vars:
           CONTAINER_NAME: "{{ .CONTAINER_NAME }}"
     cmds:
       - |
@@ -105,6 +105,16 @@ tasks:
         -e MYSQL_ROOT_PASSWORD={{ .MYSQL_ROOT_PASSWORD }} \
         -e MYSQL_DATABASE={{ .MYSQL_DATABASE }} \
         mysql:latest \
+      - task: healthcheck:db
+        vars:
+          CONTAINER_NAME: "{{ .CONTAINER_NAME }}"
+
+  healthcheck:db:
+    desc: "Block execution until test db is healthy"
+    requires:
+      vars:
+        - CONTAINER_NAME
+    cmds:
       - |
         exit_code=0
         docker exec -it {{ .CONTAINER_NAME }} mysqladmin ping -h {{ .MYSQL_HOSTNAME }} -uroot -p{{ .MYSQL_ROOT_PASSWORD }} || exit_code=1
