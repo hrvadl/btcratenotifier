@@ -14,10 +14,6 @@ import (
 	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/sub/internal/storage/platform/db"
 )
 
-func TestMain(m *testing.M) {
-	os.Exit(m.Run())
-}
-
 func TestSave(t *testing.T) {
 	type args struct {
 		ctx context.Context
