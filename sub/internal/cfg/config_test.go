@@ -7,6 +7,14 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+const (
+	mailerServiceAddrEnvKey = "MAILER_ADDR"
+	rateWatchAddrEnvKey     = "RATE_WATCH_ADDR"
+	logLevelEnvKey          = "SUB_LOG_LEVEL"
+	portEnvKey              = "SUB_PORT"
+	dsnEnvKey               = "SUB_DSN"
+)
+
 func TestMust(t *testing.T) {
 	t.Parallel()
 	type args struct {

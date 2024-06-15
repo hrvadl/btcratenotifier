@@ -7,6 +7,13 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+const (
+	exchangeServiceBaseURLEnvKey = "EXCHANGE_API_BASE_URL"
+	exchangeServiceTokenEnvKey   = "EXCHANGE_API_KEY"
+	logLevelEnvKey               = "EXCHANGE_LOG_LEVEL"
+	portEnvKey                   = "EXCHANGE_PORT"
+)
+
 func TestMust(t *testing.T) {
 	t.Parallel()
 	type args struct {

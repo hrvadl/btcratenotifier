@@ -7,6 +7,13 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+const (
+	subServiceAddrEnvKey = "SUB_ADDR"
+	rateWatchAddrEnvKey  = "RATE_WATCH_ADDR"
+	logLevelEnvKey       = "GATEWAY_LOG_LEVEL"
+	addrEnvKey           = "GATEWAY_ADDR"
+)
+
 func TestMust(t *testing.T) {
 	t.Parallel()
 	type args struct {
