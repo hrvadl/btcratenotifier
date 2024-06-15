@@ -7,4 +7,5 @@ use (
 	./rw
 	./sub
 	./pkg
+	./tests
 )
