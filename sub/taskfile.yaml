@@ -121,7 +121,7 @@ tasks:
         -h {{ .SUB_TEST_MYSQL_HOSTNAME }} \
         -uroot -p{{ .SUB_TEST_MYSQL_ROOT_PASSWORD }} || exit_code=1
         while [ "$exit_code" -gt 0 ]; do
-            sleep 3
+            sleep 5
             exit_code=0
             docker exec -t {{ .CONTAINER_NAME }} mysqladmin ping \
             -h {{ .SUB_TEST_MYSQL_HOSTNAME }} \

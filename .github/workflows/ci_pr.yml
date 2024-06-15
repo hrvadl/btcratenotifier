@@ -15,7 +15,7 @@ jobs:
       SUB_TEST_MYSQL_ROOT_PASSWORD: "password"
       SUB_TEST_MYSQL_DATABASE: "converter"
       SUB_TEST_MYSQL_PORT: "33000"
-      SUB_TEST_MYSQL_HOSTNAME: "localhost"
+      SUB_TEST_MYSQL_HOSTNAME: "0.0.0.0"
       SUB_TEST_DSN: "root:password@(0.0.0.0:33000)/converter?parseTime=true"
       MAILER_TEST_SMTP_PASSWORD: "test test test"
       MAILER_TEST_SMTP_FROM: "hrvadl@gmail.com"
