@@ -1,0 +1,29 @@
+services:
+  mailpit:
+    image: axllent/mailpit
+    healthcheck:
+      test: wget --server-response http://localhost:8025/readyz 2>&1 | awk '/^  HTTP/{print $2}' | grep 200
+      start_period: 5s
+      interval: 3s
+      timeout: 3s
+      retries: 30
+    networks:
+      - converter
+  k6:
+    image: grafana/k6
+    depends_on:
+      - gw
+    volumes:
+      - "./k6/test.js:/test.js"
+    command: run -o experimental-prometheus-rw --vus 10 --duration 30s /test.js
+    restart: on-failure
+    networks:
+      - converter
+    environment:
+      - K6_PROMETHEUS_RW_SERVER_URL=http://prometheus:9090/api/v1/write
+
+  mailer:
+    env_file:
+      - .env.test
+    networks:
+      - converter
