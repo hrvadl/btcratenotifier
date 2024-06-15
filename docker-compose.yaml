@@ -89,7 +89,7 @@ services:
       - --enable-feature=native-histograms
       - --config.file=/etc/prometheus/prometheus.yml
     volumes:
-      - "./prometheus.yml:/etc/prometheus/prometheus.yml"
+      - "./infra/prometheus.yml:/etc/prometheus/prometheus.yml"
     ports:
       - "9090:9090"
     networks:
@@ -104,9 +104,9 @@ services:
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_BASIC_ENABLED=false
     volumes:
-      - ./grafana/dashboard.yaml:/etc/grafana/provisioning/dashboards/main.yaml
-      - ./grafana/dashboards:/var/lib/grafana/dashboards
-      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./infra/grafana/dashboard.yaml:/etc/grafana/provisioning/dashboards/main.yaml
+      - ./infra/grafana/dashboards:/var/lib/grafana/dashboards
+      - ./infra/grafana/provisioning:/etc/grafana/provisioning
     depends_on:
       - prometheus
     networks:
