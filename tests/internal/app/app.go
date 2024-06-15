@@ -72,7 +72,7 @@ func (a *App) Run() error {
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		// lt.GetRate()
+		lt.GetRate()
 	}()
 
 	wg.Add(1)
