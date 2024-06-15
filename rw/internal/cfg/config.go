@@ -8,13 +8,6 @@ import (
 
 const operation = "config parsing"
 
-const (
-	exchangeServiceBaseURLEnvKey = "EXCHANGE_API_BASE_URL"
-	exchangeServiceTokenEnvKey   = "EXCHANGE_API_KEY"
-	logLevelEnvKey               = "EXCHANGE_LOG_LEVEL"
-	portEnvKey                   = "EXCHANGE_PORT"
-)
-
 // Config struct represents application config,
 // which is used application-wide.
 type Config struct {

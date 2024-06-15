@@ -8,14 +8,6 @@ import (
 
 const operation = "config parsing"
 
-const (
-	mailerServiceAddrEnvKey = "MAILER_ADDR"
-	rateWatchAddrEnvKey     = "RATE_WATCH_ADDR"
-	logLevelEnvKey          = "SUB_LOG_LEVEL"
-	portEnvKey              = "SUB_PORT"
-	dsnEnvKey               = "SUB_DSN"
-)
-
 // Config struct represents application config,
 // which is used application-wide.
 type Config struct {
