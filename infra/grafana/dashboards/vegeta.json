@@ -22,6 +22,19 @@
   "liveNow": false,
   "panels": [
     {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 19,
+      "panels": [],
+      "title": "System stats",
+      "type": "row"
+    },
+    {
       "datasource": {
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
@@ -83,7 +96,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 0
+        "y": 1
       },
       "id": 17,
       "options": {
@@ -177,7 +190,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 0
+        "y": 1
       },
       "id": 15,
       "options": {
@@ -271,7 +284,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 8
+        "y": 9
       },
       "id": 16,
       "options": {
@@ -334,7 +347,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 8
+        "y": 9
       },
       "id": 18,
       "options": {
@@ -364,19 +377,6 @@
       ],
       "title": "Node uptime (sec)",
       "type": "gauge"
-    },
-    {
-      "collapsed": true,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 16
-      },
-      "id": 14,
-      "panels": [],
-      "title": "System stats",
-      "type": "row"
     },
     {
       "collapsed": false,
@@ -991,7 +991,7 @@
       }
     }
   ],
-  "refresh": false,
+  "refresh": true,
   "schemaVersion": 38,
   "style": "dark",
   "tags": [],
@@ -999,7 +999,7 @@
     "list": []
   },
   "time": {
-    "from": "now-2m",
+    "from": "now-5m",
     "to": "now"
   },
   "timepicker": {

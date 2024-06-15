@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"log/slog"
+	"sync"
 	"time"
 
 	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/tests/internal/cfg"
@@ -65,8 +66,22 @@ func (a *App) Run() error {
 
 	start := time.Now()
 	a.log.Info("Starting tests")
-	gw.AttackGetRate(pm, a.cfg.GatewayAddr)
-	a.log.Info("Finished tests", slog.Any("took", time.Since(start).Seconds()))
+	lt := gw.NewLoadTest(pm, a.cfg.GatewayAddr)
 
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		// lt.GetRate()
+	}()
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		lt.Subscribe()
+	}()
+
+	wg.Wait()
+	a.log.Info("Finished tests", slog.Any("took", time.Since(start).Seconds()))
 	return nil
 }
