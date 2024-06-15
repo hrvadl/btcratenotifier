@@ -9,18 +9,19 @@ services:
       retries: 30
     networks:
       - converter
-  k6:
-    image: grafana/k6
+  vegeta:
+    build:
+      context: tests
+      dockerfile: ./Dockerfile
+    image: vegeta
     depends_on:
       - gw
-    volumes:
-      - "./k6/test.js:/test.js"
-    command: run -o experimental-prometheus-rw --vus 10 --duration 30s /test.js
+    environment:
+      - VEGETA_GW_ADDR=gw:8080
+      - VEGETA_PROM_EXPORTER_ADDR=0.0.0.0:8880
     restart: on-failure
     networks:
       - converter
-    environment:
-      - K6_PROMETHEUS_RW_SERVER_URL=http://prometheus:9090/api/v1/write
 
   mailer:
     env_file:
