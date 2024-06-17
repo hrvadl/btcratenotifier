@@ -26,8 +26,6 @@ jobs:
           - dockerfile: ./mailer/Dockerfile
             image: hrvadl/mailer
             context: ./mailer
-      # - dockerfile: ./tests/Dockerfile
-      # image: tests
     permissions:
       packages: write
       contents: read
