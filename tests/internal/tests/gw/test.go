@@ -17,14 +17,14 @@ const (
 
 func NewLoadTest(pm *prom.Metrics, url string) *LoadTest {
 	return &LoadTest{
-		pm:  pm,
-		url: url,
+		prometheus: pm,
+		url:        url,
 	}
 }
 
 type LoadTest struct {
-	pm  *prom.Metrics
-	url string
+	prometheus *prom.Metrics
+	url        string
 }
 
 func (lt *LoadTest) GetRate() {
@@ -37,7 +37,7 @@ func (lt *LoadTest) GetRate() {
 	attacker := vegeta.NewAttacker()
 
 	for res := range attacker.Attack(targeter, rate, duration, "Big Bang!") {
-		lt.pm.Observe(res)
+		lt.prometheus.Observe(res)
 	}
 }
 
@@ -48,7 +48,7 @@ func (lt *LoadTest) Subscribe() {
 	attacker := vegeta.NewAttacker()
 
 	for res := range attacker.Attack(targeter, rate, duration, "Big Bang!") {
-		lt.pm.Observe(res)
+		lt.prometheus.Observe(res)
 	}
 }
 

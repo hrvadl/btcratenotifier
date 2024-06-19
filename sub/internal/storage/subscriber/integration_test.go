@@ -132,7 +132,7 @@ func TestSaveSubscriberTwice(t *testing.T) {
 	}
 }
 
-func TestGet(t *testing.T) {
+func TestGetSubscribers(t *testing.T) {
 	type args struct {
 		ctx context.Context
 	}

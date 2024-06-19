@@ -29,15 +29,15 @@ type Response struct {
 func NewClient(host string, port int, timeout time.Duration) *Client {
 	return &Client{
 		addr: net.JoinHostPort(host, strconv.Itoa(port)),
-		cl: &http.Client{
+		client: &http.Client{
 			Timeout: timeout,
 		},
 	}
 }
 
 type Client struct {
-	addr string
-	cl   *http.Client
+	addr   string
+	client *http.Client
 }
 
 func (c *Client) GetAll() ([]Message, error) {
@@ -46,7 +46,7 @@ func (c *Client) GetAll() ([]Message, error) {
 		return nil, fmt.Errorf("failed to create req: %w", err)
 	}
 
-	res, err := c.cl.Do(r)
+	res, err := c.client.Do(r)
 	if err != nil {
 		return nil, fmt.Errorf("failed to send req: %w", err)
 	}
@@ -75,7 +75,7 @@ func (c *Client) DeleteAll() error {
 		return fmt.Errorf("failed to create req: %w", err)
 	}
 
-	res, err := c.cl.Do(r)
+	res, err := c.client.Do(r)
 	if err != nil {
 		return fmt.Errorf("failed to send req: %w", err)
 	}
