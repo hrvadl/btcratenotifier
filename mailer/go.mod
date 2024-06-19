@@ -6,6 +6,7 @@ require (
 	github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/pkg v0.0.0-20240614172530-7eafe18640e5
 	github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/protos v0.0.0-20240609093758-f84e7233cbf3
 	github.com/caarlos0/env/v11 v11.0.1
+	github.com/resend/resend-go/v2 v2.9.0
 	github.com/stretchr/testify v1.9.0
 	go.uber.org/mock v0.4.0
 	google.golang.org/grpc v1.64.0
