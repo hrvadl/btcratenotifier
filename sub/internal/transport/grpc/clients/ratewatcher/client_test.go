@@ -1,3 +1,5 @@
+//go:build !integration
+
 //go:generate mockgen -destination=./mocks/mock_rw.go -package=mocks github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/protos/gen/go/v1/ratewatcher RateWatcherServiceClient
 package ratewatcher
 
