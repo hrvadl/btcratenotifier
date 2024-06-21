@@ -60,14 +60,14 @@ func TestSave(t *testing.T) {
 		},
 	}
 
+	dsn := os.Getenv(testDSNEnvKey)
+	require.NotZero(t, dsn, "test DSN can not be empty")
+	db, err := db.NewConn(dsn)
+	require.NoError(t, err, "Failed to connect to test DB")
+	r := NewRepo(db)
+
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
-			dsn := os.Getenv(testDSNEnvKey)
-			require.NotZero(t, dsn, "test DSN can not be empty")
-			db, err := db.NewConn(dsn)
-			require.NoError(t, err, "Failed to connect to test DB")
-
-			r := NewRepo(db)
 			id, err := r.Save(tt.args.ctx, tt.args.sub)
 			t.Cleanup(func() {
 				cleanupSub(t, db, id)
@@ -109,14 +109,14 @@ func TestSaveSubscriberTwice(t *testing.T) {
 		},
 	}
 
+	dsn := os.Getenv(testDSNEnvKey)
+	require.NotZero(t, dsn, "test DSN can not be empty")
+	db, err := db.NewConn(dsn)
+	require.NoError(t, err, "Failed to connect to test DB")
+	r := NewRepo(db)
+
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
-			dsn := os.Getenv(testDSNEnvKey)
-			require.NotZero(t, dsn, "test DSN can not be empty")
-			db, err := db.NewConn(dsn)
-			require.NoError(t, err, "Failed to connect to test DB")
-
-			r := NewRepo(db)
 			id, err := r.Save(tt.args.ctx, tt.args.sub)
 			t.Cleanup(func() {
 				cleanupSub(t, db, id)
@@ -157,14 +157,14 @@ func TestGetSubscribers(t *testing.T) {
 		},
 	}
 
+	dsn := os.Getenv(testDSNEnvKey)
+	require.NotZero(t, dsn, "test DSN can not be empty")
+	db, err := db.NewConn(dsn)
+	require.NoError(t, err, "Failed to connect to test DB")
+	r := NewRepo(db)
+
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
-			dsn := os.Getenv(testDSNEnvKey)
-			require.NotZero(t, dsn, "test DSN can not be empty")
-			db, err := db.NewConn(dsn)
-			require.NoError(t, err, "Failed to connect to test DB")
-
-			r := NewRepo(db)
 			want := seed(t, r, 30)
 			t.Cleanup(func() {
 				for _, s := range want {

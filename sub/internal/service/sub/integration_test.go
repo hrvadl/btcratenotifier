@@ -78,17 +78,16 @@ func TestServiceSubscribeInt(t *testing.T) {
 		},
 	}
 
+	dsn := os.Getenv(testDSNEnvKey)
+	require.NotZero(t, dsn, "test DSN can not be empty")
+	db, err := db.NewConn(dsn)
+	require.NoError(t, err, "Failed to connect to db")
+	rs := subscriber.NewRepo(db)
+	v := validator.NewStdlib()
+	s := NewService(rs, v)
+
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
-			dsn := os.Getenv(testDSNEnvKey)
-			require.NotZero(t, dsn, "test DSN can not be empty")
-			db, err := db.NewConn(dsn)
-			require.NoError(t, err, "Failed to connect to db")
-
-			rs := subscriber.NewRepo(db)
-			v := validator.NewStdlib()
-			s := NewService(rs, v)
-
 			id, err := s.Subscribe(tt.args.ctx, tt.args.mail)
 			if tt.wantErr {
 				require.Error(t, err)
@@ -130,17 +129,16 @@ func TestServiceSubscribeTwice(t *testing.T) {
 		},
 	}
 
+	dsn := os.Getenv(testDSNEnvKey)
+	require.NotZero(t, dsn, "test DSN can not be empty")
+	db, err := db.NewConn(dsn)
+	require.NoError(t, err, "Failed to connect to db")
+	rs := subscriber.NewRepo(db)
+	v := validator.NewStdlib()
+	s := NewService(rs, v)
+
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
-			dsn := os.Getenv(testDSNEnvKey)
-			require.NotZero(t, dsn, "test DSN can not be empty")
-			db, err := db.NewConn(dsn)
-			require.NoError(t, err, "Failed to connect to db")
-
-			rs := subscriber.NewRepo(db)
-			v := validator.NewStdlib()
-			s := NewService(rs, v)
-
 			id, err := s.Subscribe(tt.args.ctx, tt.args.mail)
 			t.Cleanup(func() {
 				cleanupSub(t, db, id)
