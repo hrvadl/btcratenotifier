@@ -1,0 +1,68 @@
+replicaCount: 1
+
+configMapData:
+  SUB_ADDR: "sub.dev.svc.cluster.local:8083"
+  RATE_WATCH_ADDR: "rw.dev.svc.cluster.local:8081"
+
+image:
+  repository: hrvadl/gw
+  pullPolicy: Always
+  tag: "main"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+podAnnotations: {}
+podLabels: {}
+
+env:
+  - name: GATEWAY_ADDR
+    value: "0.0.0.0:8080"
+  - name: GATEWAY_LOG_LEVEL
+    value: "DEBUG"
+
+podSecurityContext:
+  fsGroup: 2000
+
+securityContext:
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 8080
+
+resources:
+  limits:
+    cpu: 200m
+    memory: 256Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+livenessProbe:
+  periodSeconds: 10
+  initialDelaySeconds: 5
+  httpGet:
+    path: /health
+    port: 8080
+readinessProbe:
+  periodSeconds: 10
+  initialDelaySeconds: 5
+  httpGet:
+    path: /health
+    port: 8080
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+volumes: []
+volumeMounts: []

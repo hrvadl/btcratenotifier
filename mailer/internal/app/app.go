@@ -9,7 +9,10 @@ import (
 	"syscall"
 
 	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/pkg/logger"
+	pb "github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/protos/gen/go/v1/mailer"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/health"
+	healthgrpc "google.golang.org/grpc/health/grpc_health_v1"
 
 	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/mailer/internal/cfg"
 	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/mailer/internal/platform/mail/gomail"
@@ -58,6 +61,13 @@ func (a *App) Run() error {
 		a.srv,
 		gomail.NewClient(a.cfg.MailerFrom, a.cfg.MailerToken, a.cfg.MailerHost, a.cfg.MailerPort),
 		a.log.With(slog.String("source", "mailerSrv")),
+	)
+
+	healthcheck := health.NewServer()
+	healthgrpc.RegisterHealthServer(a.srv, healthcheck)
+	healthcheck.SetServingStatus(
+		pb.MailerService_ServiceDesc.ServiceName,
+		healthgrpc.HealthCheckResponse_SERVING,
 	)
 
 	listener, err := net.Listen("tcp", net.JoinHostPort("", a.cfg.Port))
