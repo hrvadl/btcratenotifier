@@ -66,6 +66,20 @@ tasks:
       - mailer:test:race
       - rw:test:race
       - sub:test:race
+  update:mod:
+    desc: "Update go mod in each microservice"
+    deps:
+      - task: rw:update:mod
+      - task: gw:update:mod
+      - task: mailer:update:mod
+      - task: sub:update:mod
+  tidy:mod:
+    desc: "Tidy go mod in each microservice"
+    deps:
+      - task: rw:tidy:mod
+      - task: gw:tidy:mod
+      - task: mailer:tidy:mod
+      - task: sub:tidy:mod
   godoc:
     desc: "Host a Godoc web server on the http://localhost:6060/pkg/github.com/hrvadl/converter?m=all"
     deps: [install:godoc]

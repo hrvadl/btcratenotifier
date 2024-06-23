@@ -80,6 +80,14 @@ tasks:
       - go.mod
       - go.sum
 
+  update:mod:
+    cmds:
+      - go get -u ./...
+
+  tidy:mod:
+    cmds:
+      - go mod tidy
+
   install:
     desc: "Install all tools"
     deps:

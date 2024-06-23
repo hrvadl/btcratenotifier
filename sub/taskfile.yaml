@@ -42,6 +42,13 @@ tasks:
       - ./**/*.go
       - go.mod
       - go.sum
+  update:mod:
+    cmds:
+      - go get -u ./...
+
+  tidy:mod:
+    cmds:
+      - go mod tidy
   test:
     desc: "Run tests"
     cmds:
