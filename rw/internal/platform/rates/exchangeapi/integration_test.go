@@ -9,15 +9,20 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/require"
+
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/rw/internal/platform/rates/privat"
 )
 
 const (
-	exchangeTestAPIBaseURLEnvKEy = "EXCHANGE_TEST_API_BASE_URL"
+	exchangeTestAPIBaseURLEnvKey         = "EXCHANGE_TEST_API_BASE_URL"
+	exchangeTestAPIFallbackBaseURLEnvKey = "EXCHANGE_TEST_API_FALLBACK_BASE_URL"
 )
 
 func TestClientConvert(t *testing.T) {
+	t.Parallel()
 	type fields struct {
-		url string
+		url  string
+		next Converter
 	}
 	type args struct {
 		ctx context.Context
@@ -29,9 +34,9 @@ func TestClientConvert(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "Should get exchange rate correctly",
+			name: "Should fallback to second exchanger",
 			fields: fields{
-				url: mustGetEnv(t, exchangeTestAPIBaseURLEnvKEy),
+				next: privat.NewClient(mustGetEnv(t, exchangeTestAPIFallbackBaseURLEnvKey)),
 			},
 			args: args{
 				ctx: context.Background(),
@@ -49,7 +54,7 @@ func TestClientConvert(t *testing.T) {
 		{
 			name: "Should not get exchange rate correctly when context exceeded",
 			fields: fields{
-				url: mustGetEnv(t, exchangeTestAPIBaseURLEnvKEy),
+				url: mustGetEnv(t, exchangeTestAPIBaseURLEnvKey),
 			},
 			args: args{
 				ctx: newImmediateCtx(),
@@ -60,8 +65,10 @@ func TestClientConvert(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			c := Client{
-				url: tt.fields.url,
+				url:  tt.fields.url,
+				next: tt.fields.next,
 			}
 
 			got, err := c.Convert(tt.args.ctx)

@@ -15,7 +15,10 @@ import (
 	healthgrpc "google.golang.org/grpc/health/grpc_health_v1"
 
 	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/rw/internal/cfg"
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/rw/internal/platform/rates"
 	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/rw/internal/platform/rates/exchangeapi"
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/rw/internal/platform/rates/privat"
+	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/rw/internal/platform/rates/rateapi"
 	"github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/rw/internal/transport/grpc/server/ratewatcher"
 )
 
@@ -57,9 +60,32 @@ func (a *App) Run() error {
 		logger.NewServerGRPCMiddleware(a.log),
 	))
 
+	rateapiRw := rateapi.NewClient(
+		a.cfg.ExchangeFallbackSecondServiceToken,
+		a.cfg.ExchangeFallbackSecondServiceBaseURL,
+	)
+	wrappedRateAPIRw := rates.NewWithLogger(
+		rateapiRw,
+		a.log.With(slog.String("source", "rateAPI")),
+	)
+
+	exchangeRw := exchangeapi.NewClient(a.cfg.ExchangeServiceBaseURL)
+	exchangeRw.SetNext(wrappedRateAPIRw)
+	wrappedExchangeRw := rates.NewWithLogger(
+		exchangeRw,
+		a.log.With(slog.String("source", "exchangeAPI")),
+	)
+
+	privatRw := privat.NewClient(a.cfg.ExchangeFallbackServiceBaseURL)
+	privatRw.SetNext(wrappedExchangeRw)
+	wrappedPrivat := rates.NewWithLogger(
+		privatRw,
+		a.log.With(slog.String("source", "privatAPI")),
+	)
+
 	ratewatcher.Register(
 		a.srv,
-		exchangeapi.NewClient(a.cfg.ExchangeServiceBaseURL),
+		wrappedPrivat,
 		a.log.With(slog.String("source", "rateWatcherSrv")),
 	)
 	a.log.Info("Successfully initialized all deps")

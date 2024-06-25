@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log/slog"
 	"net/http"
 	"net/url"
 )
@@ -31,34 +30,54 @@ type usdUahResponse struct {
 // NewClient initializes new Client with parameters provided.
 // NOTE: neither of arguments can't be empty, because in that case
 // client will inevitably fail in the future.
-func NewClient(url string) Client {
-	return Client{
+func NewClient(url string) *Client {
+	return &Client{
 		url: url,
 	}
+}
+
+//go:generate mockgen -destination=./mocks/mock_converter.go -package=mocks . Converter
+type Converter interface {
+	Convert(ctx context.Context) (float32, error)
 }
 
 // Client struct represents exchange rate API client.
 // Note: url should be a base url for  the service, not full url.
 type Client struct {
-	url string
+	url  string
+	next Converter
 }
 
 // Convert method converts 1 USD to UAH accordingly to the
 // latest exchange rate. It's a handly wrapper around internal
 // getRate() function.
-func (c Client) Convert(ctx context.Context) (float32, error) {
+func (c *Client) Convert(ctx context.Context) (float32, error) {
 	res := new(usdUahResponse)
-	if err := c.getRate(ctx, res, usd); err != nil {
+	err := c.getRate(ctx, res, usd)
+	if err == nil {
+		return res.Rates["uah"], nil
+	}
+
+	if c.next == nil {
 		return 0, fmt.Errorf("%s: %w", operation, err)
 	}
 
-	return res.Rates["uah"], nil
+	chainedRes, chainedErr := c.next.Convert(ctx)
+	if chainedErr != nil {
+		return 0, fmt.Errorf("%w: %w", err, chainedErr)
+	}
+
+	return chainedRes, nil
+}
+
+func (c *Client) SetNext(next Converter) {
+	c.next = next
 }
 
 // getRate method is used to query how much **from** currency is worth
 // in **to**  currency. response should be a pointer to the API response.
 // It's needed because API returns different responses for differect currency pairs.
-func (c Client) getRate(
+func (c *Client) getRate(
 	ctx context.Context,
 	response any,
 	from string,
@@ -68,7 +87,6 @@ func (c Client) getRate(
 		return fmt.Errorf("failed to parse url: %w", err)
 	}
 
-	slog.Info("parsed url", slog.Any("url", url.String()))
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url.String(), nil)
 	if err != nil {
 		return fmt.Errorf("failed to construct request: %w", err)
@@ -88,7 +106,6 @@ func (c Client) getRate(
 		return fmt.Errorf("failed to read body bytes: %w", err)
 	}
 
-	slog.Info("got body", slog.Any("body", string(bytes)))
 	if err := json.Unmarshal(bytes, &response); err != nil {
 		return fmt.Errorf("failed to parse response body: %w", err)
 	}
