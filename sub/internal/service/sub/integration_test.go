@@ -27,6 +27,12 @@ func TestMain(t *testing.M) {
 		panic("failed to connect to test db")
 	}
 
+	defer func() {
+		if err := db.Close(); err != nil {
+			panic(err)
+		}
+	}()
+
 	if _, err := db.Exec("DELETE FROM subscribers"); err != nil {
 		panic("failed to cleanup")
 	}
@@ -82,6 +88,10 @@ func TestServiceSubscribe(t *testing.T) {
 	require.NotZero(t, dsn, "test DSN can not be empty")
 	db, err := db.NewConn(dsn)
 	require.NoError(t, err, "Failed to connect to db")
+	t.Cleanup(func() {
+		require.NoError(t, db.Close(), "Failed to close DB")
+	})
+
 	rs := subscriber.NewRepo(db)
 	v := validator.NewStdlib()
 	s := NewService(rs, v)
@@ -133,6 +143,10 @@ func TestServiceSubscribeTwice(t *testing.T) {
 	require.NotZero(t, dsn, "test DSN can not be empty")
 	db, err := db.NewConn(dsn)
 	require.NoError(t, err, "Failed to connect to db")
+	t.Cleanup(func() {
+		require.NoError(t, db.Close(), "Failed to close DB")
+	})
+
 	rs := subscriber.NewRepo(db)
 	v := validator.NewStdlib()
 	s := NewService(rs, v)

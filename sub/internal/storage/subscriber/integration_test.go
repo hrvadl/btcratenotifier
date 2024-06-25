@@ -26,6 +26,12 @@ func TestMain(t *testing.M) {
 		panic("failed to connect to test db")
 	}
 
+	defer func() {
+		if err := db.Close(); err != nil {
+			panic(err)
+		}
+	}()
+
 	if _, err := db.Exec("DELETE FROM subscribers"); err != nil {
 		panic("failed to cleanup")
 	}
@@ -64,6 +70,9 @@ func TestSave(t *testing.T) {
 	require.NotZero(t, dsn, "test DSN can not be empty")
 	db, err := db.NewConn(dsn)
 	require.NoError(t, err, "Failed to connect to test DB")
+	t.Cleanup(func() {
+		require.NoError(t, db.Close(), "Failed to close DB")
+	})
 	r := NewRepo(db)
 
 	for _, tt := range testCases {
@@ -113,6 +122,9 @@ func TestSaveSubscriberTwice(t *testing.T) {
 	require.NotZero(t, dsn, "test DSN can not be empty")
 	db, err := db.NewConn(dsn)
 	require.NoError(t, err, "Failed to connect to test DB")
+	t.Cleanup(func() {
+		require.NoError(t, db.Close(), "Failed to close DB")
+	})
 	r := NewRepo(db)
 
 	for _, tt := range testCases {
@@ -161,6 +173,9 @@ func TestGetSubscribers(t *testing.T) {
 	require.NotZero(t, dsn, "test DSN can not be empty")
 	db, err := db.NewConn(dsn)
 	require.NoError(t, err, "Failed to connect to test DB")
+	t.Cleanup(func() {
+		require.NoError(t, db.Close(), "Failed to close DB")
+	})
 	r := NewRepo(db)
 
 	for _, tt := range testCases {
