@@ -21,14 +21,8 @@ func NewClient(url string) *Client {
 	}
 }
 
-//go:generate mockgen -destination=./mocks/mock_converter.go -package=mocks . Converter
-type Converter interface {
-	Convert(ctx context.Context) (float32, error)
-}
-
 type Client struct {
-	url  string
-	next Converter
+	url string
 }
 
 type rate struct {
@@ -40,20 +34,10 @@ type rate struct {
 
 func (c *Client) Convert(ctx context.Context) (float32, error) {
 	res, err := c.getRate(ctx)
-	if err == nil {
-		return res, nil
+	if err != nil {
+		return 0, fmt.Errorf("%s: %w", operation, err)
 	}
-
-	if c.next == nil {
-		return 0, err
-	}
-
-	chainedRes, chainedErr := c.next.Convert(ctx)
-	if chainedErr != nil {
-		return 0, fmt.Errorf("%w: %w", err, chainedErr)
-	}
-
-	return chainedRes, nil
+	return res, nil
 }
 
 func (c *Client) getRate(ctx context.Context) (float32, error) {
@@ -64,12 +48,12 @@ func (c *Client) getRate(ctx context.Context) (float32, error) {
 		nil,
 	)
 	if err != nil {
-		return 0, fmt.Errorf("%s: failed to create request: %w", operation, err)
+		return 0, fmt.Errorf("failed to create request: %w", err)
 	}
 
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return 0, fmt.Errorf("%s, failed to send request: %w", operation, err)
+		return 0, fmt.Errorf("failed to send request: %w", err)
 	}
 
 	defer func() {
@@ -78,24 +62,20 @@ func (c *Client) getRate(ctx context.Context) (float32, error) {
 
 	bytes, err := io.ReadAll(res.Body)
 	if err != nil {
-		return 0, fmt.Errorf("%s: failed to read body bytes: %w", operation, err)
+		return 0, fmt.Errorf("failed to read body bytes: %w", err)
 	}
 
 	var response []rate
 	if err = json.Unmarshal(bytes, &response); err != nil {
-		return 0, fmt.Errorf("%s: failed to parse response body: %w", operation, err)
+		return 0, fmt.Errorf("failed to parse response body: %w", err)
 	}
 
 	rate, err := findExchangeRateFor(uah, usd, response)
 	if err != nil {
-		return 0, fmt.Errorf("%s: %w", operation, err)
+		return 0, err
 	}
 
 	return rate.Buy, nil
-}
-
-func (c *Client) SetNext(next Converter) {
-	c.next = next
 }
 
 func findExchangeRateFor(base, target string, r []rate) (*rate, error) {
