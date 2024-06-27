@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-const moduleInfo = "github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/mailer"
+const moduleInfo = "github.com/GenesisEducationKyiv/software-engineering-school-4-0-hrvadl/rw"
 
 func TestDependencies(t *testing.T) {
 	t.Parallel()
@@ -55,40 +55,63 @@ func TestDependencies(t *testing.T) {
 				},
 			},
 		},
-	}
-
-	module := config.Load(moduleInfo)
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
-			require.True(t, archgo.CheckArchitecture(module, tt.cfg).Passes)
-		})
-	}
-}
-
-func TestImplementationNames(t *testing.T) {
-	t.Parallel()
-	tests := []struct {
-		name string
-		cfg  config.Config
-	}{
 		{
-			name: "Mailers that implement Converter interface should be named as *Client",
+			name: "platform should not depends on other pkg",
 			cfg: config.Config{
-				NamingRules: []*config.NamingRule{
+				DependenciesRules: []*config.DependenciesRule{
 					{
-						Package: "**.rates.**",
-						InterfaceImplementationNamingRule: &config.InterfaceImplementationRule{
-							StructsThatImplement:           "Converter",
-							ShouldHaveSimpleNameEndingWith: ptr("Client"),
+						Package: "**.platform.**",
+						ShouldNotDependsOn: &config.Dependencies{
+							Internal: []string{
+								"**.transport.**",
+								"**.app.**",
+								"**.platform.**",
+								"**.service.**",
+							},
 						},
 					},
 				},
+			},
+		},
+		{
+			name: "service should not depend on other pkg",
+			cfg: config.Config{
 				DependenciesRules: []*config.DependenciesRule{
 					{
-						Package: "**.cmd.**",
-						ShouldOnlyDependsOn: &config.Dependencies{
-							Internal: []string{"**.cmd.**", "**.internal.**", "**.pkg.*"},
+						Package: "**.service.**",
+						ShouldNotDependsOn: &config.Dependencies{
+							Internal: []string{"**.transport.**", "**.app.**", "**.platform.**"},
+						},
+					},
+				},
+			},
+		},
+		{
+			name: "transport should not depend on other pkg",
+			cfg: config.Config{
+				DependenciesRules: []*config.DependenciesRule{
+					{
+						Package: "**.transport.**",
+						ShouldNotDependsOn: &config.Dependencies{
+							Internal: []string{"**.service.**", "**.app.**", "**.platform.**"},
+						},
+					},
+				},
+			},
+		},
+		{
+			name: "cfg should not depend on other pkg",
+			cfg: config.Config{
+				DependenciesRules: []*config.DependenciesRule{
+					{
+						Package: "**.cfg.**",
+						ShouldNotDependsOn: &config.Dependencies{
+							Internal: []string{
+								"**.service.**",
+								"**.transport.**",
+								"**.app.**",
+								"**.platform.**",
+							},
 						},
 					},
 				},
@@ -103,8 +126,4 @@ func TestImplementationNames(t *testing.T) {
 			require.True(t, archgo.CheckArchitecture(module, tt.cfg).Passes)
 		})
 	}
-}
-
-func ptr[T any](p T) *T {
-	return &p
 }
